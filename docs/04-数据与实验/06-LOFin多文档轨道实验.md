@@ -242,6 +242,37 @@ v8 的 6 个新闭包恰好全部落在预声明的别名层：3 道 h1 题（TM
 
 结论收紧为：period-aware 表示必要；在"同公司同年多 filing 期间碰撞 + 半年度自然措辞"这一自建冻结面上，预声明的期间别名映射使 FinPlan 首次在同一冻结集上以显著差异超过元数据分解与自身 v7，但相对 Generic/HiREC-style 的闭包差异仍不显著（方向有利），且跨年度边界与答案层仍未解决。
 
+### 5.11 A4（–Available time）消融：移除 `available_at ≤ cutoff` 后，v8 在冻结 14 题上完全不变，三个基线显著泄漏未来文件
+
+消融矩阵（方案 v2 第 4 节）的 A4 曾标为"SEC 回放完成；LOFin 当前不可识别"——因为此前 LOFin 各批语料不含 cutoff 之后的文件。validation7 语料天然含未来文件（相对 2024 年 cutoff：各公司 Q3-2024 10-Q、FY2024 10-K 与 Q1-2025 10-Q），使 A4 在该冻结集上可执行。
+
+操作化（预声明，`lofin_validation7_ablation_time_freeze.json` 在运行前写入）：no_time 变体只移除 `available_at ≤ cutoff` 约束——planning 层 `visible_filings` 以 cutoff=None 调用、retrieval 层 `index.search(..., allow_future=True)`；语料、索引、模板、预算、义务/期间解析规则、BM25 均不变。time 变体重放冻结管线，必须逐字段复现冻结结果（确定性检查：0 差异，全部 5 个方法 × 3–4 字段逐一核对）。`future_leak` 为严格大于：available_at 恰等于 cutoff 的 gold filing（fy_q1n 的 Q1-2025 10-Q）不算泄漏。frozen 14 题一次性运行，dev 4 题仅诊断。预声明预测 P1–P4 及裁决如下。
+
+冻结 14 题上 no_time vs time（配对精确 McNemar / sign test）：
+
+| 方法 | 闭包 time→no_time | future_leak no_time | 泄漏 p | 闭包损失 p |
+|---|---|---|---:|---:|
+| v8 cascade | 11/14 → 11/14 | 0/14 | 1.0（无变化） | 1.0（无变化） |
+| Single-shot | 8/14 → 4/14 | 10/14 | 0.002 | 0.125 |
+| Period metadata decomposition | 5/14 → 5/14 | 3/14 | 0.25 | 1.0 |
+| Generic adaptive period | 8/14 → 6/14 | 7/14 | 0.016 | 0.50 |
+| HiREC-style period | 8/14 → 7/14 | 7/14 | 0.016 | 1.0 |
+
+v8 的 no_time 行在 case 级全部字段与 time 行逐字段相同（含 planned_obligations、documents、wrong_doc_rate），即 A4 在 v8 上是完全 no-op。三个基线在去掉时间门后未来泄漏显著（Single-shot p=0.002、Generic/HiREC p=0.016）；Single-shot 的错误文档在全部 6 个非平局配对中增加（sign test p=0.031）。no_time 体制下的跨方法对比：v8 泄漏 0/14 对 Single-shot 10/14（p=0.002）、Generic 7/14（p=0.016）、HiREC 7/14（p=0.016）；闭包 11 对 4（p=0.016）、6（p=0.063）、7（p=0.125）。
+
+机制与预声明裁决：
+
+- **P1（v8 不变）确认**：v8 的防泄漏是结构性的，不靠时间门本身——显式期间解析（含别名）使义务计划不需要 annual fallback 去"看见"未来的 10-K；precise_path 绑定使 retrieval 只能在义务自身文档内命中。
+- **P2（Single-shot 泄漏）确认**：Q1-2025 10-Q 含 Q1-2024 同期比较与 FY2024 全年度数据，去掉时间门后 BM25 把未来文件取回，10/14 例泄漏，且闭包 8→4（未来文件挤占预算）。
+- **P3（metadata 分解无泄漏）被证伪**：其检索保持路径绑定，但 planning 层 no_time 使共享 v7 规则的 annual fallback 能看见未来 10-K——"first half of 2024" 在 v5 规则中未解析 → 无显式期间 → annual fallback → FY2024 10-K 仅在 no_time 下成为义务 → 路径绑定检索忠实地取回该未来文件（3/14）。泄漏发生在 planning 层而非 retrieval 层，我的预声明推理不完整。
+- **P4（Generic/HiREC 仅 initial 泄漏）部分被证伪**：泄漏同时来自无绑定 initial 查询与基于 fallback 义务的 fill_missing。
+
+解读边界（诚实分层）：
+
+1. 这是**稳健性消融**，不是新的 SOTA 主张：时间门开启时 v8 相对 Generic/HiREC-style 的闭包差异仍是方向性（p=0.25）。no_time 下的显著差异（p=0.016 对 Single-shot）说明 v8 的优越性不以时间过滤为前提，但正式优势主张仍受主对比约束。
+2. 该消融把"时间门承担了多少保护"从 v8 中剥离：对 v8 承担 0（结构性保护），对三个基线承担显著保护（3 个方法泄漏 p≤0.016）。这与 SEC 真实 pilot 的 A4 结果方向一致（finplan_no_time 在探索/留出集上 future_leak 0.35/0.40、overclaim 增加），且首次在预声明冻结集上给出配对检验。
+3. A3（–Limiting evidence）在本轨道不可执行：period 轨道的义务管线（v7/v8 与全部基线）均无 L 机制，没有可删除对象；A3 的真实载体是 SEC lineage pilot（finplan_no_limit：探索集闭包 1.0→0.882、limit_action_recall 0.5→0；留出集闭包 0.833→0.583、limit_action_recall 0.5→0），未走冻结清单协议，下一载体为中国机制链（D4）。A5（–Lineage）、A6（–Conflict action）因载体数据（中国问询/并购链新闻+公告、比较调查轨道）未构建，在真实冻结集上不可执行。
+
 ## 6. 对 research gap 的支持强度
 
 本实验提供两项直接证据：
@@ -265,6 +296,10 @@ validation6 运行后应进一步收紧为：
 validation7（自建冻结 14 题）运行后再次收紧为：
 
 > v8（v7 + 预声明半年度别名 H1→Q2、H2→Q3+FY）闭包 11/14，显著高于自身 v7 与元数据分解（p≈.03），错误文档显著低于 Single-shot/HiREC-style；相对 Generic/HiREC-style 的闭包差异仍只有方向性。别名层是 v8 全部增益的来源；跨年度边界（fy_q1n）三法全败。表示必要已确认，策略优势在"自然期间措辞"这一面上首次部分确认，仍不是 SOTA。
+
+A4 消融（预声明，frozen 14 一次性运行）后追加：
+
+> 移除 available_at 约束后，v8 在 case 级完全不变（0 未来泄漏、闭包 11/14 不变、错误文档不变），三个基线的未来泄漏显著上升（Single-shot 10/14、Generic/HiREC 7/14，配对 p≤0.016）且 Single-shot 闭包 8→4。v8 的防泄漏是结构性（期间解析+路径绑定），不依赖时间门；no_time 体制下 v8 闭包显著超过 Single-shot（11 对 4，p=0.016），但正式优势主张仍受时间门开启时主对比（p=0.25）约束。预声明 P3 被证伪（metadata 分解在 planning 层经 annual fallback 泄漏未来 10-K），如实记录。A3 在本轨道无 L 机制可删（SEC pilot 已有 finplan_no_limit 证据）；A5/A6 载体数据未构建。
 
 这仍是“在该任务和表示下验证”的结论，不是“已有方法做不到”。特别是，强通用 agent 完全可能学会或调用相同的元数据过滤器。
 
@@ -321,4 +356,10 @@ validation7（自建冻结 14 题）运行后再次收紧为：
 - `preexperiments/results/nonoracle_obligation_v6_validation7_frozen.json`
 - `preexperiments/results/period_aware_baselines_validation7.json`
 - `preexperiments/results/lofin_validation7_statistical_audit_v1.json`
+- `preexperiments/run_validation7_ablation_time.py`（A4 消融 runner，预声明）
+- `preexperiments/audit_validation7_ablation_time.py`（A4 统计审计）
+- `preexperiments/results/lofin_validation7_ablation_time_freeze.json`（运行前冻结）
+- `preexperiments/results/validation7_ablation_time_dev.json`（dev 诊断）
+- `preexperiments/results/validation7_ablation_time_frozen.json`（frozen 14 一次性运行）
+- `preexperiments/results/validation7_ablation_time_audit_v1.json`（统计审计）
 - `preexperiments/run_nonoracle_obligation_planning_v6.py`
