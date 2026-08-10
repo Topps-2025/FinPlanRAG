@@ -212,6 +212,36 @@ v7 将文件义务扩展为“主体、filing type、财政年度、财政期间
 
 若加入 H1→Q2、H2→FY 的 v8，它只能是 validation6 错误驱动开发版，必须再用新来源冻结验证。当前裁决是：period-aware 表示必要，但 FinPlan 的动作策略尚未证明比同元数据 Generic/HiREC-style 更优。
 
+### 5.10 自建 validation7：冻结 14 题上 v8（半年度别名）闭包 11/14，首次显著优于元数据分解
+
+LOFin 测试子集的全部同公司多 filing 题（48 行/24 题）公司与前六批的 114 个 ticker 全部重叠，不存在新鲜来源，因此按方案自行构建 validation7：6 家新公司（MDLZ/TMUS/CAT/RTX/UPS/CTVA，均 Dec-31 财年、有收入线）× (Q1/Q2/Q3 2024 10-Q + FY2024 10-K + Q1 2025 10-Q) = 30 份此前从未使用的 SEC 文件。问题模板在读取任何金标数字之前按分析师自然措辞固定（h1 上半年→Q2 10-Q、h1_9m 上半年与前三季度→Q2+Q3 10-Q、q1q2 一季与二季→Q1+Q2 10-Q、h2 下半年=全年−前三季度→Q3 10-Q+FY 10-K、fy_q1n 全年与下年一季→FY 10-K+Q1 10-Q）；gold 文件由 XBRL companyfacts 事实的 accn 必须匹配所下载文件的 accession，且数值必须在语料文本收入标签 ±250 字符内可定位，双验证决定，不按任何检索方法的行为设计。18 题 = dev 4 + frozen 14；manifest 在方法运行前冻结，builder 产出的数据、两个 registry 与四个 runner 的 SHA-256 全部先于任何方法写入 `nonoracle_obligation_v7_validation7_freeze.json`。
+
+v8 = v7 + 半年度别名映射（H1→Q2 10-Q、H2→Q3 10-Q + FY 10-K），该映射与 v7 在别名题上的预期失败均先在 manifest 的 interpretation_boundary 中预声明，v8 runner 在冻结运行前写完哈希，不是看到冻结结果后的调优。
+
+冻结 14 题闭包（gold ⊆ 检索文件集，各方法定义一致）：
+
+| 方法 | 文件闭包 | 错误文档题数 | 平均查询 |
+|---|---:|---:|---:|
+| v8（v7+半年度别名） | **11/14** | 2 | 1.71 |
+| v7 period-aware | 5/14 | 2 | 1.29 |
+| entity-year（v6） | 3/14 | 7 | 1.21 |
+| Single-shot | 8/14 | 14 | 4.00 |
+| Period metadata decomposition | 5/14 | 2 | 1.29 |
+| Generic adaptive period | 8/14 | 8 | 2.00 |
+| HiREC-style period | 8/14 | 13 | 2.79 |
+
+配对精确 McNemar（双尾，n=14，探索性、未多重校正）：v8 闭包显著高于 v7（6 个差异对全部偏向 v8，p=0.031）、entity-year（p=0.022）与 metadata 分解（p=0.031）；与 Generic/HiREC-style/Single-shot 的差异（11 对 8）为方向性（p=0.25）。错误文档出现次数上 v8 显著低于 Single-shot（12 对 0，p<0.001）、HiREC-style（11 对 0，p=0.001）与 Generic（6 对 0，p=0.031），与 metadata 持平（均 2 题）。
+
+v8 的 6 个新闭包恰好全部落在预声明的别名层：3 道 h1 题（TMUS/CAT/UPS-h1）与 3 道 h2 题（TMUS/CAT/UPS-h2）均从 0 到 1；h2 推导（H2=FY−9M 需同时取 Q3 10-Q 与 FY 10-K）对所有非 v8 方法都是失败面（Generic/HiREC/metadata 0/3，Single-shot 仅 UPS-h2 靠 4 文件全取侥幸 1/3）。显式季度题（h1_9m/q1q2）v7 与 v8 均为 5/5。因此 validation6 预声明的 H1→Q2、H2→FY 映射在冻结真实数据上被确认，这是本框架首次在同一冻结集上闭包显著超过同元数据分解基线。
+
+必须同时报告的负结果：
+
+1. **fy_q1n 层（跨财政年度边界）全部方法失败**：v8 0/3、baselines 0/3（v4 的 1/3 靠年腿侥幸）。题面 "fiscal year 2024 … first quarter of 2025" 中 "fiscal year 2024" 没有被任何 period 解析规则识别（annual fallback 只在无任何 period 命中时触发），FY 10-K 义务系统性丢失。"fiscal year N" 短语进入义务键是明确的下一步缺口。
+2. **v8 在 h1_9m 题上的过度检索**：既有 "first n quarters" 规则把 Q1 一并纳入计划，导致 TMUS/RTX-h1_9m 各 1 个错误文档（闭包仍为 1.0）。累积期应只取 Qn 所在文件；该修正未预声明，不在本冻结集上改动。
+3. 文件闭包仍不是端到端答案正确率；自建集与 LOFin 原题分开报告；样本 14 题不支撑 SOTA 声明。
+
+结论收紧为：period-aware 表示必要；在"同公司同年多 filing 期间碰撞 + 半年度自然措辞"这一自建冻结面上，预声明的期间别名映射使 FinPlan 首次在同一冻结集上以显著差异超过元数据分解与自身 v7，但相对 Generic/HiREC-style 的闭包差异仍不显著（方向有利），且跨年度边界与答案层仍未解决。
+
 ## 6. 对 research gap 的支持强度
 
 本实验提供两项直接证据：
@@ -231,6 +261,10 @@ v7 将文件义务扩展为“主体、filing type、财政年度、财政期间
 validation6 运行后应进一步收紧为：
 
 > period-aware v7 在新冻结数据上闭合 6/8，与元数据分解持平并低于 Generic/HiREC-style period 的 7/8；三道多 filing 题均闭合，但数量不足。故当前只确认表示问题真实存在，不确认 FinPlan 策略增益。
+
+validation7（自建冻结 14 题）运行后再次收紧为：
+
+> v8（v7 + 预声明半年度别名 H1→Q2、H2→Q3+FY）闭包 11/14，显著高于自身 v7 与元数据分解（p≈.03），错误文档显著低于 Single-shot/HiREC-style；相对 Generic/HiREC-style 的闭包差异仍只有方向性。别名层是 v8 全部增益的来源；跨年度边界（fy_q1n）三法全败。表示必要已确认，策略优势在"自然期间措辞"这一面上首次部分确认，仍不是 SOTA。
 
 这仍是“在该任务和表示下验证”的结论，不是“已有方法做不到”。特别是，强通用 agent 完全可能学会或调用相同的元数据过滤器。
 
@@ -278,3 +312,13 @@ validation6 运行后应进一步收紧为：
 - `preexperiments/results/nonoracle_obligation_v7_validation6_frozen.json`
 - `preexperiments/run_period_aware_baselines.py`
 - `preexperiments/results/period_aware_baselines_validation6.json`
+- `preexperiments/lofin_validation7_manifest.json`
+- `preexperiments/build_lofin_validation7.py`
+- `preexperiments/data/lofin_validation7_v1.json`
+- `preexperiments/results/nonoracle_obligation_v7_validation7_freeze.json`
+- `preexperiments/results/nonoracle_obligation_v7_validation7_frozen.json`
+- `preexperiments/results/nonoracle_obligation_v8_validation7_frozen.json`
+- `preexperiments/results/nonoracle_obligation_v6_validation7_frozen.json`
+- `preexperiments/results/period_aware_baselines_validation7.json`
+- `preexperiments/results/lofin_validation7_statistical_audit_v1.json`
+- `preexperiments/run_nonoracle_obligation_planning_v6.py`
