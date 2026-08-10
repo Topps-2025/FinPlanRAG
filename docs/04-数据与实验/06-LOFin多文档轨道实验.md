@@ -273,6 +273,40 @@ v8 的 no_time 行在 case 级全部字段与 time 行逐字段相同（含 plan
 2. 该消融把"时间门承担了多少保护"从 v8 中剥离：对 v8 承担 0（结构性保护），对三个基线承担显著保护（3 个方法泄漏 p≤0.016）。这与 SEC 真实 pilot 的 A4 结果方向一致（finplan_no_time 在探索/留出集上 future_leak 0.35/0.40、overclaim 增加），且首次在预声明冻结集上给出配对检验。
 3. A3（–Limiting evidence）在本轨道不可执行：period 轨道的义务管线（v7/v8 与全部基线）均无 L 机制，没有可删除对象；A3 的真实载体是 SEC lineage pilot（finplan_no_limit vs finplan_v3_path_bound），该 pilot 未走冻结清单协议，本会话对其追加了**事后配对统计审计**（`sec_real_pilot_ablation_audit_v1.json`，明确标注 post-hoc、仅描述性）：探索集（17 个 lineage×slice 计分单元）闭包 17→15（p=0.5）、limit_action_recall 0.5→0.0、limiting_recall 不变；留出集（12）闭包 10→7（p=0.25）、limit_action_recall 0.5→0.0、limiting_recall 1.0→0.5。A4 在同一审计中：探索集 future_leak 0→10/17（p=0.002，即文献记录的 58.8%）、留出集 0→5/12（p=0.0625，即 41.7%）——与 README 已记录的泄漏率逐字吻合，配对检验后探索集显著、留出集方向性。同一审计的 A5 邻近证据（wrong_lineage）：路径绑定方法跨谱系率 0–0.12，而 single_shot 17/17（1.0）、HiREC-style 10/17（0.59）探索集、6/12（0.5）留出集——但这不是完整的 –Lineage 消融（pilot 没有单独删除 P 维度而其余不变的对照），仍只作描述性证据。A6（–Conflict action）因载体数据（比较调查轨道、来源冲突案例）未构建，在真实冻结集上不可执行。
 
+### 5.12 自建 validation8：v9（fiscal-year-N + first-n 修复）在冻结 24 题上闭包 24/24，主对比首次显著（p≤0.00024）
+
+validation7 的冻结设计扩展到 6 家全新公司（CSX/CVS/GD/TXN/CMCSA/HCA，均 Dec-31 财年，与全部此前 120 个 ticker 零重叠）× 5 份文件 = 30 份此前未用 SEC 文件，30 题（dev 6 / frozen 24），54 条 XBRL 事实 + 语料文本双验证。`lofin_validation8_manifest.json` 在方法运行前预声明 v9 的两处解析修改：(a) **"fiscal year N"/"FY N" → 年度义务 (N, 10-K, FY)**（修复 validation7 fy_q1n 0/3）；(b) **"first n quarters of Y" → 只取 (Y, Qn) 累积文件**（6M 在 Q2 10-Q、9M 在 Q3 10-Q，消除 validation7 h1_9m 的 Q1 过度检索）；别名映射从 v8 继承并成为默认。`nonoracle_obligation_v9_validation8_freeze.json` 在 dev 诊断之前写入全部 SHA-256 与 P1–P4。dev 6 题只用于诊断，frozen 24 题一次性运行。
+
+frozen 24 闭包（按模板 h1/h1_9m/q1q2/h2/fy_q1n）与 wrong_doc 均值：
+
+| 方法 | 闭包 | h1 | h1_9m | q1q2 | h2 | fy_q1n | wrong_doc 均值 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| **v9 cascade** | **24/24** | 4 | 5 | 5 | 5 | 5 | **0.000** |
+| metadata_v9_fill（P4 对照） | 24/24 | 4 | 5 | 5 | 5 | 5 | 0.000 |
+| v8（v6 runner） | 19/24 | 4 | 5 | 5 | 5 | 0 | 0.069 |
+| v7（v5 runner） | 10/24 | 0 | 5 | 5 | 0 | 0 | 0.069 |
+| v4（entity-year） | 4/24 | 1 | 0 | 0 | 0 | 3 | 0.458 |
+| Single-shot | 11/24 | 3 | 3 | 3 | 1 | 1 | 0.719 |
+| Period metadata decomposition | 10/24 | 0 | 5 | 5 | 0 | 0 | 0.069 |
+| Generic adaptive period | 10/24 | 0 | 5 | 5 | 0 | 0 | 0.451 |
+| HiREC-style period | 11/24 | 2 | 3 | 5 | 0 | 1 | 0.549 |
+
+预声明裁决（配对精确 McNemar / sign test，frozen 24 一次性）：
+
+- **P1 确认**：fy_q1n 模板 v8 0/5 → v9 5/5（"fiscal year N" 解析是全部增益来源）；总体 24 vs 19，全部 5 个非平局配对都是 v9 赢（n10=5, n01=0, p=0.0625，方向性、未达 0.05——如实记录）。v8 在本集的失败面与 validation7 完全一致（仅跨年度边界层）。
+- **P2 确认**：h1_9m 错误文档 v9 0.000 vs v7/v8 0.333；三者闭包均为 1.0。first-n 修复移除 Q1 过度检索（5/5 非平局配对，sign test p=0.0625，方向性）。
+- **P3 确认（首次显著）**：v9 闭包 24/24 对 Single-shot 11/24（p=0.00024）、HiREC-style 11/24（p=0.00024）、metadata 分解 10/24（p=0.00012）、Generic 10/24（p=0.00012）——全部非平局配对均为 v9 单侧赢，无反向。判别面：h2 5 vs ≤1、fy_q1n 5 vs ≤1、h1 4 vs ≤3；q1q2 对照面五法全通（5/5）。validation7 的 p=0.25 方向性差异在 n=24 上成为显著优势。
+- **P4 持平（按预声明收缩主张）**：metadata_v9_fill（与 v9 共享完全相同的义务、预算，仅检索退化为元数据分解式 fill_missing）24/24 与 v9 完全持平（0 非平局配对，p=1.0；wrong_doc 均 0.000）。按 manifest 的 interpretation_boundary，**论文的策略优势主张必须收缩到表示层（期间解析）**：v9 相对 v7-shared baselines 的全部增益来自义务表示（fiscal-year-N、first-n、别名），级联检索策略在本轨道没有独立于表示的增益。
+
+一致性检查：dev 6 题在 dev 与 frozen 文件中逐字段相同（全部 5 个 runner 0 差异，确定性检查）；v9 future_leak 0/24（frozen）与 0/6（dev）。审计输出：`lofin_validation8_statistical_audit_v1.json`。
+
+解读边界（诚实分层）：
+
+1. 闭包是文件级义务闭包与文档正确率，不是页级证据或最终答案正确率；reader/答案轨道的更强主张仍需真实 reader 实验。
+2. 与 validation7 相同，自建集与 LOFin 原题分开报告；baselines 共享 v7 planner，比较对象是"v7-shared 规划"，不是原版 HiREC/Search-R1（仍未复现）。
+3. 三个层面的贡献被分开：别名层（v8 已有，validation7 确认）、FY/first-n 解析层（v9 新增，validation8 确认）、级联检索策略（P4 显示无独立增益——诚实负结果，写进论文的消融立场）。
+4. 冻结 24 题的一次性运行是预声明的；审计脚本在方法运行后编写（分析层不属方法，SHA 未纳入冻结文件）。
+
 ## 6. 对 research gap 的支持强度
 
 本实验提供两项直接证据：
@@ -300,6 +334,10 @@ validation7（自建冻结 14 题）运行后再次收紧为：
 A4 消融（预声明，frozen 14 一次性运行）后追加：
 
 > 移除 available_at 约束后，v8 在 case 级完全不变（0 未来泄漏、闭包 11/14 不变、错误文档不变），三个基线的未来泄漏显著上升（Single-shot 10/14、Generic/HiREC 7/14，配对 p≤0.016）且 Single-shot 闭包 8→4。v8 的防泄漏是结构性（期间解析+路径绑定），不依赖时间门；no_time 体制下 v8 闭包显著超过 Single-shot（11 对 4，p=0.016），但正式优势主张仍受时间门开启时主对比（p=0.25）约束。预声明 P3 被证伪（metadata 分解在 planning 层经 annual fallback 泄漏未来 10-K），如实记录。A3 在本轨道无 L 机制可删（SEC pilot 已有 finplan_no_limit 证据）；A5/A6 载体数据未构建。
+
+validation8（自建冻结 24 题，6 家全新公司）运行后更新为：
+
+> v9（v8 别名 + 预声明 fiscal-year-N 解析 + first-n 只取 Qn）在冻结 24 题上闭包 24/24、wrong_doc 0.000，显著高于四个 v7-shared baselines（11–10/24，配对精确 McNemar p≤0.00024，全部非平局配对单侧）；fy_q1n 层 5/5（v8 0/5），h1_9m 错误文档 0.000（v7/v8 0.333）。P4 诚实性对照（同义务、检索退化为元数据分解 fill_missing）与 v9 完全持平（24/24）——按预声明边界，策略优势主张收缩到**表示层（期间解析）**，级联检索策略无独立增益。这仍是"自然期间措辞/跨年度边界表示"这一面上的确认，不是 SOTA 主张；reader 答案正确率、原版 HiREC/Search-R1 复现仍待做。
 
 这仍是“在该任务和表示下验证”的结论，不是“已有方法做不到”。特别是，强通用 agent 完全可能学会或调用相同的元数据过滤器。
 
@@ -364,3 +402,16 @@ A4 消融（预声明，frozen 14 一次性运行）后追加：
 - `preexperiments/results/validation7_ablation_time_audit_v1.json`（统计审计）
 - `preexperiments/audit_sec_real_pilot_ablations.py` + `preexperiments/results/sec_real_pilot_ablation_audit_v1.json`（SEC pilot A3/A4 事后配对审计 + A5 邻近 wrong_lineage 证据）
 - `preexperiments/run_nonoracle_obligation_planning_v6.py`
+- `preexperiments/lofin_validation8_manifest.json`（预声明 manifest：6 家新公司、30 题、v9 修改与 P1–P4）
+- `preexperiments/build_lofin_validation8.py`
+- `preexperiments/data/lofin_validation8_v1.json`（30 cases/30 docs/54 fact_verifications）
+- `preexperiments/data/lofin_validation8_dev_v1.json`（dev 6 子集）
+- `preexperiments/data/sec_company_registry_validation8_v1.json` + `sec_filing_registry_validation8_v2.json`
+- `preexperiments/nonoracle_obligation_v9_validation8_freeze.json`（方法运行前冻结，SHA-256 全集）
+- `preexperiments/run_nonoracle_obligation_planning_v7.py`（v9 runner：finplan_v9_cascade + metadata_v9_fill）
+- `preexperiments/results/nonoracle_obligation_v9_validation8_dev.json` + `_frozen.json`
+- `preexperiments/results/nonoracle_obligation_v8_validation8_{dev,frozen}.json`（v6 runner 对照）
+- `preexperiments/results/nonoracle_obligation_v7_validation8_{dev,frozen}.json`（v5 runner 对照）
+- `preexperiments/results/nonoracle_obligation_v4_validation8_{dev,frozen}.json`（v4 对照）
+- `preexperiments/results/period_aware_baselines_validation8_{dev,frozen}.json`
+- `preexperiments/audit_validation8.py` + `preexperiments/results/lofin_validation8_statistical_audit_v1.json`（统计审计，P1–P4 裁决）

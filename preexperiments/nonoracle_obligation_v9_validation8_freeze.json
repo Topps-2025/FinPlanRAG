@@ -1,0 +1,52 @@
+{
+  "schema": "finplan-lofin-validation8-freeze.v1",
+  "frozen_at": "2026-08-11T18:00:00+08:00",
+  "status": "frozen-before-any-method-run",
+  "purpose": "validation8 预声明记录：manifest/builder/data/双 registry/全部 runner 的 SHA-256 在任何方法运行之前写入。dev 6 题只用于诊断，frozen 24 题一次性运行，冻结集不得用于调优。",
+  "protocol": {
+    "selection_manifest": "preexperiments/lofin_validation8_manifest.json",
+    "selection_manifest_sha256": "025f0e81a12c124170d41a0bc5124549b67385b7cce30e18f739cf90f9120788",
+    "builder": "preexperiments/build_lofin_validation8.py",
+    "builder_sha256": "f48a03d3ea7e4acc1c6edc7c61d84538a316531135f0e3e00b3450c3679eb87a",
+    "data": "D:/Engineering/FinPlanRAG/database/preexperiments/data/lofin_validation8_v1.json",
+    "data_sha256": "9730bf092718793a3f085be7f11cfd90676549ebe08c88c5aea841b3ff2009ca",
+    "company_registry": "D:/Engineering/FinPlanRAG/database/preexperiments/data/sec_company_registry_validation8_v1.json",
+    "company_registry_sha256": "aeaba5f0b3ba7bd4682c1eb3ff9d81934e2b05c87aaf6bf6e2c3c5276fed3713",
+    "filing_registry": "D:/Engineering/FinPlanRAG/database/preexperiments/data/sec_filing_registry_validation8_v2.json",
+    "filing_registry_sha256": "01e9e102b0c4ad58d4aa2616dcf7e6111df957b047f49d8deadeace4180d7cf0",
+    "runner_v9": "preexperiments/run_nonoracle_obligation_planning_v7.py",
+    "runner_v9_sha256": "6cc4c2abd489b978ea3b54868f91ad8a982ca3a0380f7db2076c49198dc65318",
+    "runner_v8": "preexperiments/run_nonoracle_obligation_planning_v6.py",
+    "runner_v8_sha256": "7c1d84f47829dc86654c82a49b1e85feb6a289978dc0d2b1dad5976cd21f443f",
+    "runner_v7": "preexperiments/run_nonoracle_obligation_planning_v5.py",
+    "runner_v7_sha256": "36617dc6eb6f5bad5704f0639a63064da5573bb0b7c775d94e3f2a988391b448",
+    "runner_v4": "preexperiments/run_nonoracle_obligation_planning_v4.py",
+    "runner_v4_sha256": "9bc5cd1bacc4ed0445318df065ef5d785c0c0eda65e6d7085b54326e10ddc252",
+    "runner_baselines": "preexperiments/run_period_aware_baselines.py",
+    "runner_baselines_sha256": "c5231d0fbde8b150ea29d7f14d529028d9d276e37337e994de88e05e09feaf02",
+    "dev_subset": "D:/Engineering/FinPlanRAG/database/preexperiments/data/lofin_validation8_dev_v1.json",
+    "dev_cases": ["CVS-h1", "HCA-h1", "CSX-h1_9m", "TXN-q1q2", "GD-h2", "CMCSA-fy_q1n"],
+    "budget": 4
+  },
+  "method_matrix": {
+    "finplan_v9_cascade": "v9 runner 主方法：v8 别名默认 + fiscal-year-N 解析 + first-n 只取 Qn",
+    "metadata_v9_fill": "P4 诚实性对照：与 v9 相同义务，检索退化为元数据分解 fill_missing",
+    "finplan_v8": "v6 runner，validation7 相同（本集对照，分离 v9 修改效果）",
+    "finplan_v7": "v5 runner，validation7 相同（shared planner 基线）",
+    "finplan_v4": "v4 runner，entity-year 基线",
+    "baselines": "single_shot / period_metadata_decomposition / generic_adaptive_period / hirec_period（shared v7 planner）"
+  },
+  "predeclared_predictions": {
+    "P1": "v9 在 frozen 集闭包 ≥ v8：fy_q1n 模板上 v8 预期 0/5，v9 预期 5/5。",
+    "P2": "v9 在 h1_9m 模板上错误文档 < v7/v8（first-n 修复移除 Q1 过度检索）；闭包三者均为 1.0。",
+    "P3": "v9 闭包 > v7-shared baselines（single/metadata/generic/hirec），判别 case 为 h1/h2（别名层）与 fy_q1n（FY 层）；配对精确 McNemar 报告。",
+    "P4_open": "v9 vs metadata_v9_fill 不预判方向；若持平，表示层贡献确认、级联策略在本轨道无独立增益。"
+  },
+  "interpretation_boundary": [
+    "dev 6 题只用于诊断，不得反哺冻结集；frozen 24 题一次性运行。",
+    "v9 的两处解析修改与本文件记录的预测在方法运行前冻结；若 v9 在任一修改点上失败，属于预期负结果，不是调优信号。",
+    "指标是文件级义务闭包与文档正确率，不是页级证据或最终答案正确率。",
+    "gold 文件由 XBRL 事实 accn 匹配 + 语料文本定位双验证，不按任何检索方法的行为设计。",
+    "P3 的判别面是别名层（h1/h2）与 FY 层（fy_q1n）；若 metadata_v9_fill 追平 v9，论文的策略优势主张必须收缩到表示层。"
+  ]
+}
