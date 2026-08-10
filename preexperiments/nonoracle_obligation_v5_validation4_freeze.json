@@ -1,0 +1,31 @@
+{
+  "schema": "finplan-nonoracle-v5-validation4-freeze.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "purpose": "在运行任一方法前冻结 v5 及 legacy-year validation4，用于检验长时间窗口迁移。",
+  "hashes": {
+    "runner_sha256": "f6c213ef9b713066eda6fbe8677f13ae98a2de958df51d08803a0941b145c3ec",
+    "data_sha256": "1e359888a05ce275df01b6733a78a1f7c3c65e3b5eb6bc84b971b56ef37d8fff",
+    "registry_sha256": "62e88a5fe27a8106df91f5b100cf34f424a8e03f1c84bf8c721828432dc90678",
+    "manifest_sha256": "4c62544bef909bd7787bc0b095fe99705ab497942d09d1ddcefc0d84bbc5d93e",
+    "builder_sha256": "967072e3d371ef1fc5f50a74685b03ef3023ee06eae0fb567515fb1f38d1aefd"
+  },
+  "protocol": {
+    "cases": 6,
+    "documents": 12,
+    "companies": 6,
+    "document_overlap_with_prior_batches": 0,
+    "contains_pre_2021_filings": true,
+    "planner": "cutoff-visible registry + canonical entity coverage + explicit temporal obligations",
+    "cascade": "predicted obligations -> frozen BM25 path-bound retrieval",
+    "query_budget": 4,
+    "document_budget": 4,
+    "validation4_method_results_seen_before_freeze": false,
+    "sec_user_agent": "hard-coded/project-scoped non-user placeholder; no local or git email read"
+  },
+  "interpretation_boundary": [
+    "v5 由 validation3 的四类失败开发；validation4 才是新的冻结检验。",
+    "validation4 只有 6 题，统计功效很低，必须报告 Wilson 区间和逐题错误。",
+    "该轨道只评价公司—年份义务和文件闭包，不评价页级证据或最终答案。",
+    "若失败，不得修改本冻结记录或覆盖结果；后续版本必须另建开发结果和新验证来源。"
+  ]
+}

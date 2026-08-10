@@ -1,0 +1,28 @@
+{
+  "schema": "finplan-nonoracle-obligation-freeze.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "purpose": "在读取非 oracle 规划级联结果前冻结公开注册表、模型和评分协议。",
+  "hashes": {
+    "runner_sha256": "e7a0dc3bf9277f83688811f20b83e61ccce0c1e78799395fb0ca6957e7197542",
+    "data_sha256": "ebc476bcbe359f7fc9c0fd478fc402a72dfe5928cc6161ed45001614b28a9c28",
+    "registry_sha256": "31646395197e0faf5c3cdd52d52419f4a5f634528a9cca8617f98549e50f0771",
+    "model_safetensors_sha256": "fdf756fa7fcbe7404d5c60e26bff1a0c8b8aa1f72ced49e7dd0210fe288fb7fe",
+    "config_sha256": "18e18aafcacca0de98daf13a54092927904649e1dd4eba8299ab717d5d94ff45",
+    "tokenizer_sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+  },
+  "protocol": {
+    "planners": ["registry_rule", "Qwen2.5-0.5B-Instruct"],
+    "planner_input": "question + public SEC company/year registry only",
+    "hidden_from_planners": ["candidate_legs", "gold_doc_ids", "gold_pages", "reference_answer"],
+    "cascade": "predicted obligations -> frozen FinPlan v3 path-bound BM25 retrieval",
+    "query_budget": 4,
+    "document_budget": 4,
+    "post_result_tuning": false
+  },
+  "interpretation_boundary": [
+    "该实验区分义务生成错误和文件检索错误，不评价最终答案。",
+    "SEC 注册表是公共语料元数据，不是 gold obligation。",
+    "Qwen-0.5B 是小模型诊断，不是通用规划 SOTA。",
+    "若规则或模型不能准确识别实体/年份，不能把 oracle 文件闭包结果外推到真实端到端系统。"
+  ]
+}

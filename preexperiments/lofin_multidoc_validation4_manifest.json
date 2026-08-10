@@ -1,0 +1,16 @@
+{
+  "schema": "finplan-lofin-multidoc-validation4-manifest.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "selection_rule": "合并 LOFin 公开测试子集并按 qid 数字升序去重；保留 2–3 份 10-K 证据、至少一份报告年度早于 2021、与前三批全部文件及本批已选文件不重叠的题目；遇到文件重叠时保留较早 qid。",
+  "target_cases": 6,
+  "split": "validation4",
+  "method_results_seen_before_freeze": false,
+  "cases": [
+    {"qid": "openqa_11", "split": "validation4", "docs": ["PG_2020_10K", "PG_2024_10K"]},
+    {"qid": "openqa_42", "split": "validation4", "docs": ["XOM_2020_10K", "XOM_2023_10K"]},
+    {"qid": "openqa_50", "split": "validation4", "docs": ["BMY_2018_10K", "BMY_2023_10K"]},
+    {"qid": "openqa_67", "split": "validation4", "docs": ["MU_2020_10K", "MU_2023_10K"]},
+    {"qid": "openqa_75", "split": "validation4", "docs": ["ABBV_2020_10K", "ABBV_2023_10K"]},
+    {"qid": "openqa_86", "split": "validation4", "docs": ["AMAT_2018_10K", "AMAT_2023_10K"]}
+  ]
+}

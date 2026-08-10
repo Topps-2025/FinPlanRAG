@@ -1,0 +1,44 @@
+{
+  "schema": "finplan-china-finglm-page-pilot-freeze.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "status": "method-freeze-before-run",
+  "protocol": {
+    "cases": 9,
+    "documents": 18,
+    "pages": 3567,
+    "budget": 4,
+    "method_results_seen_before_freeze": false,
+    "retriever": "Unicode NFKC Chinese character+bigram BM25 over PDF pages",
+    "splits": {
+      "development": 4,
+      "frozen-pilot": 5
+    },
+    "label_policy": "报告 FinGLM 原始字符串标签与 NFKC/casefold/贇→赟 规范化语义标签两套结果；文件闭包不受标签规范化影响。",
+    "claim_limit": "公开 pilot 只验证中文迁移、页级证据可得性和表示诊断，不支持总体显著性或 SOTA。"
+  },
+  "hashes": {
+    "builder_sha256": "04a97b99337ef153794e15440118f25f0c509207e1f8b51275289fc43e52d138",
+    "runner_sha256": "93087e1aff8bdb4c908b675e0b686de1b3a59e356de7af51eebd424e25bb5e90",
+    "data_sha256": "d22bb7192cc4b51bf506f21dd6ed3987f23de64ede106bf3af298d9c6dc9a2e5",
+    "manifest_sha256": "ac846588080d80bf15b86804f11be1730da6f144d1448b32b543d4c3ec26f5bc",
+    "acquisition_sha256": "4ec2791fb2cccac83719fb04b4d398f3b8f29c3731faf77bf28fb91be247d9d4"
+  },
+  "methods": [
+    "single_shot",
+    "fixed_decomposition",
+    "metadata_decomposition",
+    "generic_adaptive_period",
+    "hirec_period",
+    "finplan_v1_entity_only",
+    "finplan_entity_year_no_path",
+    "finplan_entity_year"
+  ],
+  "fairness": {
+    "shared_corpus": true,
+    "shared_bm25": true,
+    "shared_budget": true,
+    "gold_documents_hidden_from_retrieval": true,
+    "hirec_original_code": false,
+    "reader_is_oracle_page_coverage_diagnostic": true
+  }
+}

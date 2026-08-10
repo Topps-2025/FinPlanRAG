@@ -1,0 +1,18 @@
+# External assets are stored under D:\Engineering\FinPlanRAG\database.
+preexperiments/data/
+preexperiments/models/
+preexperiments/results/
+tmp/
+杂项草稿/
+
+# Generated caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local storage override
+.env
+
+# Local editor / tool state (Obsidian vault workspace, Claude Code local settings)
+.obsidian/
+.claude/

@@ -1,0 +1,60 @@
+{
+  "schema": "finplanrag-storage-path-migration-audit.v1",
+  "status": "post-freeze-path-only-refactor-not-a-result-rerun",
+  "migrated_at": "2026-08-10",
+  "old_code_root": "C:\\Users\\Lenovo\\Desktop\\Paper\\RAG",
+  "new_code_root": "C:\\Users\\Lenovo\\Desktop\\Paper\\FinPlanRAG",
+  "external_storage_root": "D:\\Engineering\\FinPlanRAG\\database",
+  "policy": "历史结果继续绑定冻结时源码哈希；路径外置后的源码哈希只证明当前文件身份，不把旧结果冒充为由迁移后源码重新生成。新实验必须创建新 freeze 和结果版本。",
+  "change_scope": [
+    "将 data/results/models 默认路径改为 storage_paths.py 管理的外置目录",
+    "增加 FINPLANRAG_STORAGE_ROOT 环境变量覆盖",
+    "未有意修改检索、规划、评分或统计逻辑"
+  ],
+  "files": {
+    "run_lofin_multidoc_pilot.py": {
+      "frozen_sha256": "63bdba76c3b5e48b77904b436a2a7baf0b13c367dba6e16cd9b6c41d2b89fdc3",
+      "post_migration_sha256": "51de0af05ce4c2c19ef3c5c35c3a6133326ea3cae0298e0fdbe61b2e4d4119ec"
+    },
+    "run_lofin_multidoc_dense.py": {
+      "frozen_sha256": "6aa6c5676dbd82b3b1b0da247830edb8ac99b3d8310e8996cb225cb7bae0da53",
+      "post_migration_sha256": "894c1fa48c832ff8c353501027e61d35869002cff253e7df48fd483225fac1e6"
+    },
+    "run_lofin_multidoc_hybrid.py": {
+      "frozen_sha256": "da5a535d857e3f7bc8ac4b6425ee849e16a837dc5253585dd9010a849c2b5868",
+      "post_migration_sha256": "4a3b13b49241b29de80f1e4423e6ac1f3d416f175f0f380c6adc596fd22ed840"
+    },
+    "run_nonoracle_obligation_planning.py": {
+      "frozen_sha256": "e7a0dc3bf9277f83688811f20b83e61ccce0c1e78799395fb0ca6957e7197542",
+      "post_migration_sha256": "a46bb74721859164a42056e6f1e1ba724f1ec2c045f5769af05530f0a1be1469"
+    },
+    "run_nonoracle_obligation_planning_v2.py": {
+      "frozen_sha256": "f6d3644284ab19f749b457a96ac4f904f77e4941a41be1e21acb32d101dcb5ff",
+      "post_migration_sha256": "577a136d3b6aeba8acf9f6a03a450fae46ce7117874a2075e002b3b548d6093d"
+    },
+    "run_nonoracle_obligation_planning_v3.py": {
+      "frozen_sha256": "f6c213ef9b713066eda6fbe8677f13ae98a2de958df51d08803a0941b145c3ec",
+      "post_migration_sha256": "89bdcecc72299a0580ffbfd743d4ecd8acf80806702fca873e04774a3ccddfad"
+    },
+    "run_nonoracle_obligation_planning_v4.py": {
+      "frozen_sha256": "c5913af1f185f80202d01d90372e808cc11024fd372349938134486d396ba871",
+      "post_migration_sha256": "9bc5cd1bacc4ed0445318df065ef5d785c0c0eda65e6d7085b54326e10ddc252"
+    },
+    "build_china_finglm_page_pilot.py": {
+      "frozen_sha256": "04a97b99337ef153794e15440118f25f0c509207e1f8b51275289fc43e52d138",
+      "post_migration_sha256": "12b7ec746a4397e0a6826ffdc2ccb05432dcf70800cfd80a89bcdb0b13aee547"
+    },
+    "run_china_finglm_page_pilot.py": {
+      "frozen_sha256": "93087e1aff8bdb4c908b675e0b686de1b3a59e356de7af51eebd424e25bb5e90",
+      "post_migration_sha256": "166f5c70d02bd71627dd25cbb1e2366800c5ac790bb334100accacb18506d1f7"
+    },
+    "run_nonoracle_obligation_planning_v5.py": {
+      "frozen_sha256": "ed660fa43642bf83ea935188745e2558bf310863e11f89d2c5515781baa9ae26",
+      "post_migration_sha256": "36617dc6eb6f5bad5704f0639a63064da5573bb0b7c775d94e3f2a988391b448"
+    },
+    "run_period_aware_baselines.py": {
+      "frozen_sha256": "a097e11a6d106291cacd5b675c4198aafb3ab679d5fbb10f5a6274a373643c5c",
+      "post_migration_sha256": "c5231d0fbde8b150ea29d7f14d529028d9d276e37337e994de88e05e09feaf02"
+    }
+  }
+}

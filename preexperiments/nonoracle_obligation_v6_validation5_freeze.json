@@ -1,0 +1,30 @@
+{
+  "schema": "finplan-nonoracle-v6-validation5-freeze.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "purpose": "在运行方法前冻结 v6 与公司/文件独立的 10-K/10-Q validation5，检验 filing 粒度迁移。",
+  "hashes": {
+    "runner_sha256": "c5913af1f185f80202d01d90372e808cc11024fd372349938134486d396ba871",
+    "data_sha256": "bb06fa30febf9d089fe058edc429497eed2ef2b2137be4211766ec893d5e6c78",
+    "registry_sha256": "9aaad313374bdac3c3369fdf67398735175ee95f63d29065a006f8522a0824fd",
+    "manifest_sha256": "bb7a052e94253dfd5e809e08aed8579d6305972583036d8ab5f3d4dbcbee806a",
+    "builder_sha256": "bf3fae6ed095b42504056aede2cda77a8593e587047c26c2a258cd2e31009180"
+  },
+  "protocol": {
+    "cases": 8,
+    "documents": 21,
+    "companies": 14,
+    "document_overlap_with_prior_batches": 0,
+    "within_batch_company_overlap": 0,
+    "contains_10q": true,
+    "planner_under_test": "v6 company-year 10-K obligation representation",
+    "query_budget": 4,
+    "validation5_method_results_seen_before_freeze": false,
+    "sec_user_agent": "hard-coded/project-scoped non-user placeholder; no local or git email read"
+  },
+  "interpretation_boundary": [
+    "v6 只显式表示 company-year-10-K；本轨道检验该表示能否迁移到季度和混合 filing 问题。",
+    "失败可证明当前表示覆盖不足，但不能单独证明所有 Agentic RAG 都做不到。",
+    "8 题样本很小；必须同时报告逐题义务错误和统计不确定性。",
+    "页级证据和最终答案仍未评价。"
+  ]
+}

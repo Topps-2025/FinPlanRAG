@@ -1,0 +1,54 @@
+{
+  "schema": "finplan-sec-lineage-manifest.v1",
+  "scope": "prospective holdout lineages frozen after exploratory v3 policy",
+  "lineages": [
+    {
+      "lineage_id": "amd_xilinx",
+      "company": "AMD",
+      "target": "Xilinx",
+      "cik": "0000002488",
+      "agreement": {"accession": "0001193125-20-277468", "document": "d67182d8k.htm"},
+      "terminal": {"accession": "0000002488-22-000031", "document": "amd-20220214.htm", "event": "completed"}
+    },
+    {
+      "lineage_id": "jetblue_spirit",
+      "company": "JetBlue",
+      "target": "Spirit",
+      "cik": "0001158463",
+      "agreement": {"accession": "0001193125-22-204208", "document": "d319514d8k.htm"},
+      "terminal": {"accession": "0001158463-24-000010", "document": "jblu-20240301.htm", "event": "terminated"}
+    },
+    {
+      "lineage_id": "exxon_pioneer",
+      "company": "Exxon",
+      "target": "Pioneer",
+      "cik": "0000034088",
+      "agreement": {"accession": "0000950103-23-014885", "document": "dp201349_8k.htm"},
+      "terminal": {"accession": "0000950103-24-006322", "document": "dp210867_8k.htm", "event": "completed"}
+    },
+    {
+      "lineage_id": "capitalone_discover",
+      "company": "Capital One",
+      "target": "Discover",
+      "cik": "0000927628",
+      "agreement": {"accession": "0001193125-24-042826", "document": "d780383d8k.htm"},
+      "terminal": {"accession": "0001193125-25-122059", "document": "d934475d8k.htm", "event": "completed"}
+    },
+    {
+      "lineage_id": "synopsys_ansys",
+      "company": "Synopsys",
+      "target": "Ansys",
+      "cik": "0000883241",
+      "agreement": {"accession": "0001193125-24-008120", "document": "d720113d8k.htm"},
+      "terminal": {"accession": "0001140361-25-026139", "document": "ef20051970_8k.htm", "event": "completed"}
+    },
+    {
+      "lineage_id": "nvidia_arm",
+      "company": "NVIDIA",
+      "target": "Arm",
+      "cik": "0001045810",
+      "agreement": {"accession": "0001193125-20-244601", "document": "d13958d8k.htm"},
+      "terminal": {"accession": "0001045810-22-000005", "document": "nvda-20220208.htm", "event": "terminated"}
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "schema": "finplan-lofin-multidoc-hybrid-freeze.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "purpose": "在读取 hybrid 结果前冻结 BM25+BGE 排名融合协议。",
+  "hashes": {
+    "runner_sha256": "da5a535d857e3f7bc8ac4b6425ee849e16a837dc5253585dd9010a849c2b5868",
+    "data_sha256": "ebc476bcbe359f7fc9c0fd478fc402a72dfe5928cc6161ed45001614b28a9c28",
+    "dense_model_safetensors_sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad"
+  },
+  "protocol": {
+    "fusion": "reciprocal rank fusion",
+    "rrf_k": 60,
+    "lexical": "shared BM25 over all passages",
+    "dense": "frozen BGE max score over 12 uniform passages per document",
+    "query_budget": 4,
+    "document_budget": 4,
+    "post_result_tuning": false
+  },
+  "interpretation_boundary": [
+    "该实验只检验 gap 是否依赖单一检索器。",
+    "RRF 和 passage 样本数不根据结果调整。",
+    "仍不评价义务抽取、段落证据或最终答案。"
+  ]
+}

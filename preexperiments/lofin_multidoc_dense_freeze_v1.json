@@ -1,0 +1,33 @@
+{
+  "schema": "finplan-lofin-multidoc-dense-freeze.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "purpose": "在读取 dense 稳健性结果前冻结 CPU BGE 检索协议。",
+  "hashes": {
+    "runner_sha256": "6aa6c5676dbd82b3b1b0da247830edb8ac99b3d8310e8996cb225cb7bae0da53",
+    "data_sha256": "ebc476bcbe359f7fc9c0fd478fc402a72dfe5928cc6161ed45001614b28a9c28",
+    "model_safetensors_sha256": "3c9f31665447c8911517620762200d2245a2518d6e7208acc78cd9db317e21ad",
+    "config_sha256": "094f8e891b932f2000c92cfc663bac4c62069f5d8af5b5278c4306aef3084750",
+    "tokenizer_sha256": "d241a60d5e8f04cc1b2b3e9ef7a4921b27bf526d9f6050ab90f9267a1f9e5c66"
+  },
+  "protocol": {
+    "model": "BAAI/bge-small-en-v1.5",
+    "model_revision": "5c38ec7c405ec4b44b94cc5a9bb96e735b38267a",
+    "download_endpoint": "https://hf-mirror.com/",
+    "pooling": "attention-mask mean pooling plus L2 normalization",
+    "document_score": "maximum cosine similarity among uniformly sampled passages",
+    "samples_per_document": 12,
+    "max_length": 256,
+    "query_prefix": "none",
+    "query_budget": 4,
+    "document_budget": 4,
+    "hardware": "CPU-only",
+    "post_result_tuning": false
+  },
+  "interpretation_boundary": [
+    "该实现是 CPU 受限的文档级 dense 稳健性诊断，不是完整 dense/hybrid SOTA。",
+    "每份文件只均匀抽取 12 个 passage，不能评价精确段落召回。",
+    "候选公司—年份义务仍由标注给定。",
+    "路径绑定方法仍利用结构化元数据，强路径绑定基线享有相同约束。",
+    "结果只评价文件闭包和轨迹污染，不评价最终回答。"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "finplan-lofin-multidoc-validation3-manifest.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "selection_rule": "按 LOFin qid 数字升序扫描；证据为 2–3 份且报告年度不早于 2021 的 10-K；与第一批、第二批及本批次已选文件均不重叠；剩余满足条件者共 22 题。",
+  "target_cases": 22,
+  "split": "validation3",
+  "cases": [
+    {"qid":"openqa_150","split":"validation3","docs":["FIS_2024_10K","FI_2024_10K"]},
+    {"qid":"openqa_156","split":"validation3","docs":["FIS_2021_10K","FIS_2022_10K"]},
+    {"qid":"openqa_170","split":"validation3","docs":["IR_2024_10K","PH_2024_10K"]},
+    {"qid":"openqa_177","split":"validation3","docs":["JBL_2022_10K","JBL_2023_10K","JBL_2024_10K"]},
+    {"qid":"openqa_179","split":"validation3","docs":["EMR_2024_10K","KEYS_2024_10K"]},
+    {"qid":"openqa_194","split":"validation3","docs":["AMGN_2024_10K","LLY_2024_10K"]},
+    {"qid":"openqa_203","split":"validation3","docs":["MU_2022_10K","MU_2024_10K"]},
+    {"qid":"openqa_205","split":"validation3","docs":["NVDA_2024_10K","NVDA_2025_10K"]},
+    {"qid":"openqa_223","split":"validation3","docs":["PYPL_2022_10K","PYPL_2023_10K","PYPL_2024_10K"]},
+    {"qid":"openqa_229","split":"validation3","docs":["DIS_2024_10K","WBD_2024_10K"]},
+    {"qid":"openqa_234","split":"validation3","docs":["PNR_2024_10K","XYL_2024_10K"]},
+    {"qid":"openqa_243","split":"validation3","docs":["MCD_2024_10K","YUM_2024_10K"]},
+    {"qid":"openqa_249","split":"validation3","docs":["IDXX_2024_10K","ZTS_2024_10K"]},
+    {"qid":"openqa_262","split":"validation3","docs":["JNJ_2022_10K","JNJ_2024_10K"]},
+    {"qid":"openqa_280","split":"validation3","docs":["KO_2024_10K","PEP_2024_10K"]},
+    {"qid":"openqa_287","split":"validation3","docs":["HD_2025_10K","LOW_2025_10K"]},
+    {"qid":"openqa_293","split":"validation3","docs":["TGT_2025_10K","WMT_2025_10K"]},
+    {"qid":"openqa_298","split":"validation3","docs":["ABNB_2024_10K","BKNG_2024_10K","EXPE_2024_10K"]},
+    {"qid":"openqa_303","split":"validation3","docs":["AAP_2021_10K","AAP_2022_10K","AAP_2023_10K"]},
+    {"qid":"openqa_310","split":"validation3","docs":["CBOE_2023_10K","CME_2023_10K"]},
+    {"qid":"openqa_314","split":"validation3","docs":["DD_2023_10K","PPG_2023_10K"]},
+    {"qid":"openqa_328","split":"validation3","docs":["AZO_2023_10K","GPC_2023_10K","ORLY_2023_10K"]}
+  ]
+}

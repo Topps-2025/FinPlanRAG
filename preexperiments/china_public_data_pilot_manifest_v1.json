@@ -1,0 +1,109 @@
+{
+  "schema": "finplan-china-public-data-pilot-manifest.v1",
+  "frozen_at": "2026-08-10T00:00:00+08:00",
+  "status": "selection-frozen-documents-acquired-methods-pending",
+  "method_results_seen_before_freeze": false,
+  "source": {
+    "dataset": "MetaGLM/FinGLM 复赛A",
+    "repository_commit": "ff48a9dc5e6c7f9d9a9c6120024dccefd8cbaa80",
+    "report_index": "preexperiments/data/external/china/finglm_reports_list.csv",
+    "question_file": "preexperiments/data/external/china/finglm_A_questions.json",
+    "answer_file": "preexperiments/data/external/china/finglm_A_answers.json"
+  },
+  "selection_rule": "选择复赛A中题面含‘相比’且比较两个明确报告年度、公司间互不重复、报告清单能定位全部所需年份的全部9题；按qid升序，前4题仅作开发，后5题在方法冻结后运行。",
+  "development_qids": [357, 941, 1178, 1221],
+  "frozen_pilot_qids": [1493, 1626, 1863, 1958, 1976],
+  "cases": [
+    {
+      "qid": 357,
+      "split": "development",
+      "company": "上海开开实业股份有限公司",
+      "stock_code": "900943",
+      "years": [2019, 2020],
+      "question": "在2020年，上海开开实业股份有限公司的法定代表人与2019年相比相同吗?"
+    },
+    {
+      "qid": 941,
+      "split": "development",
+      "company": "上海世茂股份有限公司",
+      "stock_code": "600823",
+      "years": [2019, 2021],
+      "question": "请问，上海世茂股份有限公司2021年的法定代表人与2019年相比是否相同?"
+    },
+    {
+      "qid": 1178,
+      "split": "development",
+      "company": "南京市测绘勘察研究院股份有限公司",
+      "stock_code": "300826",
+      "years": [2020, 2021],
+      "question": "相比于2020年，2021年测绘股份的法定代表人是否相同？"
+    },
+    {
+      "qid": 1221,
+      "split": "development",
+      "company": "紫光国芯微电子股份有限公司",
+      "stock_code": "002049",
+      "years": [2019, 2020],
+      "question": "紫光国微2020年的法定代表人与2019年相比是否发生不同？"
+    },
+    {
+      "qid": 1493,
+      "split": "frozen-pilot",
+      "company": "珠海光库科技股份有限公司",
+      "stock_code": "300620",
+      "years": [2019, 2020],
+      "question": "与2019年相比，2020年珠海光库科技股份有限公司的法定代表人是否相同？"
+    },
+    {
+      "qid": 1626,
+      "split": "frozen-pilot",
+      "company": "安徽省司尔特肥业股份有限公司",
+      "stock_code": "002538",
+      "years": [2020, 2021],
+      "question": "与2020年相比，2021年司尔特的法定代表人是否相同?"
+    },
+    {
+      "qid": 1863,
+      "split": "frozen-pilot",
+      "company": "安徽江淮汽车集团股份有限公司",
+      "stock_code": "600418",
+      "years": [2020, 2021],
+      "question": "安徽江淮汽车集团股份有限公司2021年的法定代表人相比2020年相不相同？"
+    },
+    {
+      "qid": 1958,
+      "split": "frozen-pilot",
+      "company": "青岛汇金通电力设备股份有限公司",
+      "stock_code": "603577",
+      "years": [2019, 2020],
+      "question": "请问在2020年，青岛汇金通电力设备股份有限公司的法定代表人与2019年相比是否相同？"
+    },
+    {
+      "qid": 1976,
+      "split": "frozen-pilot",
+      "company": "上海贝岭股份有限公司",
+      "stock_code": "600171",
+      "years": [2019, 2020],
+      "question": "上海贝岭股份有限公司2020年的法定代表人与2019年相比是否相同？"
+    }
+  ],
+  "document_contract": {
+    "required_document_types": ["年度报告"],
+    "gold_document_rule": "每题每个显式比较年份各绑定一份同证券代码年度报告；不得只用较新年报中的上年字段替代独立路径闭包。",
+    "source_priority": ["交易所或巨潮资讯官方公告页", "ModelScope FinGLM LFS对象"],
+    "required_provenance": ["原始URL", "公告日期", "证券代码", "报告年度", "文档类型", "SHA-256", "下载状态"],
+    "available_at_rule": "报告清单文件名日期仅作候选公告日；点时实验必须由官方公告页重新核验。"
+  },
+  "evaluation_contract": {
+    "primary": ["entity-year obligation recall", "document closure", "wrong-document rate"],
+    "secondary": ["evidence-span recall", "answer accuracy", "citation accuracy"],
+    "baselines": ["single-shot", "fixed decomposition", "period metadata decomposition", "Generic adaptive", "HiREC-style", "FinPlan period-aware"],
+    "claim_limit": "9题公开pilot只检验中文迁移和机制可运行性，不支持总体显著性或SOTA结论。"
+  },
+  "constructed_extension": {
+    "sources": ["巨潮资讯", "上海证券交易所", "深圳证券交易所"],
+    "target_document_chains": ["年报—半年报—季报", "问询函—公司回复", "并购方案—进展—完成或终止", "处罚决定—整改公告"],
+    "minimum_fields": ["query_id", "security_code", "entity", "cutoff", "valid_time", "available_at", "document_type", "source_url", "sha256", "obligations", "evidence_spans", "limiting_spans", "answerability"],
+    "status": "construction-rule-frozen-cases-not-yet-collected"
+  }
+}

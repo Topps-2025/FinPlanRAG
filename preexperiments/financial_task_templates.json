@@ -1,0 +1,26 @@
+{
+  "schema": "finplan-financial-template-registry.v1",
+  "scope": "financial-domain planning; not a domain-general agent ontology",
+  "templates": {
+    "lifecycle_relation": {
+      "applies_to": ["acquisition/control", "license", "supply contract", "regulated project"],
+      "obligations": ["entity_path", "instrument_or_asset", "formation_event", "current_status", "limiting_event", "valid_time", "available_at", "provenance"],
+      "legal_actions": ["expand_path", "retrieve_formation", "retrieve_status", "retrieve_limit", "verify_time", "resolve_conflict", "assert", "abstain"]
+    },
+    "accounting_derivation": {
+      "applies_to": ["financial ratio", "table calculation", "narrative numeric derivation"],
+      "obligations": ["metric_definition", "numerator", "denominator", "period", "unit", "scope", "restatement_or_adjustment", "calculation"],
+      "legal_actions": ["retrieve_definition", "retrieve_component", "align_period", "normalize_unit", "verify_adjustment", "calculate", "assert", "abstain"]
+    },
+    "point_in_time_lookup": {
+      "applies_to": ["market data", "macro indicator", "historical financial value"],
+      "obligations": ["metric_definition", "entity_or_geography", "observation_date", "release_vintage", "unit", "source", "revision_status"],
+      "legal_actions": ["retrieve_series", "retrieve_vintage", "verify_date", "verify_unit", "retrieve_revision", "assert", "abstain"]
+    },
+    "comparative_investigation": {
+      "applies_to": ["multi-company comparison", "complex historical investigation", "cross-source reconciliation"],
+      "obligations": ["independent_entity_legs", "common_definition", "period_alignment", "unit_alignment", "source_independence", "conflicts", "limitations", "comparison_rule"],
+      "legal_actions": ["expand_entity_leg", "retrieve_leg", "align_definition", "align_period", "normalize_unit", "resolve_conflict", "compare", "assert", "abstain"]
+    }
+  }
+}
