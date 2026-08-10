@@ -271,7 +271,7 @@ v8 的 no_time 行在 case 级全部字段与 time 行逐字段相同（含 plan
 
 1. 这是**稳健性消融**，不是新的 SOTA 主张：时间门开启时 v8 相对 Generic/HiREC-style 的闭包差异仍是方向性（p=0.25）。no_time 下的显著差异（p=0.016 对 Single-shot）说明 v8 的优越性不以时间过滤为前提，但正式优势主张仍受主对比约束。
 2. 该消融把"时间门承担了多少保护"从 v8 中剥离：对 v8 承担 0（结构性保护），对三个基线承担显著保护（3 个方法泄漏 p≤0.016）。这与 SEC 真实 pilot 的 A4 结果方向一致（finplan_no_time 在探索/留出集上 future_leak 0.35/0.40、overclaim 增加），且首次在预声明冻结集上给出配对检验。
-3. A3（–Limiting evidence）在本轨道不可执行：period 轨道的义务管线（v7/v8 与全部基线）均无 L 机制，没有可删除对象；A3 的真实载体是 SEC lineage pilot（finplan_no_limit：探索集闭包 1.0→0.882、limit_action_recall 0.5→0；留出集闭包 0.833→0.583、limit_action_recall 0.5→0），未走冻结清单协议，下一载体为中国机制链（D4）。A5（–Lineage）、A6（–Conflict action）因载体数据（中国问询/并购链新闻+公告、比较调查轨道）未构建，在真实冻结集上不可执行。
+3. A3（–Limiting evidence）在本轨道不可执行：period 轨道的义务管线（v7/v8 与全部基线）均无 L 机制，没有可删除对象；A3 的真实载体是 SEC lineage pilot（finplan_no_limit vs finplan_v3_path_bound），该 pilot 未走冻结清单协议，本会话对其追加了**事后配对统计审计**（`sec_real_pilot_ablation_audit_v1.json`，明确标注 post-hoc、仅描述性）：探索集（17 个 lineage×slice 计分单元）闭包 17→15（p=0.5）、limit_action_recall 0.5→0.0、limiting_recall 不变；留出集（12）闭包 10→7（p=0.25）、limit_action_recall 0.5→0.0、limiting_recall 1.0→0.5。A4 在同一审计中：探索集 future_leak 0→10/17（p=0.002，即文献记录的 58.8%）、留出集 0→5/12（p=0.0625，即 41.7%）——与 README 已记录的泄漏率逐字吻合，配对检验后探索集显著、留出集方向性。同一审计的 A5 邻近证据（wrong_lineage）：路径绑定方法跨谱系率 0–0.12，而 single_shot 17/17（1.0）、HiREC-style 10/17（0.59）探索集、6/12（0.5）留出集——但这不是完整的 –Lineage 消融（pilot 没有单独删除 P 维度而其余不变的对照），仍只作描述性证据。A6（–Conflict action）因载体数据（比较调查轨道、来源冲突案例）未构建，在真实冻结集上不可执行。
 
 ## 6. 对 research gap 的支持强度
 
@@ -362,4 +362,5 @@ A4 消融（预声明，frozen 14 一次性运行）后追加：
 - `preexperiments/results/validation7_ablation_time_dev.json`（dev 诊断）
 - `preexperiments/results/validation7_ablation_time_frozen.json`（frozen 14 一次性运行）
 - `preexperiments/results/validation7_ablation_time_audit_v1.json`（统计审计）
+- `preexperiments/audit_sec_real_pilot_ablations.py` + `preexperiments/results/sec_real_pilot_ablation_audit_v1.json`（SEC pilot A3/A4 事后配对审计 + A5 邻近 wrong_lineage 证据）
 - `preexperiments/run_nonoracle_obligation_planning_v6.py`
