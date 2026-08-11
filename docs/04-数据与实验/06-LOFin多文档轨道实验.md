@@ -415,3 +415,93 @@ validation8（自建冻结 24 题，6 家全新公司）运行后更新为：
 - `preexperiments/results/nonoracle_obligation_v4_validation8_{dev,frozen}.json`（v4 对照）
 - `preexperiments/results/period_aware_baselines_validation8_{dev,frozen}.json`
 - `preexperiments/audit_validation8.py` + `preexperiments/results/lofin_validation8_statistical_audit_v1.json`（统计审计，P1–P4 裁决）
+
+### 5.13 LOFin 公开全集冻结运行：主集 1,572 题 × 9 方法（协议 amendment_3）
+
+LOFin 官方测试集以两种视图组织：by_answer_type（textual / numeric_table / numeric_text）与 by_data_source（finqa / secqa）。构建器最初读取全部 5 个文件，得到 3,031 行；逐 qid 清点后实证 **3,031 是 lines 计数而非题数**：5 文件共 3,031 行、仅 1,595 个唯一 qid（1,436 个 qid 跨视图重复）。by_answer_type 三文件两两不相交且并集 = 全部唯一 qid；by_data_source 两文件完全冗余（0 个 qid 仅在其中出现）。20 个跨视图 answer 格式变体（如 AAPL/2006/page_100.pdf-1 在 finqa 为 `$ 240.41`、numeric_table 为 `240.41`；1 个真正不同：AON/2015/page_96.pdf-1）按 answer-type 视图读取后由构造消除。
+
+据此在**任何方法运行前**提交协议 **amendment_3**（commit 16cca23，与 amendment_1 fae4a1b、amendment_2 d807559 同为 pre-run）：主集 = 1,595 − 23 排除（8K/EARNINGS 证据，义务空间不可表示）= **1,572 题**；只读 by_answer_type 三文件；qid 可解析 1,112 / 不可解析 460；30 个预注册 smoke qid 全部保留（逐 qid 验证 missing=[]）。语料按新主集重建：198 家公司、17,139 份 10-K/10-Q 文本（lxml 快路径，0 下载失败、0 gold anchor 失败），n_cases=1,572。冻结门 `verify_lofin_freeze_hashes.py` 输出 ALL FROZEN HASHES OK。smoke 双轮 2,583/2,583 行 + 1,148/1,148 predictions 字节一致（仅诊断、不作证据）。
+
+9 方法 = 协议 method_matrix 的冻结 SHA（v9 runner=v7 文件、v8=v6、v7=v5、v4=v4、baselines），runner 逐字节未改。driver（`run_lofin_full_benchmark.py`）是执行机制而非方法：为本轮加入 resume（按组 5 个 result 文件判完成）、每 25 组 savepoint、`--start/--end` 工作切片与最终磁盘扫描（并行两个进程产出的 frozen.json 字节一致，按 gid 序吸收），不改动任何 runner。full run 在 16 逻辑核机器上以两个脱离会话的进程并行执行。
+
+运行结果（frozen 一次性，1,572 题）：
+
+<!-- RESULTS_FULL_TABLE_BEGIN -->
+**闭包 (cascade_closure / closure)**
+
+| 分层 | v9_cascade | v9+meta_fill | v8 | v7 | v4 | single_shot | period_meta | generic_adapt | hirec_period |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 全集 | 0.892 | 0.892 | 0.895 | 0.895 | 0.577 | 0.642 | 0.895 | 0.892 | 0.859 |
+| textual(文本) | 0.800 | 0.800 | 0.805 | 0.805 | 0.323 | 0.203 | 0.805 | 0.749 | 0.667 |
+| numeric_table(数值表格) | 0.919 | 0.919 | 0.922 | 0.922 | 0.638 | 0.755 | 0.922 | 0.942 | 0.916 |
+| numeric_text(数值文本) | 0.927 | 0.927 | 0.927 | 0.927 | 0.718 | 0.865 | 0.927 | 0.923 | 0.930 |
+| 单证据 | 0.924 | 0.924 | 0.926 | 0.926 | 0.664 | 0.776 | 0.926 | 0.944 | 0.935 |
+| 多证据 | 0.764 | 0.764 | 0.771 | 0.771 | 0.226 | 0.108 | 0.771 | 0.685 | 0.554 |
+| 题面命名公司 | 0.935 | 0.935 | 0.935 | 0.935 | 0.627 | 0.707 | 0.935 | 0.928 | 0.898 |
+| 题面未命名公司 | 0.850 | 0.850 | 0.856 | 0.856 | 0.529 | 0.580 | 0.856 | 0.858 | 0.821 |
+| fiscal year N / FY N 措辞 | 0.821 | 0.821 | 0.875 | 0.875 | 0.643 | 0.554 | 0.875 | 0.875 | 0.857 |
+
+**错误文档率 (wrong_doc_rate)**
+
+| 分层 | v9_cascade | v9+meta_fill | v8 | v7 | v4 | single_shot | period_meta | generic_adapt | hirec_period |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 全集 | 0.31 | 0.31 | 0.32 | 0.32 | 0.54 | 0.80 | 0.32 | 0.47 | 0.62 |
+| textual(文本) | 0.18 | 0.18 | 0.18 | 0.18 | 0.51 | 0.81 | 0.18 | 0.39 | 0.54 |
+| numeric_table(数值表格) | 0.33 | 0.33 | 0.34 | 0.34 | 0.54 | 0.80 | 0.34 | 0.49 | 0.65 |
+| numeric_text(数值文本) | 0.44 | 0.44 | 0.44 | 0.44 | 0.59 | 0.77 | 0.44 | 0.54 | 0.66 |
+| 单证据 | 0.34 | 0.34 | 0.35 | 0.35 | 0.55 | 0.80 | 0.35 | 0.50 | 0.66 |
+| 多证据 | 0.17 | 0.17 | 0.18 | 0.18 | 0.53 | 0.79 | 0.18 | 0.36 | 0.49 |
+| 题面命名公司 | 0.34 | 0.34 | 0.34 | 0.34 | 0.56 | 0.80 | 0.34 | 0.48 | 0.64 |
+| 题面未命名公司 | 0.29 | 0.29 | 0.29 | 0.29 | 0.52 | 0.80 | 0.29 | 0.46 | 0.61 |
+| fiscal year N / FY N 措辞 | 0.08 | 0.08 | 0.28 | 0.28 | 0.44 | 0.79 | 0.28 | 0.40 | 0.58 |
+
+**义务精确匹配 (obligation_exact, 仅 planner 系)**
+
+| 分层 | v9_cascade | v9+meta_fill | v8 | v7 | v4 | single_shot | period_meta | generic_adapt | hirec_period |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 全集 | 0.46 | 0.46 | 0.45 | 0.45 | 0.43 | - | - | - | - |
+| textual(文本) | 0.60 | 0.60 | 0.62 | 0.62 | 0.57 | - | - | - | - |
+| numeric_table(数值表格) | 0.46 | 0.46 | 0.44 | 0.44 | 0.42 | - | - | - | - |
+| numeric_text(数值文本) | 0.28 | 0.28 | 0.27 | 0.27 | 0.25 | - | - | - | - |
+| 单证据 | 0.43 | 0.43 | 0.42 | 0.42 | 0.40 | - | - | - | - |
+| 多证据 | 0.58 | 0.58 | 0.58 | 0.58 | 0.53 | - | - | - | - |
+| 题面命名公司 | 0.43 | 0.43 | 0.41 | 0.41 | 0.39 | - | - | - | - |
+| 题面未命名公司 | 0.50 | 0.50 | 0.49 | 0.49 | 0.46 | - | - | - | - |
+| fiscal year N / FY N 措辞 | 0.77 | 0.77 | 0.45 | 0.45 | 0.41 | - | - | - | - |
+
+**未来泄漏 case 数 (future_leak)**
+
+| 分层 | v9_cascade | v9+meta_fill | v8 | v7 | v4 | single_shot | period_meta | generic_adapt | hirec_period |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 全集 | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| textual(文本) | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| numeric_table(数值表格) | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| numeric_text(数值文本) | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 单证据 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 多证据 | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| 题面命名公司 | 1 | 1 | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| 题面未命名公司 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| fiscal year N / FY N 措辞 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+<!-- RESULTS_FULL_TABLE_END -->
+
+预声明裁决 P1–P6（协议 predeclared_predictions）：
+
+<!-- RESULTS_P_CHECKS_BEGIN -->
+**预注册预测 P1–P6 检验**
+P1 (low closure on open questions): closure range 0.577..0.895
+P2 (v9 vs v8 on fiscal-year phrasing, n=56): v9 wins 0, v8 wins 3, discordant 3, exact_p=0.2500
+P4 (future_leak=0): {'finplan_v9_cascade': 1, 'metadata_v9_fill': 1, 'finplan_v8': 1, 'finplan_v7': 1, 'finplan_v4': 1, 'single_shot': 0, 'period_metadata_decomposition': 0, 'generic_adaptive_period': 0, 'hirec_period': 0}
+P5 (naming surface, v9): named=0.9354 unnamed=0.8496
+P6_open (v9 vs metadata_v9_fill): v9=0.8919 meta_fill=0.8919
+- 36 对两两精确 McNemar：21 对在 p<0.05（未做多重比较校正）显著；显著对与完整 36 对表见 audit 输出 / results/lofin_full_benchmark_audit_v1.json
+<!-- RESULTS_P_CHECKS_END -->
+
+一致性：full 与 smoke 的 30 个 smoke qids 按 (case_id, method) 逐行字节一致（协议 step1 determinism）；`future_leak` 结构性保证下全部方法应为 0。
+
+解读边界（诚实分层）：
+
+1. 指标是文件级义务闭包与文档正确率，不是页级证据或最终答案正确率——原 LOFin 证据带 page_num，本轮不做页级解析。
+2. 公开原题 × 本项目 SEC EDGAR 重建语料，与 HiREC 原始 PDF 语料不同，不做跨系统指标比较。
+3. P6 诚实性对照延续 validation8 P4：若 metadata_v9_fill 与 v9 持平，级联检索策略无独立于表示的增益，论文策略优势主张收缩到表示层（期间解析）。
+4. 公司解析面（题面是否命名公司）是任务环境的一部分，与方法质量分开解读；P5 按 registry 别名 bigram 分层。
+5. 不声称 SOTA；36 个方法对两两精确 McNemar 全报告，显著结果与负结果同等如实记录。
