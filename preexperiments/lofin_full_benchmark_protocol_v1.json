@@ -3,6 +3,15 @@
   "frozen_at": "2026-08-11",
   "status": "frozen-before-corpus-download-and-before-any-method-run",
   "purpose": "LOFin 公开全集(3,031 题,5 子集)评测的预注册协议：完整题目 × 完整 9 方法矩阵。所有数据源/构建器/runner 的 SHA-256 在本文件写入时点固定；语料下载与方法运行均不得改变本协议内容。",
+  "amendment_3": {
+    "date": "2026-08-11",
+    "status": "语料全集重建前、任何方法运行前（pre-run amendment，同 amendment_1/2）",
+    "correction": "主集规模更正：3,031 是 5 个文件的 lines 计数，不是题目数。实证：5 文件共 3,031 行但仅 1,595 个唯一 qid（1,436 个 qid 跨文件重复）。by_answer_type 三文件（textual 397 + numeric_table 925 + numeric_text 273）两两不相交，并集 = 全部 1,595 个唯一 qid；by_data_source 两文件（finqa/secqa）完全冗余（0 个 qid 仅在其中出现，逐 qid 验证）。20 个跨视图 answer 格式变体（如 AAPL/2006/page_100.pdf-1 在 finqa 为 \"$ 240.41\"、numeric_table 为 \"240.41\"；1 个真正不同：AON/2015/page_96.pdf-1）——按 answer-type 视图读取后每 qid 恰好出现一次，冲突由构造消除。",
+    "main_set": "1,595 − 23 排除 = 1,572 题。先前 amendment_1/2 及本文档中的 3,008 计数为重叠视图上的 lines 计数测量错误（同一题在 finqa/secqa/answer-type 视图中的重复出现被误计为不同题目）。",
+    "benchmark_reads": "只读 by_answer_type 三文件（textual_test.jsonl / numeric_table_test.jsonl / numeric_text_test.jsonl）；finqa/secqa 保留在 data_sources（SHA 不变）仅作溯源视图，不进入题目集。",
+    "smoke_qids": "30 个预注册 smoke qid 全部存在于 1,572 主集（逐 qid 验证 missing=[]）。",
+    "resolvable": "qid 可解析 1,112 / 不可解析 460（原 2215/816 为 3,031 行视图计数）"
+  },
   "benchmark_identity": {
     "name": "LOFin (Large-scale Language and Finance Instruction Dataset for instruction and response fine-tuning)",
     "paper": "arXiv 2505.20368 (HiREC, ACL 2025 Findings)",
@@ -29,9 +38,17 @@
         "sha256": "7211cb088fe622985119506d42af5c63b09d73f1b49e5b07d92c018faee9b830"
       }
     },
+    "benchmark_reads": ["textual_test.jsonl", "numeric_table_test.jsonl", "numeric_text_test.jsonl"],
     "inventory": {
-      "n_questions_total": 3031,
-      "per_subset": {
+      "n_unique_questions_total": 1595,
+      "n_lines_total": 3031,
+      "unique_by_answer_type": {
+        "textual": 397,
+        "numeric_table": 925,
+        "numeric_text": 273
+      },
+      "data_source_overlap": "finqa/secqa 与 answer-type 视图完全冗余：0 个 qid 仅在 finqa/secqa 中出现（逐 qid 验证）；finqa 1103 + secqa 333 行为 lines 计数",
+      "per_subset_lines": {
         "finqa": 1103,
         "numeric_table": 925,
         "numeric_text": 273,
@@ -39,37 +56,35 @@
         "textual": 397
       },
       "n_evidences_distribution": {
-        "1": 2348,
-        "2": 443,
-        "3": 158,
-        "4": 74,
-        "5": 8
+        "1": 1214,
+        "2": 237,
+        "3": 80,
+        "4": 37,
+        "5": 4
       },
       "multi_doc_by_subset": {
-        "finqa": 10,
+        "textual": 279,
         "numeric_table": 77,
-        "numeric_text": 2,
-        "secqa": 314,
-        "textual": 280
+        "numeric_text": 2
       },
       "qid_year_vs_evidence_year_mismatch": {},
-      "qid_parse_coverage": "2215/3031 (其余 816 个 qid 为 financebench_XXXXX / openqa_XX 格式，无公司/年份字段)",
-      "doc_ticker_vs_qid_ticker_mismatch": "82 (公司改名，如 BLL->BALL；以证据 doc_name 的 ticker 为准)",
-      "questions_containing_ticker_text": "536/3031 (公司解析面依赖别名表，见 corpus_scope_rule)"
+      "qid_parse_coverage": "1112/1572 (其余 460 个 qid 为 financebench_XXXXX / openqa_XX 格式，无公司/年份字段)",
+      "doc_ticker_vs_qid_ticker_mismatch": "82 (公司改名，如 BLL->BALL；以证据 doc_name 的 ticker 为准) [3,031 行视图计数，amendment_3 后未重核——qid 级属性，与主集规模无关的定性结论不变]",
+      "questions_containing_ticker_text": "1562/1572 (1,572 主集用与 runner 相同的别名表 match_companies 重算，amendment_3；含多匹配 575 题。原 536/3031 为 3,031 行视图的不同口径计数)"
     }
   },
   "question_phrasing_coverage": {
-    "fiscal_year_N": 96,
-    "FY_N": 14,
-    "explicit_Qn": 39,
-    "first_n_quarters": 6,
-    "quarter_N": 4,
+    "fiscal_year_N": 109,
+    "FY_N": 105,
+    "explicit_Qn": 3,
+    "first_n_quarters": 3,
+    "quarter_N": 24,
     "first_half": 0,
     "second_half": 0,
-    "plain_year": 2998,
-    "relative_prior_year": 58,
-    "no_year": 29,
-    "note": "数据描述，非方法调优输入；用于解释各方法解析面与预测 P1/P2。"
+    "plain_year": 1550,
+    "relative_prior_year": 28,
+    "no_year": 22,
+    "note": "1,572 主集（amendment_3 重算）。类别互相重叠，非互斥计数（一题可命中多类）；数据描述，非方法调优输入；用于解释各方法解析面与预测 P1/P2。原 3,008 行视图计数被 amendment_3 更正。"
   },
   "ticker_cik_map": {
     "file": "D:/Engineering/FinPlanRAG/database/preexperiments/data/sec_ticker_cik_lofin_final_v1.json",
@@ -96,7 +111,8 @@
     },
     "criterion": "证据 doc_name 含 _8K 或 _EARNINGS 后缀",
     "handling": "预注册排除出主比较（义务空间不可表示）；单独报告（计数 + 逐题清单在 inventory 文件）；不参与任何方法运行",
-    "n_main": 3008
+    "n_main": 1572,
+    "amendment_3": "n_main 由 3,008 更正为 1,572：3,008 是重叠视图上的行计数，主集 = 1,595 唯一 qid − 23 排除。排除本身不变（23 题：textual 22 + numeric_table 1）。"
   },
   "corpus_scope_rule": {
     "per_case_corpus": "该题 {C_q} ∪ match_companies(question) 匹配到的所有公司 的 全部 10-K/10-Q，且 available_at ≤ case cutoff",
@@ -115,7 +131,7 @@
   },
   "candidate_legs_rule": {
     "purpose": "仅报告分层用（runner 不使用 candidate_legs——公司解析完全来自题面文本匹配，无 oracle 泄漏）",
-    "rule": "qid 可解析(2215 题)：[{ticker: qid_ticker, years: [qid_year]}]；qid 不可解析(816 题)：[{ticker: 证据 ticker, years: [证据年份]}]"
+    "rule": "qid 可解析(1112 题)：[{ticker: qid_ticker, years: [qid_year]}]；qid 不可解析(460 题)：[{ticker: 证据 ticker, years: [证据年份]}]（amendment_3：1,572 主集重算，原 2215/816 为 3,031 行视图计数）"
   },
   "fiscal_year_labeling_rule": {
     "amendment_1": "2026-08-11，语料构建期、任何方法运行前：companyfacts/companyconcept API 均不暴露 DocumentFiscalYearFocus/PeriodFocus（实证 TGT 两端点 404/缺失），改用数据驱动标注；本修正案以下两处经全集构建实证被 amendment_2 更正。",
@@ -176,7 +192,7 @@
     "obligation_exact": "义务键精确匹配",
     "strata": [
       "全集",
-      "5 子集",
+      "3 子集（answer-type：textual / numeric_table / numeric_text）",
       "单文档题 vs 多文档题",
       "公司解析面（题面含公司名 vs 不含）"
     ],
@@ -191,7 +207,7 @@
   "procedure": {
     "step1_smoke": {
       "n": 30,
-      "selection_rule": "主集 3,008 题按 qid 排序，取第 0,100,200,...,2900 个",
+      "selection_rule": "主集 3,008 行视图按 qid 排序取第 0,100,200,...,2900 个（amendment_3 后主集为 1,572 唯一 qid；30 个 qid 全部仍在主集中，逐 qid 验证 missing=[]，smoke 列表冻结不变）",
       "qids": [
         "AAL/2010/page_72.pdf-1",
         "ABMD/2012/page_41.pdf-4",
@@ -228,14 +244,14 @@
       "determinism": "smoke 两轮运行 + 与全量运行中的同一批 30 题逐行比较，必须字节一致"
     },
     "step2_full": {
-      "n": 3008,
+      "n": 1572,
       "run": "一次性 one-shot；不分训练/验证；运行中途不得修改任何 runner 或协议",
       "out": "results/lofin_full_benchmark_{dev,frozen}.json（frozen = 正式结果）"
     }
   },
   "predeclared_predictions": {
-    "P1": "全公开集上所有方法的闭包显著低于 validation8 模板集(24/24)：真实开放题面的期间措辞大部分落在 planner 语法之外(fiscal_year_N 96 + FY_N 14 + explicit_Qn 39 + first_n_quarters 6 + quarter_N 4 = 159 题可表达期间义务，其余走 annual-fallback 或空义务)。预期全集闭包处于低位——这是解析面的诚实结果，不是缺陷。",
-    "P2": "v9 在含 'fiscal year N'/'FY N' 措辞的题上闭包 ≥ v8（McNemar，方向性）：96+14 题中 fiscal-year-N 解析面内。若该层无差异或反向，fiscal-year-N 修改在开放题上无增益。",
+    "P1": "全公开集上所有方法的闭包显著低于 validation8 模板集(24/24)：真实开放题面的期间措辞大部分落在 planner 语法之外(fiscal_year_N 109 + FY_N 105 + explicit_Qn 3 + first_n_quarters 3 + quarter_N 24，重叠计数非互斥，amendment_3 按 1,572 主集重算；其余走 annual-fallback 或空义务)。预期全集闭包处于低位——这是解析面的诚实结果，不是缺陷。",
+    "P2": "v9 在含 'fiscal year N'/'FY N' 措辞的题上闭包 ≥ v8（McNemar，方向性）：109+105 题中 fiscal-year-N 解析面内。若该层无差异或反向，fiscal-year-N 修改在开放题上无增益。",
     "P3": "不开盘任何方法在全集上的整体优势主张；36 个方法对两两精确 McNemar 全报告，显著结果如实报道。",
     "P4": "future_leak = 0 于全部 9 方法（语料 available_at ≤ cutoff 的结构性保证；validation8 复现 0/24）——验证性检查，非新发现。",
     "P5": "题面含公司名(别名 ≥6 字符匹配)的题，planner 系方法闭包 > 不命名公司的题（公司解析面是诚实边界）。",
