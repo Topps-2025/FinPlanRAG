@@ -1,0 +1,155 @@
+{
+  "schema": "finplan-lofin-full-benchmark-protocol.v1",
+  "frozen_at": "2026-08-11",
+  "status": "frozen-before-corpus-download-and-before-any-method-run",
+  "purpose": "LOFin 公开全集(3,031 题,5 子集)评测的预注册协议：完整题目 × 完整 9 方法矩阵。所有数据源/构建器/runner 的 SHA-256 在本文件写入时点固定；语料下载与方法运行均不得改变本协议内容。",
+  "benchmark_identity": {
+    "name": "LOFin (Large-scale Language and Finance Instruction Dataset for instruction and response fine-tuning)",
+    "paper": "arXiv 2505.20368 (HiREC, ACL 2025 Findings)",
+    "repo": "github.com/deep-over/LOFin-bench-HiREC (repo 仅含 21 个 AAPL 示例 PDF；完整语料在 Google Drive，本项目无法访问，故在真实 SEC EDGAR 文件上按证据 doc_name 重建) —— 解释边界：本项目不使用其语料，只在相同原题+相同证据 doc 标识(可解析为 EDGAR filing)上运行本项目冻结方法。",
+    "origin_questions": true,
+    "self_built_questions": false
+  },
+  "data_sources": {
+    "dir": "D:/Engineering/FinPlanRAG/database/preexperiments/data/external/lofin/",
+    "files": {
+      "finqa_test.jsonl": {"sha256": "094ad208221d9d7f76eeb736c887f305ac68adacff0cb513977462fbf38eb7dd"},
+      "numeric_table_test.jsonl": {"sha256": "a42f678c624a83fe02cb65b1a2d2dd7f1030a58a17d63edf51695feb3b2b49c2"},
+      "numeric_text_test.jsonl": {"sha256": "3030804902ab04387c3b1a8769b6bf48812d1ce60039e964e1d21b57e8a64d57"},
+      "secqa_test.jsonl": {"sha256": "df8b0e44ceab315870d28833000a2338839f5de0ecbeb1e5e8370431eaa83ca4"},
+      "textual_test.jsonl": {"sha256": "7211cb088fe622985119506d42af5c63b09d73f1b49e5b07d92c018faee9b830"}
+    },
+    "inventory": {
+      "n_questions_total": 3031,
+      "per_subset": {"finqa": 1103, "numeric_table": 925, "numeric_text": 273, "secqa": 333, "textual": 397},
+      "n_evidences_distribution": {"1": 2348, "2": 443, "3": 158, "4": 74, "5": 8},
+      "multi_doc_by_subset": {"finqa": 10, "numeric_table": 77, "numeric_text": 2, "secqa": 314, "textual": 280},
+      "qid_year_vs_evidence_year_mismatch": {},
+      "qid_parse_coverage": "2215/3031 (其余 816 个 qid 为 financebench_XXXXX / openqa_XX 格式，无公司/年份字段)",
+      "doc_ticker_vs_qid_ticker_mismatch": "82 (公司改名，如 BLL->BALL；以证据 doc_name 的 ticker 为准)",
+      "questions_containing_ticker_text": "536/3031 (公司解析面依赖别名表，见 corpus_scope_rule)"
+    }
+  },
+  "question_phrasing_coverage": {
+    "fiscal_year_N": 96,
+    "FY_N": 14,
+    "explicit_Qn": 39,
+    "first_n_quarters": 6,
+    "quarter_N": 4,
+    "first_half": 0,
+    "second_half": 0,
+    "plain_year": 2998,
+    "relative_prior_year": 58,
+    "no_year": 29,
+    "note": "数据描述，非方法调优输入；用于解释各方法解析面与预测 P1/P2。"
+  },
+  "ticker_cik_map": {
+    "file": "D:/Engineering/FinPlanRAG/database/preexperiments/data/sec_ticker_cik_lofin_final_v1.json",
+    "sha256": "49d58593694d986722f8faa42cdb8173eefe90211d32dbe5cc1d53f170f3867f",
+    "builder": "D:/Engineering/FinPlanRAG/database/preexperiments/finalize_ticker_cik_map.py",
+    "summary": "199 tickers；193 全年份覆盖 ok；6 ticker 仅有 8K/EARNINGS gaps(AMCR 2、FL 2、JNJ 3、MGM 1、PEP 3、ULTA 1，即 23 题排除面)；REAL gaps(missing 10-K/10-Q)= NONE；unresolved = []",
+    "sources": {"company_tickers.json": 180, "browse-edgar": 14, "manual": 5}
+  },
+  "doc_resolution_rule": {
+    "doc_name_format": "{TICKER}_{YEAR}_10K / {TICKER}_{YYYY}Q{N}_10Q / {TICKER}_{date}_8K / {TICKER}_{YYYY}Q{N}_EARNINGS",
+    "parse": "doc_parse 同 finalize_ticker_cik_map.py：10K->10-K、10Q->10-Q；义务键 = (ticker, fiscal_year, filing_type, fiscal_period)，10-K->(y, 10-K, FY)，10-Q->(y, 10-Q, Qn)",
+    "gold_doc_ids": "证据 doc_name 原样作为 doc_id（未自建）",
+    "obligation_space": "10-K/10-Q 义务空间无法表示 8-K/EARNINGS 证据"
+  },
+  "exclusion_rule": {
+    "n_excluded": 23,
+    "by_subset": {"numeric_table": 1, "textual": 22},
+    "criterion": "证据 doc_name 含 _8K 或 _EARNINGS 后缀",
+    "handling": "预注册排除出主比较（义务空间不可表示）；单独报告（计数 + 逐题清单在 inventory 文件）；不参与任何方法运行",
+    "n_main": 3008
+  },
+  "corpus_scope_rule": {
+    "per_case_corpus": "该题 {C_q} ∪ match_companies(question) 匹配到的所有公司 的 全部 10-K/10-Q，且 available_at ≤ case cutoff",
+    "C_q": "证据 doc_name 的 ticker（证据公司；public 元数据，非方法输出）",
+    "match_companies": "与 runner 相同的公司文本匹配函数（v4 的 match_companies = v5 匹配器 + 别名压缩扩展，所有 runner 共用）—— 保证索引包含 planner 可义务化的任何公司",
+    "year_window": "无（全史；实证每文档 ~120K 字符归一化文本，199 公司全史总规模可行）",
+    "time_filter": "文档 available_at ≤ cutoff（validation8 同语义；BM25.search 另有查询时 cutoff 过滤，双保险）",
+    "empty_corpus_guard": "C_q 的 gold 文档本身 ≤ cutoff 且为 10-K/10-Q，故语料恒非空",
+    "download_scope": "每公司：available_at ≤ B_company 的全部 10-K/10-Q 文本；B_company = 该公司的所有 question 的 cutoff 之最大值（含被匹配公司）。下载清单、filing 注册表、公司注册表与文本 SHA-256 全部落盘为 corpus 产物",
+    "text_normalization": "download_text 同 build_lofin_multidoc_pilot.py（BeautifulSoup get_text(' ', strip=True)），与 validation8 完全一致"
+  },
+  "cutoff_rule": {
+    "cutoff": "该题 gold 证据文档 available_at 的最大值",
+    "format": "ISO datetime（filingDate + T00:00:00.000Z，与语料注册表同一来源）",
+    "source": "SEC submissions filingDate"
+  },
+  "candidate_legs_rule": {
+    "purpose": "仅报告分层用（runner 不使用 candidate_legs——公司解析完全来自题面文本匹配，无 oracle 泄漏）",
+    "rule": "qid 可解析(2215 题)：[{ticker: qid_ticker, years: [qid_year]}]；qid 不可解析(816 题)：[{ticker: 证据 ticker, years: [证据年份]}]"
+  },
+  "fiscal_year_labeling_rule": {
+    "primary": "companyfacts DocumentFiscalYearFocus / DocumentFiscalPeriodFocus by accession",
+    "fallback": "reportDate 年份 ∈ {y, y+1}（非 12-31 财政年报表述见 finalize_ticker_cik_map.py 验证逻辑）",
+    "doc_year": "LOFin doc_name 中的年份 = fiscal year（不是 reportDate 年份）"
+  },
+  "method_matrix": {
+    "note": "9 方法；runner 与 validation8 freeze 逐字节一致（SHA 已核对）；不修改任何 runner",
+    "finplan_v9_cascade": {"runner": "run_nonoracle_obligation_planning_v7.py", "sha256": "6cc4c2abd489b978ea3b54868f91ad8a982ca3a0380f7db2076c49198dc65318"},
+    "metadata_v9_fill": {"runner": "run_nonoracle_obligation_planning_v7.py", "note": "P4 诚实性对照：同义务，检索退化为元数据分解 fill_missing"},
+    "finplan_v8": {"runner": "run_nonoracle_obligation_planning_v6.py", "sha256": "7c1d84f47829dc86654c82a49b1e85feb6a289978dc0d2b1dad5976cd21f443f"},
+    "finplan_v7": {"runner": "run_nonoracle_obligation_planning_v5.py", "sha256": "36617dc6eb6f5bad5704f0639a63064da5573bb0b7c775d94e3f2a988391b448"},
+    "finplan_v4": {"runner": "run_nonoracle_obligation_planning_v4.py", "sha256": "9bc5cd1bacc4ed0445318df065ef5d785c0c0eda65e6d7085b54326e10ddc252"},
+    "single_shot": {"runner": "run_period_aware_baselines.py", "sha256": "c5231d0fbde8b150ea29d7f14d529028d9d276e37337e994de88e05e09feaf02"},
+    "period_metadata_decomposition": {"runner": "run_period_aware_baselines.py"},
+    "generic_adaptive_period": {"runner": "run_period_aware_baselines.py"},
+    "hirec_period": {"runner": "run_period_aware_baselines.py"},
+    "runner_import_chain_shas": {
+      "run_sec_real_pilot.py": "e8a51393a61f8f2521140c8f9e390d103fbd83b855f6fcd39da4bbd8b8f923b2",
+      "run_lofin_multidoc_pilot.py": "51de0af05ce4c2c19ef3c5c35c3a6133326ea3cae0298e0fdbe61b2e4d4119ec",
+      "run_nonoracle_obligation_planning.py": "a46bb74721859164a42056e6f1e1ba724f1ec2c045f5769af05530f0a1be1469",
+      "run_nonoracle_obligation_planning_v2.py": "577a136d3b6aeba8acf9f6a03a450fae46ce7117874a2075e002b3b548d6093d",
+      "run_nonoracle_obligation_planning_v3.py": "89bdcecc72299a0580ffbfd743d4ecd8acf80806702fca873e04774a3ccddfad"
+    }
+  },
+  "budget": 4,
+  "metrics": {
+    "closure": "gold ⊆ used（文档级，cascade_closure）",
+    "wrong_doc_rate": "|used - gold| / max(1, |used|)",
+    "future_leak": "used 中存在 available_at > cutoff 的 chunk",
+    "obligation_exact": "义务键精确匹配",
+    "strata": ["全集", "5 子集", "单文档题 vs 多文档题", "公司解析面（题面含公司名 vs 不含）"],
+    "statistics": "配对精确 McNemar（全部 36 个方法对）＋ sign test；不做独立性假设"
+  },
+  "execution_grouping": {
+    "rule": "题目按公司匹配集分组：group_key = frozenset(match_companies(question)) ∪ {C_q}。每组一个 data JSON（文档 = 组内所有公司的全部 10-K/10-Q，available_at ≤ B_group，B_group = 组内所有题 cutoff 的最大值；查询时 cutoff 由 BM25.search / visible_filings 二次过滤）+ 一个组内公司 registry JSON。每 runner 每组调用一次 run()（非逐题调用）。",
+    "group_membership": "一道题属于其 group_key 对应的唯一组；多匹配题（匹配集 >1）的语料 = 匹配集 ∪ C_q 的并集，在组内一次运行完成——与 corpus_scope_rule 逐字一致",
+    "registry_scope": "组内 registry 只含组内公司（match_companies 在组内 registry 上的结果与全 199 公司 registry 相同：匹配是逐公司独立判定）",
+    "n_groups_expected": "≈200（199 个 C_q 单公司组 + 少量多匹配组）"
+  },
+  "procedure": {
+    "step1_smoke": {
+      "n": 30,
+      "selection_rule": "主集 3,008 题按 qid 排序，取第 0,100,200,...,2900 个",
+      "qids": ["AAL/2010/page_72.pdf-1", "ABMD/2012/page_41.pdf-4", "AMT/2006/page_113.pdf-2", "AON/2007/page_171.pdf-1", "BKNG/2016/page_33.pdf-2", "C/2008/page_44.pdf-2", "CE/2016/page_19.pdf-3", "DISCA/2014/page_64.pdf-3", "EMR/2017/page_78.pdf-2", "FIS/2006/page_31.pdf-2", "GPN/2014/page_92.pdf-2", "GS/2015/page_188.pdf-2", "HOLX/2009/page_151.pdf-2", "IP/2006/page_75.pdf-4", "JPM/2012/page_140.pdf-2", "LMT/2015/page_89.pdf-3", "MRO/2003/page_45.pdf-2", "MSI/2014/page_76.pdf-2", "PNC/2012/page_68.pdf-5", "SLB/2015/page_59.pdf-1", "STT/2011/page_69.pdf-3", "UNP/2015/page_56.pdf-1", "ZBH/2008/page_57.pdf-4", "financebench_03473", "openqa_124", "openqa_17", "openqa_214", "openqa_26", "openqa_304", "openqa_50"],
+      "purpose": "仅崩溃/空义务路径诊断；不得用于任何调优；其结果不作为证据",
+      "determinism": "smoke 两轮运行 + 与全量运行中的同一批 30 题逐行比较，必须字节一致"
+    },
+    "step2_full": {
+      "n": 3008,
+      "run": "一次性 one-shot；不分训练/验证；运行中途不得修改任何 runner 或协议",
+      "out": "results/lofin_full_benchmark_{dev,frozen}.json（frozen = 正式结果）"
+    }
+  },
+  "predeclared_predictions": {
+    "P1": "全公开集上所有方法的闭包显著低于 validation8 模板集(24/24)：真实开放题面的期间措辞大部分落在 planner 语法之外(fiscal_year_N 96 + FY_N 14 + explicit_Qn 39 + first_n_quarters 6 + quarter_N 4 = 159 题可表达期间义务，其余走 annual-fallback 或空义务)。预期全集闭包处于低位——这是解析面的诚实结果，不是缺陷。",
+    "P2": "v9 在含 'fiscal year N'/'FY N' 措辞的题上闭包 ≥ v8（McNemar，方向性）：96+14 题中 fiscal-year-N 解析面内。若该层无差异或反向，fiscal-year-N 修改在开放题上无增益。",
+    "P3": "不开盘任何方法在全集上的整体优势主张；36 个方法对两两精确 McNemar 全报告，显著结果如实报道。",
+    "P4": "future_leak = 0 于全部 9 方法（语料 available_at ≤ cutoff 的结构性保证；validation8 复现 0/24）——验证性检查，非新发现。",
+    "P5": "题面含公司名(别名 ≥6 字符匹配)的题，planner 系方法闭包 > 不命名公司的题（公司解析面是诚实边界）。",
+    "P6_open": "v9 vs metadata_v9_fill 不预判；若持平，级联检索策略在开放题轨道无独立增益（与 validation8 P4 一致，表示层主张收缩延续）。"
+  },
+  "interpretation_boundary": [
+    "指标是文件级义务闭包与文档正确率，不是页级证据或最终答案正确率（LOFin 原始 evidence 带 page_num，本项目不做页级解析）",
+    "公开原题 × 本项目语料（SEC EDGAR 重建）——语料与 HiREC 原始 PDF 语料不同，不做跨系统指标比较",
+    "8K/EARNINGS 23 题预注册排除，单独报告；任何排除面外的失败属于预期负结果",
+    "公司解析面(题面是否命名公司)是任务环境的一部分，与方法质量分开解读",
+    "未注册自建题参与本基准（自建题集另在 validation8 冻结集，报告时分开）",
+    "禁止主张：'首个金融多步规划'/'SOTA'/'现有方法不验证'——本基准只测本框架 9 方法的相对 head-to-head",
+    "数据源与构建器（build_lofin_multidoc_pilot.py / build_lofin_validation8.py / build_sec_company_registry.py / storage_paths.py）SHA 见上表与 freeze 文件，任何字节变化即失效"
+  ]
+}
