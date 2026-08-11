@@ -13,17 +13,45 @@
   "data_sources": {
     "dir": "D:/Engineering/FinPlanRAG/database/preexperiments/data/external/lofin/",
     "files": {
-      "finqa_test.jsonl": {"sha256": "094ad208221d9d7f76eeb736c887f305ac68adacff0cb513977462fbf38eb7dd"},
-      "numeric_table_test.jsonl": {"sha256": "a42f678c624a83fe02cb65b1a2d2dd7f1030a58a17d63edf51695feb3b2b49c2"},
-      "numeric_text_test.jsonl": {"sha256": "3030804902ab04387c3b1a8769b6bf48812d1ce60039e964e1d21b57e8a64d57"},
-      "secqa_test.jsonl": {"sha256": "df8b0e44ceab315870d28833000a2338839f5de0ecbeb1e5e8370431eaa83ca4"},
-      "textual_test.jsonl": {"sha256": "7211cb088fe622985119506d42af5c63b09d73f1b49e5b07d92c018faee9b830"}
+      "finqa_test.jsonl": {
+        "sha256": "094ad208221d9d7f76eeb736c887f305ac68adacff0cb513977462fbf38eb7dd"
+      },
+      "numeric_table_test.jsonl": {
+        "sha256": "a42f678c624a83fe02cb65b1a2d2dd7f1030a58a17d63edf51695feb3b2b49c2"
+      },
+      "numeric_text_test.jsonl": {
+        "sha256": "3030804902ab04387c3b1a8769b6bf48812d1ce60039e964e1d21b57e8a64d57"
+      },
+      "secqa_test.jsonl": {
+        "sha256": "df8b0e44ceab315870d28833000a2338839f5de0ecbeb1e5e8370431eaa83ca4"
+      },
+      "textual_test.jsonl": {
+        "sha256": "7211cb088fe622985119506d42af5c63b09d73f1b49e5b07d92c018faee9b830"
+      }
     },
     "inventory": {
       "n_questions_total": 3031,
-      "per_subset": {"finqa": 1103, "numeric_table": 925, "numeric_text": 273, "secqa": 333, "textual": 397},
-      "n_evidences_distribution": {"1": 2348, "2": 443, "3": 158, "4": 74, "5": 8},
-      "multi_doc_by_subset": {"finqa": 10, "numeric_table": 77, "numeric_text": 2, "secqa": 314, "textual": 280},
+      "per_subset": {
+        "finqa": 1103,
+        "numeric_table": 925,
+        "numeric_text": 273,
+        "secqa": 333,
+        "textual": 397
+      },
+      "n_evidences_distribution": {
+        "1": 2348,
+        "2": 443,
+        "3": 158,
+        "4": 74,
+        "5": 8
+      },
+      "multi_doc_by_subset": {
+        "finqa": 10,
+        "numeric_table": 77,
+        "numeric_text": 2,
+        "secqa": 314,
+        "textual": 280
+      },
       "qid_year_vs_evidence_year_mismatch": {},
       "qid_parse_coverage": "2215/3031 (其余 816 个 qid 为 financebench_XXXXX / openqa_XX 格式，无公司/年份字段)",
       "doc_ticker_vs_qid_ticker_mismatch": "82 (公司改名，如 BLL->BALL；以证据 doc_name 的 ticker 为准)",
@@ -48,7 +76,11 @@
     "sha256": "49d58593694d986722f8faa42cdb8173eefe90211d32dbe5cc1d53f170f3867f",
     "builder": "D:/Engineering/FinPlanRAG/database/preexperiments/finalize_ticker_cik_map.py",
     "summary": "199 tickers；193 全年份覆盖 ok；6 ticker 仅有 8K/EARNINGS gaps(AMCR 2、FL 2、JNJ 3、MGM 1、PEP 3、ULTA 1，即 23 题排除面)；REAL gaps(missing 10-K/10-Q)= NONE；unresolved = []",
-    "sources": {"company_tickers.json": 180, "browse-edgar": 14, "manual": 5}
+    "sources": {
+      "company_tickers.json": 180,
+      "browse-edgar": 14,
+      "manual": 5
+    }
   },
   "doc_resolution_rule": {
     "doc_name_format": "{TICKER}_{YEAR}_10K / {TICKER}_{YYYY}Q{N}_10Q / {TICKER}_{date}_8K / {TICKER}_{YYYY}Q{N}_EARNINGS",
@@ -58,7 +90,10 @@
   },
   "exclusion_rule": {
     "n_excluded": 23,
-    "by_subset": {"numeric_table": 1, "textual": 22},
+    "by_subset": {
+      "numeric_table": 1,
+      "textual": 22
+    },
     "criterion": "证据 doc_name 含 _8K 或 _EARNINGS 后缀",
     "handling": "预注册排除出主比较（义务空间不可表示）；单独报告（计数 + 逐题清单在 inventory 文件）；不参与任何方法运行",
     "n_main": 3008
@@ -83,23 +118,48 @@
     "rule": "qid 可解析(2215 题)：[{ticker: qid_ticker, years: [qid_year]}]；qid 不可解析(816 题)：[{ticker: 证据 ticker, years: [证据年份]}]"
   },
   "fiscal_year_labeling_rule": {
-    "amendment_1": "2026-08-11，语料构建期、任何方法运行前：companyfacts/companyconcept API 均不暴露 DocumentFiscalYearFocus/PeriodFocus（实证 TGT 两端点 404/缺失），改用数据驱动标注：",
-    "gold_docs": "LOFin doc_name 年份/期间为权威标签（doc_year = fiscal year，实证 TGT_2023_10K ↔ reportDate 2024-02-03、TGT_2025_10K ↔ 2026-01-31、AMD_2023Q3_10Q ↔ 2023-09-30），按 (form, year[, Qn]) 锚定 accn",
-    "non_gold_10K": "fiscal_year = year(reportDate) − 1（fy_end_month ≤ 2，实证 TGT/WMT）；否则 year(reportDate)；period = FY",
-    "non_gold_10Q": "fiscal_year = year(reportDate)；period = 日历季度 Q{ceil(month/3)}（实证仅有的 10-Q 黄金证据 AMD(12-31 报表)精确匹配；Jan/Feb-end 报表公司的 10-Q 为日历近似，无黄金 10-Q 证据，只影响非黄金文件的义务匹配，不影响任何 gold 匹配）",
+    "amendment_1": "2026-08-11，语料构建期、任何方法运行前：companyfacts/companyconcept API 均不暴露 DocumentFiscalYearFocus/PeriodFocus（实证 TGT 两端点 404/缺失），改用数据驱动标注；本修正案以下两处经全集构建实证被 amendment_2 更正。",
+    "amendment_2": "2026-08-11，语料全集构建期、任何方法运行前：非黄金 10-K 修正案1 的 year(reportDate)−1 条件误用公司级 fy_end_month≤2（AAP/SNA 等 1 月末财年的 12 月报 10-K 被多减 1：实证 AAP_2024_10K ↔ reportDate 2024-12-28、SNA_2007_10K ↔ 2007-12-29）；且 10-Q 日历季度近似漏掉黄金 10-Q（实证 ORCL_2023Q1_10Q ↔ reportDate 2022-08-31，Oracle 5 月末财年）。修正案1 的“无黄金 10-Q 证据”主张不成立。统一改为公司财历映射（见下），黄金与非黄金同规则。",
+    "gold_docs": "LOFin doc_name 年份/期间为权威标签（doc_year = fiscal year，实证 TGT_2023_10K ↔ reportDate 2024-02-03、TGT_2025_10K ↔ 2026-01-31、AMD_2023Q3_10Q ↔ 2023-09-30、ORCL_2023Q1_10Q ↔ 2022-08-31），按 (form, year[, Qn]) 锚定 accn；黄金文件以 doc_name 标签回写（authoritative）。",
+    "non_gold_10K": "fiscal_year = year(reportDate) − 1 当且仅当 reportDate 月 ≤ 2（1/2 月报的 10-K 结束于上一日历年度的财年，实证 TGT/WMT/AAP/SNA）；否则 year(reportDate)（12 月报的 10-K 结束于该日历年度的财年）；period = FY",
+    "non_gold_10Q": "按公司财历映射：fiscal_year = year(reportDate) + 1 当且仅当 reportDate 月 > fy_end_month（否则 year(reportDate)）；fiscal_period = Q{1 + (reportDate月 − 财年起始月) mod 12 // 3}，财年起始月 = fy_end_month + 1（mod 12）。12-31 财年公司退化为日历季度（实证 AMD）；5 月末财年公司实证 ORCL_2023Q1 ↔ 2022-08-31。黄金与非黄金 10-Q 同规则。",
     "doc_year": "LOFin doc_name 中的年份 = fiscal year（不是 reportDate 年份）"
   },
   "method_matrix": {
     "note": "9 方法；runner 与 validation8 freeze 逐字节一致（SHA 已核对）；不修改任何 runner",
-    "finplan_v9_cascade": {"runner": "run_nonoracle_obligation_planning_v7.py", "sha256": "6cc4c2abd489b978ea3b54868f91ad8a982ca3a0380f7db2076c49198dc65318"},
-    "metadata_v9_fill": {"runner": "run_nonoracle_obligation_planning_v7.py", "note": "P4 诚实性对照：同义务，检索退化为元数据分解 fill_missing"},
-    "finplan_v8": {"runner": "run_nonoracle_obligation_planning_v6.py", "sha256": "7c1d84f47829dc86654c82a49b1e85feb6a289978dc0d2b1dad5976cd21f443f"},
-    "finplan_v7": {"runner": "run_nonoracle_obligation_planning_v5.py", "sha256": "36617dc6eb6f5bad5704f0639a63064da5573bb0b7c775d94e3f2a988391b448"},
-    "finplan_v4": {"runner": "run_nonoracle_obligation_planning_v4.py", "sha256": "9bc5cd1bacc4ed0445318df065ef5d785c0c0eda65e6d7085b54326e10ddc252"},
-    "single_shot": {"runner": "run_period_aware_baselines.py", "sha256": "c5231d0fbde8b150ea29d7f14d529028d9d276e37337e994de88e05e09feaf02"},
-    "period_metadata_decomposition": {"runner": "run_period_aware_baselines.py"},
-    "generic_adaptive_period": {"runner": "run_period_aware_baselines.py"},
-    "hirec_period": {"runner": "run_period_aware_baselines.py"},
+    "finplan_v9_cascade": {
+      "runner": "run_nonoracle_obligation_planning_v7.py",
+      "sha256": "6cc4c2abd489b978ea3b54868f91ad8a982ca3a0380f7db2076c49198dc65318"
+    },
+    "metadata_v9_fill": {
+      "runner": "run_nonoracle_obligation_planning_v7.py",
+      "note": "P4 诚实性对照：同义务，检索退化为元数据分解 fill_missing"
+    },
+    "finplan_v8": {
+      "runner": "run_nonoracle_obligation_planning_v6.py",
+      "sha256": "7c1d84f47829dc86654c82a49b1e85feb6a289978dc0d2b1dad5976cd21f443f"
+    },
+    "finplan_v7": {
+      "runner": "run_nonoracle_obligation_planning_v5.py",
+      "sha256": "36617dc6eb6f5bad5704f0639a63064da5573bb0b7c775d94e3f2a988391b448"
+    },
+    "finplan_v4": {
+      "runner": "run_nonoracle_obligation_planning_v4.py",
+      "sha256": "9bc5cd1bacc4ed0445318df065ef5d785c0c0eda65e6d7085b54326e10ddc252"
+    },
+    "single_shot": {
+      "runner": "run_period_aware_baselines.py",
+      "sha256": "c5231d0fbde8b150ea29d7f14d529028d9d276e37337e994de88e05e09feaf02"
+    },
+    "period_metadata_decomposition": {
+      "runner": "run_period_aware_baselines.py"
+    },
+    "generic_adaptive_period": {
+      "runner": "run_period_aware_baselines.py"
+    },
+    "hirec_period": {
+      "runner": "run_period_aware_baselines.py"
+    },
     "runner_import_chain_shas": {
       "run_sec_real_pilot.py": "e8a51393a61f8f2521140c8f9e390d103fbd83b855f6fcd39da4bbd8b8f923b2",
       "run_lofin_multidoc_pilot.py": "51de0af05ce4c2c19ef3c5c35c3a6133326ea3cae0298e0fdbe61b2e4d4119ec",
@@ -114,7 +174,12 @@
     "wrong_doc_rate": "|used - gold| / max(1, |used|)",
     "future_leak": "used 中存在 available_at > cutoff 的 chunk",
     "obligation_exact": "义务键精确匹配",
-    "strata": ["全集", "5 子集", "单文档题 vs 多文档题", "公司解析面（题面含公司名 vs 不含）"],
+    "strata": [
+      "全集",
+      "5 子集",
+      "单文档题 vs 多文档题",
+      "公司解析面（题面含公司名 vs 不含）"
+    ],
     "statistics": "配对精确 McNemar（全部 36 个方法对）＋ sign test；不做独立性假设"
   },
   "execution_grouping": {
@@ -127,7 +192,38 @@
     "step1_smoke": {
       "n": 30,
       "selection_rule": "主集 3,008 题按 qid 排序，取第 0,100,200,...,2900 个",
-      "qids": ["AAL/2010/page_72.pdf-1", "ABMD/2012/page_41.pdf-4", "AMT/2006/page_113.pdf-2", "AON/2007/page_171.pdf-1", "BKNG/2016/page_33.pdf-2", "C/2008/page_44.pdf-2", "CE/2016/page_19.pdf-3", "DISCA/2014/page_64.pdf-3", "EMR/2017/page_78.pdf-2", "FIS/2006/page_31.pdf-2", "GPN/2014/page_92.pdf-2", "GS/2015/page_188.pdf-2", "HOLX/2009/page_151.pdf-2", "IP/2006/page_75.pdf-4", "JPM/2012/page_140.pdf-2", "LMT/2015/page_89.pdf-3", "MRO/2003/page_45.pdf-2", "MSI/2014/page_76.pdf-2", "PNC/2012/page_68.pdf-5", "SLB/2015/page_59.pdf-1", "STT/2011/page_69.pdf-3", "UNP/2015/page_56.pdf-1", "ZBH/2008/page_57.pdf-4", "financebench_03473", "openqa_124", "openqa_17", "openqa_214", "openqa_26", "openqa_304", "openqa_50"],
+      "qids": [
+        "AAL/2010/page_72.pdf-1",
+        "ABMD/2012/page_41.pdf-4",
+        "AMT/2006/page_113.pdf-2",
+        "AON/2007/page_171.pdf-1",
+        "BKNG/2016/page_33.pdf-2",
+        "C/2008/page_44.pdf-2",
+        "CE/2016/page_19.pdf-3",
+        "DISCA/2014/page_64.pdf-3",
+        "EMR/2017/page_78.pdf-2",
+        "FIS/2006/page_31.pdf-2",
+        "GPN/2014/page_92.pdf-2",
+        "GS/2015/page_188.pdf-2",
+        "HOLX/2009/page_151.pdf-2",
+        "IP/2006/page_75.pdf-4",
+        "JPM/2012/page_140.pdf-2",
+        "LMT/2015/page_89.pdf-3",
+        "MRO/2003/page_45.pdf-2",
+        "MSI/2014/page_76.pdf-2",
+        "PNC/2012/page_68.pdf-5",
+        "SLB/2015/page_59.pdf-1",
+        "STT/2011/page_69.pdf-3",
+        "UNP/2015/page_56.pdf-1",
+        "ZBH/2008/page_57.pdf-4",
+        "financebench_03473",
+        "openqa_124",
+        "openqa_17",
+        "openqa_214",
+        "openqa_26",
+        "openqa_304",
+        "openqa_50"
+      ],
       "purpose": "仅崩溃/空义务路径诊断；不得用于任何调优；其结果不作为证据",
       "determinism": "smoke 两轮运行 + 与全量运行中的同一批 30 题逐行比较，必须字节一致"
     },
