@@ -496,7 +496,22 @@ P6_open (v9 vs metadata_v9_fill): v9=0.8919 meta_fill=0.8919
 - 36 对两两精确 McNemar：21 对在 p<0.05（未做多重比较校正）显著；显著对与完整 36 对表见 audit 输出 / results/lofin_full_benchmark_audit_v1.json
 <!-- RESULTS_P_CHECKS_END -->
 
-一致性：full 与 smoke 的 30 个 smoke qids 按 (case_id, method) 逐行字节一致（协议 step1 determinism）；`future_leak` 结构性保证下全部方法应为 0。
+**扩展配对检验（`lofin_full_benchmark_extended_tests_v1.json`，seed 20260812，20,000 次置换）**——在冻结结果上补两类候选声称口径的显著性（未做多重比较校正）：
+
+| 检验 | v9 vs | 差 / 胜败 | p |
+|---|---|---|---|
+| wrong_doc_rate 配对置换（n=1,572） | generic_adaptive_period | 差 −0.163 | <0.0001 |
+| wrong_doc_rate 配对置换（n=1,572） | hirec_period | 差 −0.314 | <0.0001 |
+| wrong_doc_rate 配对置换（n=1,572） | single_shot | 差 −0.488 | <0.0001 |
+| wrong_doc_rate 配对置换（n=1,572） | finplan_v4 | 差 −0.232 | <0.0001 |
+| wrong_doc_rate 配对置换（n=1,572） | v8/v7/period_meta | 差 −0.007 | 0.0027（效应量可忽略） |
+| multi_doc 分层闭包 McNemar（n=314） | generic_adaptive_period | 29/4（disc 33） | <0.0001 |
+| multi_doc 分层闭包 McNemar（n=314） | hirec_period | 72/6（disc 78） | <0.0001 |
+| multi_doc 分层闭包 McNemar（n=314） | single_shot | 216/10（disc 226） | <0.0001 |
+| multi_doc 分层闭包 McNemar（n=314） | finplan_v4 | 170/1（disc 171） | <0.0001 |
+| multi_doc 分层闭包 McNemar（n=314） | v8/v7/period_meta | 2/4（disc 6） | 0.6875（内部持平） |
+
+按此，可声称口径（amendment_4 预注册）：**(1) 同等闭包下错误文档率显著更低**（v9 0.31 vs generic 0.47 / hirec 0.62 / single_shot 0.80，均 p<0.0001）；**(2) multi_doc 分层闭包显著更高**（vs generic_adapt/hirec/single_shot/v4，均 p<0.0001）。full 层闭包 vs 强基线仍打平（0.892 vs 0.895，p=0.227），不得声称。
 
 解读边界（诚实分层）：
 
