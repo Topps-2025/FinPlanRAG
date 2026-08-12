@@ -34,6 +34,7 @@ import json
 import re
 import sys
 import time
+from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
@@ -137,7 +138,6 @@ def build_cases(companies: dict[str, dict]) -> None:
         })
     CASES.write_text(json.dumps({"cases": cases, "excluded": excluded},
                                 ensure_ascii=False, indent=1), encoding="utf-8")
-    from collections import Counter
     reasons = Counter(x["reason"] for x in excluded)
     print(f"cases: {len(cases)} resolved, {len(excluded)} excluded "
           f"(rate {len(cases)/(len(cases)+len(excluded)):.4f}); reasons: "
@@ -171,6 +171,21 @@ def parse_job(j) -> dict:
         return {"code": code, "year": year, "status": "error", "error": str(exc)}
 
 
+def write_code_file(out: Path, docs: list[dict]) -> int:
+    """Merge a code's freshly parsed docs into its per-code file.
+
+    Merge semantics identical to the old batch-end write; only the flush
+    timing differs (per-code, on completion, instead of batch-end).
+    """
+    existing = []
+    if out.exists():
+        existing = json.loads(out.read_text(encoding="utf-8"))["documents"]
+    combined = {d["doc_id"]: d for d in existing + docs}
+    out.write_text(json.dumps({"documents": list(combined.values())},
+                              ensure_ascii=False, indent=1), encoding="utf-8")
+    return len(combined)
+
+
 def build_text(companies: dict[str, dict], workers: int) -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     jobs = []
@@ -192,7 +207,9 @@ def build_text(companies: dict[str, dict], workers: int) -> None:
     print(f"text phase: {len(jobs)} reports to parse, workers={workers}, "
           f"{pending} pending download (picked up on a later run)", flush=True)
     per_code: dict[str, list[dict]] = {}
+    remaining = Counter(j[0] for j in jobs)
     status = {"ok": 0, "error": 0}
+    n_docs = 0
     t_start = time.time()
     # ProcessPoolExecutor: pdfium holds the GIL during page text extraction;
     # threads give ~1x scaling (measured), processes scale ~linearly (8 procs
@@ -206,21 +223,20 @@ def build_text(companies: dict[str, dict], workers: int) -> None:
             status[rec["status"]] += 1
             if rec["status"] == "ok":
                 per_code.setdefault(rec["code"], []).append(rec["doc"])
+            remaining[rec["code"]] -= 1
+            if remaining[rec["code"]] == 0 and rec["code"] in per_code:
+                # flush as soon as a code's last job completes: a
+                # batch-end-only write loses ALL in-memory work if the
+                # process is killed mid-batch (observed: the first batch-1
+                # run died and ~1,000 parsed reports were lost)
+                n_docs += write_code_file(OUT_DIR / f"{rec['code']}.json",
+                                          per_code.pop(rec["code"]))
             if done % 200 == 0 or done == len(futs):
                 print(f"  {done}/{len(futs)} ok={status['ok']} "
                       f"err={status['error']} @ {time.time()-t_start:.0f}s", flush=True)
-    # write per-code files
-    n_docs = 0
+    # safety pass: flush any code left in memory (should not happen)
     for code, docs in per_code.items():
-        out = OUT_DIR / f"{code}.json"
-        # merge with any existing docs from a previous partial run
-        existing = []
-        if out.exists():
-            existing = json.loads(out.read_text(encoding="utf-8"))["documents"]
-        combined = {d["doc_id"]: d for d in existing + docs}
-        out.write_text(json.dumps({"documents": list(combined.values())},
-                                  ensure_ascii=False, indent=1), encoding="utf-8")
-        n_docs += len(combined)
+        n_docs += write_code_file(OUT_DIR / f"{code}.json", docs)
     print(f"text done: {n_docs} documents, {status['error']} errors -> {OUT_DIR}")
 
 
