@@ -155,18 +155,23 @@ def extract_text(pdf_path: Path) -> str:
 def build_text(companies: dict[str, dict], workers: int) -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     jobs = []
+    pending = 0
     for code, ent in companies.items():
         out = OUT_DIR / f"{code}.json"
         if out.exists():
             continue  # resumable
         for year, info in ent["years"].items():
             pdf = PDF_DIR / info["filename"]
+            if not pdf.exists():
+                # incremental mode: PDF not yet downloaded; a later run
+                # picks it up (the per-code file is still absent, so the
+                # resumable skip logic re-submits it next round)
+                pending += 1
+                continue
             jobs.append((code, ent, year, pdf, out))
 
     def job(j) -> dict:
         code, ent, year, pdf, out = j
-        if not pdf.exists():
-            return {"code": code, "year": year, "status": "missing_pdf"}
         try:
             t0 = time.time()
             text = extract_text(pdf)
@@ -182,9 +187,10 @@ def build_text(companies: dict[str, dict], workers: int) -> None:
         except Exception as exc:
             return {"code": code, "year": year, "status": "error", "error": str(exc)}
 
-    print(f"text phase: {len(jobs)} reports to parse, workers={workers}", flush=True)
+    print(f"text phase: {len(jobs)} reports to parse, workers={workers}, "
+          f"{pending} pending download (picked up on a later run)", flush=True)
     per_code: dict[str, list[dict]] = {}
-    status = {"ok": 0, "missing_pdf": 0, "error": 0}
+    status = {"ok": 0, "error": 0}
     t_start = time.time()
     with ThreadPoolExecutor(max_workers=workers) as pool:
         futs = [pool.submit(job, j) for j in jobs]
@@ -196,7 +202,7 @@ def build_text(companies: dict[str, dict], workers: int) -> None:
             if rec["status"] == "ok":
                 per_code.setdefault(rec["code"], []).append(rec["doc"])
             if done % 200 == 0 or done == len(futs):
-                print(f"  {done}/{len(futs)} ok={status['ok']} miss={status['missing_pdf']} "
+                print(f"  {done}/{len(futs)} ok={status['ok']} "
                       f"err={status['error']} @ {time.time()-t_start:.0f}s", flush=True)
     # write per-code files
     n_docs = 0
