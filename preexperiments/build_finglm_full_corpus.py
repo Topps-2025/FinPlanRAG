@@ -18,8 +18,10 @@ Exclusions (recorded with reasons, reported honestly):
   (code, year) report missing from the list.
 
 Corpus storage: data/finglm_full_corpus_v1/<code>.json, one document per
-report year (doc_id = <code>_<year>_annual), resumable: existing per-code
-files are skipped.  PDF text via pypdfium2 (page-level, joined by \n\n),
+report year (doc_id = <code>_<year>_annual), resumable at (code, year)
+granularity: years already written are skipped, partial per-code files are
+completed (never skipped whole — incremental runs must not drop a code's
+remaining years).  PDF text via pypdfium2 (page-level, joined by \n\n),
 same lineage as the frozen China page pilot.
 
 Usage:
@@ -192,13 +194,24 @@ def build_text(companies: dict[str, dict], workers: int) -> None:
     pending = 0
     for code, ent in companies.items():
         out = OUT_DIR / f"{code}.json"
+        # resumable at (code, year) granularity, NOT per code: a per-code
+        # file may be partial when an earlier run was incremental (its job
+        # list was a snapshot of PDFs available at submission time; codes
+        # with some years pending are flushed per-code on completion of the
+        # submitted subset).  Skipping the whole code would permanently
+        # drop those missing years (measured: 1,972 partial files / 3,355
+        # missing reports).  Only years already written are skipped.
+        written = set()
         if out.exists():
-            continue  # resumable
+            written = {d["doc_id"] for d in
+                       json.loads(out.read_text(encoding="utf-8"))["documents"]}
         for year, info in ent["years"].items():
+            if f"{code}_{year}_annual" in written:
+                continue  # already parsed (this run or an earlier one)
             pdf = PDF_DIR / info["filename"]
             if not pdf.exists():
                 # incremental mode: PDF not yet downloaded; a later run
-                # picks it up (the per-code file is still absent, so the
+                # picks it up (its doc_id is still absent, so the
                 # resumable skip logic re-submits it next round)
                 pending += 1
                 continue
