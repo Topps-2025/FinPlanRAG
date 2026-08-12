@@ -1,0 +1,66 @@
+{
+  "schema": "finplan-finglm-protocol.v1",
+  "pre_registered": "2026-08-12",
+  "status": "pre-registered (no FinGLM result has been produced by any method yet)",
+  "dataset": {
+    "name": "FinGLM 复赛A (MetaGLM/FinGLM public repo)",
+    "source": "github.com/MetaGLM/FinGLM (questions/answers JSONL, 2,000 QA pairs)",
+    "corpus": "11,588 annual reports (2019-2022), filenames byte-identical to FinGLM reports_list.csv; PDFs mirrored from ModelScope modelscope/chatglm_llm_fintech_raw_dataset allpdf/ (LFS), polite-paced REST download, Range-resumed, %PDF- magic verified",
+    "corpus_path": "data/external/china/documents/finglm_full/",
+    "readonly": "external data lives under D:/Engineering/FinPlanRAG/database only, read-only upstream; never modified in place"
+  },
+  "gold_standard": {
+    "original_document_sets": false,
+    "statement": "FinGLM provides NO original gold document sets (audited: gold_document_sets=False). The per-question gold document set is DERIVED from the answer prompt metadata (ent_name + year -> the single annual report of that company/year). This is a SELF-BUILT evaluation convention and is declared as such; it is not an original dataset annotation.",
+    "derivation": "prompt.ent_name matched to reports_list company full name (exact) -> code; prompt.year -> the (code, year) annual report; gold_doc_ids = [<code>_<year>_annual]",
+    "gold_size_per_question": 1,
+    "note": "single-document closure: closure=1 means the unique gold document was retrieved within budget"
+  },
+  "exclusions": {
+    "total": 171,
+    "rate": "171/2000 = 8.55%",
+    "reasons": {
+      "no_prompt_generic_concept_question": 88,
+      "ent_name_not_in_reports_list": 66,
+      "report_year_missing": 17
+    },
+    "reporting": "excluded cases are recorded with reasons in finglm_full_cases_v1.json and reported honestly; they are never silently dropped"
+  },
+  "cases": {"resolved": 1829, "answer_type_layers": ["1", "1-2", "2-1", "2-2", "3-1"]},
+  "temporal": {
+    "cutoff_rule": "cutoff = the report's announcement date (date field of reports_list.csv row); a document is visible iff available_at <= cutoff; the gold document's available_at == its own cutoff (always visible)"
+  },
+  "retrieval_interface": {
+    "budget": 4,
+    "index": "per-document single chunk (one annual report = one retrieval unit); BM25 formula IDENTICAL to LOFin's frozen baseline: idf = log(1 + (N - df + 0.5)/(df + 0.5)), k1=2.2, b=0.75, term-frequency formula identical, dedup by document",
+    "tokenizer": "jieba (CJK words with len>=2 or digit strings); declared difference vs LOFin's English tokenizer, both are the frozen baselines' native tokenizers for their respective languages",
+    "obligation_rule": "chinese_obligation_rule: first (20xx)年 in the question + longest alias (full name / short name / code) present in the question -> the single (code, year) annual report; filing_type=10-K, fiscal_period=FY (annual-report analogues)",
+    "path_markers": "chunk terms include generic_path = path<code><year> and precise_path = path<code><year>fy10k, byte-identical construction to LOFin's make_period_chunks (fill_missing matches required_terms against them)"
+  },
+  "methods": {
+    "external_baselines_run_first": [
+      "single_shot",
+      "period_metadata_decomposition",
+      "generic_adaptive_period",
+      "hirec_period"
+    ],
+    "note": "the four external baselines are the same-named frozen baselines as in the LOFin benchmark; all run through retrieve_policy imported byte-identically from run_period_aware_baselines.py (language-agnostic policy reading only obligation fields + BM25 interface). Project-internal methods (v4/v8/v9 family) are a SEPARATE comparison run AFTER this protocol is committed, with zero tuning on FinGLM results."
+  },
+  "metrics": {
+    "primary": ["leg_recall", "closure", "wrong_doc_rate"],
+    "leg_recall": "|gold & used| / |gold| (single gold doc -> 0/1)",
+    "closure": "file-level: gold_doc_ids subset of used_docs (single gold doc -> gold retrieved within budget)",
+    "wrong_doc_rate": "|used - gold| / |used|",
+    "stratification": "overall + 5 answer_type layers",
+    "note": "closure is FILE-LEVEL document closure, NOT answer accuracy; FinGLM answers are never scored. For single-gold-doc tasks closure reduces to recall; discriminating signal comes from wrong_doc_rate and the layered report."
+  },
+  "statistics": {
+    "pairwise_comparisons": "McNemar on closure and paired permutation (sign-flip, seed 20260812, +1 pseudo-count) on wrong_doc_rate, identical procedure to the LOFin extended tests (audit_lofin_full_extended_tests.py)",
+    "claim_boundary": "any claim of superiority is restricted to these pairwise tests on the declared metrics; no SOTA claim against external leaderboards (FinGLM original papers use answer-accuracy, which this protocol explicitly does not measure)"
+  },
+  "integrity": {
+    "frozen_protocol_discipline": "protocol changes must be committed before any run; the frozen method set is never tuned on FinGLM results",
+    "reporting": "negative results reported; Chinese/English results kept separate; question text never reveals filing type to any method (the methods receive only the public question)",
+    "reproducibility": "runners import the frozen LOFin policy code byte-identically (no copy-paste divergence)"
+  }
+}
