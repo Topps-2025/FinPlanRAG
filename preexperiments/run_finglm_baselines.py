@@ -14,6 +14,18 @@ interface).  Differences vs LOFin, all documented in the protocol:
 - corpus is read streaming per-code (11,588 docs ~1.7GB text must never be
   fully resident); chunk.text is dropped after tokenization.
 
+Memory note (2026-08-12): the original scan implementation kept every
+document's full token list resident in the chunks list (~916M token
+instances, ~30GB virtual) and died with MemoryError on the 13.9GB machine
+after ~80min of tokenization.  The index is now a streaming inverted index:
+each document's term list is counted and dropped immediately; the index
+keeps only packed (chunk_idx, tf) postings (~8 bytes per unique term-doc
+pair; ~90M pairs ~0.7GB).  Ranking is byte-identical to the scan version -
+same BM25 formula (k1=2.2, b=0.75, same idf/log smoothing), same
+(-score, available_at, chunk_id) tie-break, same dedup-by-doc_id; float
+accumulation stays term-major in query order so every score sum is
+bit-for-bit the same.
+
 run(corpus_dir, registry_path, cases_path, out_path, budget) mirrors the
 LOFin runner interface shape; outputs rows + trajectories + summary.
 """
@@ -25,6 +37,7 @@ import json
 import math
 import re
 import sys
+from array import array
 from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime
@@ -68,21 +81,26 @@ class Chunk:
     role: str
     available_at: datetime
     text: str  # diagnostic only; not the full report
-    terms: tuple[str, ...]
+    terms: tuple[str, ...]  # dropped after indexing (always ()); dl lives in CNBM25
 
 
 class CNBM25:
-    """Same scoring as run_sec_real_pilot.BM25, built streaming."""
+    """Same BM25 scoring as run_sec_real_pilot.BM25, built streaming.
 
-    def __init__(self, chunks: Sequence[Chunk]) -> None:
+    Holds a compact inverted index: term -> array('I') of interleaved
+    (chunk_idx, tf) pairs, chunk_idx ascending.  document lengths (dl) are
+    kept per chunk.  search() replicates the original O(N) scan exactly:
+    same idf formula, same term-major accumulation order (bit-identical
+    scores), same filters (used / allow_future / required_terms), same
+    (-score, available_at, chunk_id) sort and dedup-by-doc_id.
+    """
+
+    def __init__(self, chunks: Sequence[Chunk], postings: dict[str, array],
+                 dl: Sequence[int]) -> None:
         self.chunks = list(chunks)
-        self.tf: list[Counter[str]] = []
-        self.df = Counter()
-        for chunk in self.chunks:
-            counts = Counter(chunk.terms)
-            self.tf.append(counts)
-            self.df.update(counts.keys())
-        self.avgdl = sum(len(c.terms) for c in self.chunks) / max(1, len(self.chunks))
+        self.postings = postings
+        self.dl = list(dl)
+        self.avgdl = sum(self.dl) / max(1, len(self.chunks))
 
     def search(self, query: str, cutoff: datetime, used: Sequence[str],
                allow_future: bool, limit: int = 1,
@@ -90,25 +108,44 @@ class CNBM25:
         qterms = cn_tokens(query)
         used_set = set(used)
         n = len(self.chunks)
-        scored: list[tuple[float, Chunk]] = []
-        for chunk, counts in zip(self.chunks, self.tf):
-            if chunk.chunk_id in used_set:
-                continue
-            if not allow_future and chunk.available_at > cutoff:
-                continue
-            if required_terms and not all(t in counts for t in required_terms):
-                continue
-            dl = len(chunk.terms)
-            score = 0.0
-            for term in qterms:
-                f = counts.get(term, 0)
-                if not f:
+        # candidates: chunks holding every required term (path markers)
+        if required_terms:
+            present = []
+            for t in required_terms:
+                p = self.postings.get(t)
+                if p is None:
+                    return []
+                present.append(p)
+            base = min(present, key=len)
+            candidates = {base[j] for j in range(0, len(base), 2)}
+            for p in present:
+                if p is base:
                     continue
-                idf = math.log(1.0 + (n - self.df.get(term, 0) + 0.5) /
-                               (self.df.get(term, 0) + 0.5))
-                score += idf * (f * 2.2) / (f + 1.2 * (0.25 + 0.75 * dl / max(1.0, self.avgdl)))
-            if score:
-                scored.append((score, chunk))
+                keep = {p[j] for j in range(0, len(p), 2)}
+                candidates.intersection_update(keep)
+                if not candidates:
+                    return []
+        else:
+            candidates = None
+        scores: dict[int, float] = {}
+        for t in qterms:
+            p = self.postings.get(t)
+            if p is None:
+                continue
+            idf = math.log(1.0 + (n - (len(p) // 2) + 0.5) / ((len(p) // 2) + 0.5))
+            for j in range(0, len(p), 2):
+                i, f = p[j], p[j + 1]
+                if candidates is not None and i not in candidates:
+                    continue
+                ch = self.chunks[i]
+                if ch.chunk_id in used_set:
+                    continue
+                if not allow_future and ch.available_at > cutoff:
+                    continue
+                dl = self.dl[i]
+                scores[i] = scores.get(i, 0.0) + idf * (f * 2.2) / (
+                    f + 1.2 * (0.25 + 0.75 * dl / max(1.0, self.avgdl)))
+        scored = [(scores[i], self.chunks[i]) for i in scores]
         scored.sort(key=lambda item: (-item[0], item[1].available_at, item[1].chunk_id))
         out: list[Chunk] = []
         docs: set[str] = set()
@@ -168,8 +205,11 @@ def run(corpus_dir: Path, registry_path: Path, cases_path: Path,
     companies = registry["companies"]
     cases = json.loads(Path(cases_path).read_text(encoding="utf-8"))["cases"]
 
-    # streaming index build: one chunk per document, text dropped
+    # streaming index build: one chunk per document; term lists are counted
+    # and dropped immediately, only (chunk_idx, tf) postings stay resident
     chunks: list[Chunk] = []
+    postings: dict[str, array] = {}
+    dl: list[int] = []
     for code_file in sorted(Path(corpus_dir).glob("*.json")):
         code = code_file.stem
         ent = companies.get(code)
@@ -180,7 +220,15 @@ def run(corpus_dir: Path, registry_path: Path, cases_path: Path,
             # identical path markers as LOFin's make_period_chunks: the
             # fill_missing policy matches required_terms against them
             generic_path = f"path{str(doc['ticker']).lower()}{int(doc['year'])}"
-            terms = cn_tokens(doc["text"]) + (generic_path, precise_path(obligation))
+            terms = cn_tokens(doc["text"])
+            counts = Counter(terms)
+            idx = len(chunks)
+            for term, f in counts.items():
+                p = postings.get(term)
+                if p is None:
+                    p = postings[term] = array("I")
+                p.append(idx)
+                p.append(f)
             chunks.append(Chunk(
                 chunk_id=f"{doc['doc_id']}::c0",
                 doc_id=doc["doc_id"],
@@ -188,10 +236,11 @@ def run(corpus_dir: Path, registry_path: Path, cases_path: Path,
                 role=str(doc.get("form", "10-K")),
                 available_at=parse_time(doc["available_at"]),
                 text=doc["text"][:500],
-                terms=terms,
+                terms=(),
             ))
-    index = CNBM25(chunks)
-    print(f"index: {len(chunks)} docs, {len(index.df)} unique terms, "
+            dl.append(len(terms))
+    index = CNBM25(chunks, postings, dl)
+    print(f"index: {len(chunks)} docs, {len(index.postings)} unique terms, "
           f"avgdl={index.avgdl:.0f}", flush=True)
 
     rows, trajectories = [], []
