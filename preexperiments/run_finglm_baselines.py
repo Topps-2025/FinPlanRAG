@@ -217,9 +217,15 @@ def run(corpus_dir: Path, registry_path: Path, cases_path: Path,
             obligation = {"ticker": doc["ticker"], "fiscal_year": doc["year"],
                           "filing_type": doc.get("form", "10-K"),
                           "fiscal_period": doc.get("fiscal_period", "FY")}
-            # identical path markers as LOFin's make_period_chunks: the
-            # fill_missing policy matches required_terms against them
+            # path markers identical to LOFin's make_period_chunks
+            # (run_nonoracle_obligation_planning_v5.make_period_chunks):
+            # terms = tuple(tokens(text)) + (generic_path, precise_path).
+            # Both markers MUST be injected into postings - fill_missing
+            # filters candidates by required_terms=[precise_path(obligation)],
+            # and cn_tokens() alone never emits "path..." terms, which
+            # silently disabled every fill_missing call (fix 2026-08-13).
             generic_path = f"path{str(doc['ticker']).lower()}{int(doc['year'])}"
+            precise = precise_path(obligation)
             terms = cn_tokens(doc["text"])
             counts = Counter(terms)
             idx = len(chunks)
@@ -229,6 +235,12 @@ def run(corpus_dir: Path, registry_path: Path, cases_path: Path,
                     p = postings[term] = array("I")
                 p.append(idx)
                 p.append(f)
+            for marker in (generic_path, precise):
+                p = postings.get(marker)
+                if p is None:
+                    p = postings[marker] = array("I")
+                p.append(idx)
+                p.append(1)
             chunks.append(Chunk(
                 chunk_id=f"{doc['doc_id']}::c0",
                 doc_id=doc["doc_id"],
@@ -238,7 +250,9 @@ def run(corpus_dir: Path, registry_path: Path, cases_path: Path,
                 text=doc["text"][:500],
                 terms=(),
             ))
-            dl.append(len(terms))
+            # dl must include the two path markers, matching LOFin's
+            # len(chunk.terms) = len(tokens(text)) + 2 (same BM25 formula)
+            dl.append(len(terms) + 2)
     index = CNBM25(chunks, postings, dl)
     print(f"index: {len(chunks)} docs, {len(index.postings)} unique terms, "
           f"avgdl={index.avgdl:.0f}", flush=True)
