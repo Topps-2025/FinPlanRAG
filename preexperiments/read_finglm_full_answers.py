@@ -31,7 +31,7 @@ from answer_layer import (
     llm_row, gold_support, normalize,
 )
 from run_finglm_internal import chinese_internal_obligation_rule
-from run_finglm_baselines import precise_path
+from run_finglm_baselines import precise_path, cn_tokens
 
 PROTOCOL = Path(r"C:\Users\Lenovo\Desktop\Paper\FinPlanRAG\docs\04-数据与实验\answer_accuracy_dense_hybrid_protocol_v1.json")
 CASES_PATH = DATA_ROOT / "finglm_full_cases_v1.json"
@@ -86,13 +86,21 @@ def reconstruct_internal(cases: list[dict], companies: dict,
     """Marker-deterministic used_docs for the 3 internal methods, mirroring
     run_finglm_internal.retrieve() (budget break, metadata_v9_fill dedup,
     doc absent from corpus -> no candidate, doc available after cutoff ->
-    excluded by allow_future=False)."""
+    excluded by allow_future=False).
+
+    The frozen search also returns [] when the marker candidate chunk has no
+    query-term overlap with the doc's own text (zero-text stub docs in the
+    corpus: markers are injected unconditionally, so postings are non-empty
+    while scores stay empty).  Reproduced exactly: the method's query is
+    rebuilt as retrieve() builds it and the doc is kept iff some query term
+    appears in cn_tokens(doc text)."""
     from run_sec_real_pilot import parse_time
     out: dict[tuple[str, str], list[str]] = {}
     for case in cases:
         q = str(case["question"])
         cutoff = parse_time(str(case["cutoff"]))
         obligations, _ = chinese_internal_obligation_rule(q, companies)
+        doc_terms: dict[str, set[str]] = {}  # per-case cache, bounds memory
         for method in INT_METHODS:
             used: list[str] = []
             for ob in obligations:
@@ -100,35 +108,37 @@ def reconstruct_internal(cases: list[dict], companies: dict,
                     break
                 if method == "finplan_v4":
                     marker = f"path{str(ob['ticker']).lower()}{int(ob['fiscal_year'])}"
+                    query = f"{q} {ob['ticker']} {ob['fiscal_year']}"
                 else:
                     marker = precise_path(ob)
+                    query = (f"{q} {ob['ticker']} {ob['fiscal_year']} "
+                             f"{ob['fiscal_period']} {ob['filing_type']}")
                 doc = corpus_docs.get(str(ob["doc_id"]))
                 if doc is None:
                     continue  # marker absent from corpus -> search returns []
-                if doc["available_at"] > cutoff:
+                if parse_time(doc["available_at"]) > cutoff:
                     continue  # allow_future=False excludes it
                 if method == "metadata_v9_fill" and str(ob["doc_id"]) in used:
                     continue
-                used.append(str(ob["doc_id"]))
+                did = str(ob["doc_id"])
+                text = str(doc.get("text", ""))
+                if not text:
+                    continue  # zero-text stub: marker candidate, no scores
+                terms = doc_terms.get(did)
+                if terms is None:
+                    terms = doc_terms[did] = set(cn_tokens(text))
+                if not set(cn_tokens(query)) & terms:
+                    continue  # no query-term overlap -> frozen search returns []
+                used.append(did)
             out[(case["case_id"], method)] = used
     return out
 
 
-def build_corpus_index() -> dict[str, str]:
-    """doc_id -> full text (streamed per code file; released after use by the
-    caller since the whole set is ~2.8GB of text)."""
-    docs: dict[str, str] = {}
-    for path in sorted(CORPUS.glob("*.json")):
-        for doc in json.loads(path.read_text(encoding="utf-8"))["documents"]:
-            docs[str(doc["doc_id"])] = str(doc["text"])
-    return docs
-
-
 def l1_phase(cases: list[dict], answers: dict[int, list[str]], ids: list[int],
              ext_used: dict[tuple[str, str], list[str]],
-             int_used: dict[tuple[str, str], list[str]]) -> None:
-    docs = build_corpus_index()
-    print(f"corpus docs loaded: {len(docs)}", flush=True)
+             int_used: dict[tuple[str, str], list[str]],
+             corpus_docs: dict[str, dict]) -> None:
+    print(f"corpus docs loaded: {len(corpus_docs)}", flush=True)
     norm_cache: dict[str, str] = {}
     frozen_int = json.loads(FROZEN_INT.read_text(encoding="utf-8"))["rows"]
     rows: list[dict] = []
@@ -151,8 +161,8 @@ def l1_phase(cases: list[dict], answers: dict[int, list[str]], ids: list[int],
                                  "reconstructed": len(used_docs), "frozen": want})
             parts = []
             for d in used_docs:
-                text = docs.get(str(d))
-                if text is None:
+                text = corpus_docs.get(str(d), {}).get("text")
+                if not text:
                     continue
                 key = str(d)
                 if key not in norm_cache:
@@ -170,8 +180,8 @@ def l1_phase(cases: list[dict], answers: dict[int, list[str]], ids: list[int],
         used_docs = [str(d) for d in case["gold_doc_ids"]]
         parts = []
         for d in used_docs:
-            text = docs.get(str(d))
-            if text is None:
+            text = corpus_docs.get(str(d), {}).get("text")
+            if not text:
                 continue
             key = str(d)
             if key not in norm_cache:
@@ -225,8 +235,8 @@ def stratified_sample(cases: list[dict], answers: dict[int, list[str]],
 
 def l2_phase(cases: list[dict], answers: dict[int, list[str]], ids: list[int],
              ext_used: dict[tuple[str, str], list[str]],
-             int_used: dict[tuple[str, str], list[str]]) -> None:
-    docs = build_corpus_index()
+             int_used: dict[tuple[str, str], list[str]],
+             corpus_docs: dict[str, dict]) -> None:
     sample = stratified_sample(cases, answers, ids, L2_N)
     tokenizer, model = load_reader_model(MODEL)
     rows: list[dict] = []
@@ -238,8 +248,8 @@ def l2_phase(cases: list[dict], answers: dict[int, list[str]], ids: list[int],
             used_docs = (ext_used if method in EXT_METHODS else int_used)[(cid, method)]
             ctx_parts = []
             for d in used_docs[:L2_MAX_DOCS]:
-                text = docs.get(str(d))
-                if text is None:
+                text = corpus_docs.get(str(d), {}).get("text")
+                if not text:
                     continue
                 ctx_parts.append(text[:L2_CHARS_PER_DOC])
             context = "\n\n".join(ctx_parts)
@@ -250,8 +260,8 @@ def l2_phase(cases: list[dict], answers: dict[int, list[str]], ids: list[int],
         # oracle
         ctx_parts = []
         for d in [str(d) for d in case["gold_doc_ids"]][:L2_MAX_DOCS]:
-            text = docs.get(d)
-            if text is None:
+            text = corpus_docs.get(str(d), {}).get("text")
+            if not text:
                 continue
             ctx_parts.append(text[:L2_CHARS_PER_DOC])
         context = "\n\n".join(ctx_parts)
@@ -292,21 +302,23 @@ def main(phase: str) -> None:
         ext_used[(tr["case_id"], tr["method"])] = list(tr["used_docs"])
 
     registry = json.loads((DATA_ROOT / "finglm_full_registry_v1.json").read_text(encoding="utf-8"))
-    # corpus doc index: doc_id -> {available_at} only (text stays in l1_phase
-    # to keep peak memory within the 14.2GB machine)
+    # corpus doc index: doc_id -> {available_at, text}; built once and shared
+    # by reconstruction + both phases (texts are ~3.5GB in memory on the
+    # 14.2GB machine, so only one copy ever exists)
     doc_ids: set[str] = set()
     corpus_docs: dict[str, dict] = {}
     for path in sorted(CORPUS.glob("*.json")):
         for doc in json.loads(path.read_text(encoding="utf-8"))["documents"]:
             doc_ids.add(str(doc["doc_id"]))
-            corpus_docs[str(doc["doc_id"])] = {"available_at": doc["available_at"]}
+            corpus_docs[str(doc["doc_id"])] = {"available_at": doc["available_at"],
+                                               "text": str(doc["text"])}
     print(f"corpus doc_ids: {len(doc_ids)}", flush=True)
     int_used = reconstruct_internal(cases, registry["companies"], corpus_docs)
 
     if phase in ("l1", "all"):
-        l1_phase(cases, answers, ids, ext_used, int_used)
+        l1_phase(cases, answers, ids, ext_used, int_used, corpus_docs)
     if phase in ("l2", "all"):
-        l2_phase(cases, answers, ids, ext_used, int_used)
+        l2_phase(cases, answers, ids, ext_used, int_used, corpus_docs)
 
 
 if __name__ == "__main__":
