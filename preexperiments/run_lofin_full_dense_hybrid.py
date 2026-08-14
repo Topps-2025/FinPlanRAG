@@ -138,7 +138,10 @@ def run_group(gid: str, group: dict, frozen: dict, index_kind: str,
         for row in rows:
             want = frozen[(row["case_id"], row["method"])]
             for k, v in want.items():
-                if k in row and row[k] != v:
+                if k not in row:
+                    mism.append((row["case_id"], row["method"], k,
+                                 "<missing>", v))
+                elif row[k] != v:
                     mism.append((row["case_id"], row["method"], k, row[k], v))
         if mism:
             raise AssertionError(f"{gid}: parity mismatch: {mism[:5]}")
