@@ -161,8 +161,11 @@ Output JSON only, in this format:
 {{"answer": "your answer or 'insufficient evidence'", "support": "yes" or "no"}}
 "support": "no" means the retrieved content is insufficient. """
 
-_JSON_RE = re.compile(r"\{.*\}", re.DOTALL)
-_REFUSAL_RE = re.compile(r"证据不足|insufficient")
+_JSON_RE = re.compile(r"\{.*?\}", re.DOTALL)
+# Refusal fallback: full words, but also the truncated prefix - the 0.5B
+# reader's long English refusals hit max_new_tokens mid-word ("Insuffic"),
+# and a truncated refusal must not be classified as an assertion.
+_REFUSAL_RE = re.compile(r"证据不足|拒绝|insufficient|insuffic|refuse to|refus|无法确定|cannot determine")
 
 
 # ---------------------------------------------------------------------------
@@ -201,22 +204,26 @@ def build_prompt(question: str, context_text: str, is_chinese: bool) -> str:
 
 
 def parse_llm_output(output: str) -> dict:
-    malformed = False
-    match = _JSON_RE.search(output)
-    if match:
+    # Take the LAST valid JSON object in the output.  The 0.5B reader often
+    # echoes the prompt's schema example ({"answer": "你的回答或'证据不足'",
+    # "support": "yes"或"no"} - invalid JSON, skipped), so a greedy
+    # first-{..}-to-last-} match would span echo+answer and fail to load.
+    last: dict | None = None
+    for match in _JSON_RE.finditer(output):
         try:
             data = json.loads(match.group(0))
-            if isinstance(data, dict):
+            if not isinstance(data, dict):
+                continue
+            support = str(data.get("support", "")).strip().lower()
+            if support in ("yes", "no", "true", "false"):
                 answer = str(data.get("answer", "")).strip()
-                support = str(data.get("support", "")).strip().lower()
-                if support in ("yes", "no"):
-                    return {"answer": answer, "support": support,
-                            "malformed": False}
-                if support in ("true", "false"):
-                    return {"answer": answer, "support": "yes" if support == "true"
-                            else "no", "malformed": False}
-        except json.JSONDecodeError:
-            pass
+                last = {"answer": answer,
+                        "support": "yes" if support in ("yes", "true") else "no",
+                        "malformed": False}
+        except (json.JSONDecodeError, ValueError):
+            continue
+    if last is not None:
+        return last
     text = output.strip()
     refused = bool(_REFUSAL_RE.search(text))
     return {"answer": text[:200], "support": "no" if refused else "yes",
@@ -266,4 +273,5 @@ def llm_row(case_id: str, method: str, stratum: str, generated: dict,
         "false_refusal": int(not asserted and bool(context_support)),
         "malformed": s["malformed"],
         "n_generated_cores": s["n_generated_cores"],
+        "answer_text": str(generated.get("answer", ""))[:200],
     }
