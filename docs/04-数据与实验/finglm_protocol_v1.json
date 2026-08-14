@@ -1,106 +1,112 @@
 {
- "schema": "finplan-finglm-protocol.v1",
- "pre_registered": "2026-08-12",
- "status": "pre-registered + amendment_1 committed (2026-08-13); external baselines done; internal-method step next",
- "dataset": {
-  "name": "FinGLM 复赛A (MetaGLM/FinGLM public repo)",
-  "source": "github.com/MetaGLM/FinGLM (questions/answers JSONL, 2,000 QA pairs)",
-  "corpus": "11,588 annual reports (2019-2022), filenames byte-identical to FinGLM reports_list.csv; PDFs mirrored from ModelScope modelscope/chatglm_llm_fintech_raw_dataset allpdf/ (LFS), polite-paced REST download, Range-resumed, %PDF- magic verified",
-  "corpus_path": "data/external/china/documents/finglm_full/",
-  "readonly": "external data lives under D:/Engineering/FinPlanRAG/database only, read-only upstream; never modified in place"
- },
- "gold_standard": {
-  "original_document_sets": false,
-  "statement": "FinGLM provides NO original gold document sets (audited: gold_document_sets=False). The per-question gold document set is DERIVED from the answer prompt metadata (ent_name + year -> the single annual report of that company/year). This is a SELF-BUILT evaluation convention and is declared as such; it is not an original dataset annotation.",
-  "derivation": "prompt.ent_name matched to reports_list company full name (exact) -> code; prompt.year -> the (code, year) annual report; gold_doc_ids = [<code>_<year>_annual]",
-  "gold_size_per_question": 1,
-  "note": "single-document closure: closure=1 means the unique gold document was retrieved within budget"
- },
- "exclusions": {
-  "total": 171,
-  "rate": "171/2000 = 8.55%",
-  "reasons": {
-   "no_prompt_generic_concept_question": 88,
-   "ent_name_not_in_reports_list": 66,
-   "report_year_missing": 17
+  "schema": "finplan-finglm-protocol.v1",
+  "pre_registered": "2026-08-12",
+  "status": "pre-registered + amendment_1 committed (2026-08-13); external baselines done; internal-method step next",
+  "dataset": {
+    "name": "FinGLM 复赛A (MetaGLM/FinGLM public repo)",
+    "source": "github.com/MetaGLM/FinGLM (questions/answers JSONL, 2,000 QA pairs)",
+    "corpus": "11,588 annual reports (2019-2022), filenames byte-identical to FinGLM reports_list.csv; PDFs mirrored from ModelScope modelscope/chatglm_llm_fintech_raw_dataset allpdf/ (LFS), polite-paced REST download, Range-resumed, %PDF- magic verified",
+    "corpus_path": "data/external/china/documents/finglm_full/",
+    "readonly": "external data lives under D:/Engineering/FinPlanRAG/database only, read-only upstream; never modified in place"
   },
-  "reporting": "excluded cases are recorded with reasons in finglm_full_cases_v1.json and reported honestly; they are never silently dropped"
- },
- "cases": {
-  "resolved": 1829,
-  "answer_type_layers": [
-   "1",
-   "1-2",
-   "2-1",
-   "2-2",
-   "3-1"
-  ]
- },
- "temporal": {
-  "cutoff_rule": "cutoff = the report's announcement date (date field of reports_list.csv row); a document is visible iff available_at <= cutoff; the gold document's available_at == its own cutoff (always visible)"
- },
- "retrieval_interface": {
-  "budget": 4,
-  "index": "per-document single chunk (one annual report = one retrieval unit); BM25 formula IDENTICAL to LOFin's frozen baseline: idf = log(1 + (N - df + 0.5)/(df + 0.5)), k1=2.2, b=0.75, term-frequency formula identical, dedup by document",
-  "tokenizer": "jieba (CJK words with len>=2 or digit strings); declared difference vs LOFin's English tokenizer, both are the frozen baselines' native tokenizers for their respective languages",
-  "obligation_rule": "chinese_obligation_rule: first (20xx)年 in the question + longest alias (full name / short name / code) present in the question -> the single (code, year) annual report; filing_type=10-K, fiscal_period=FY (annual-report analogues)",
-  "path_markers": "chunk terms include generic_path = path<code><year> and precise_path = path<code><year>fy10k, byte-identical construction to LOFin's make_period_chunks (fill_missing matches required_terms against them)"
- },
- "methods": {
-  "external_baselines_run_first": [
-   "single_shot",
-   "period_metadata_decomposition",
-   "generic_adaptive_period",
-   "hirec_period"
-  ],
-  "note": "the four external baselines are the same-named frozen baselines as in the LOFin benchmark; all run through retrieve_policy imported byte-identically from run_period_aware_baselines.py (language-agnostic policy reading only obligation fields + BM25 interface). Project-internal methods (v4/v8/v9 family) are a SEPARATE comparison run AFTER this protocol is committed, with zero tuning on FinGLM results."
- },
- "metrics": {
-  "primary": [
-   "leg_recall",
-   "closure",
-   "wrong_doc_rate"
-  ],
-  "leg_recall": "|gold & used| / |gold| (single gold doc -> 0/1)",
-  "closure": "file-level: gold_doc_ids subset of used_docs (single gold doc -> gold retrieved within budget)",
-  "wrong_doc_rate": "|used - gold| / |used|",
-  "stratification": "overall + 5 answer_type layers",
-  "note": "closure is FILE-LEVEL document closure, NOT answer accuracy; FinGLM answers are never scored. For single-gold-doc tasks closure reduces to recall; discriminating signal comes from wrong_doc_rate and the layered report."
- },
- "statistics": {
-  "pairwise_comparisons": "McNemar on closure and paired permutation (sign-flip, seed 20260812, +1 pseudo-count) on wrong_doc_rate, identical procedure to the LOFin extended tests (audit_lofin_full_extended_tests.py)",
-  "claim_boundary": "any claim of superiority is restricted to these pairwise tests on the declared metrics; no SOTA claim against external leaderboards (FinGLM original papers use answer-accuracy, which this protocol explicitly does not measure)"
- },
- "integrity": {
-  "frozen_protocol_discipline": "protocol changes must be committed before any run; the frozen method set is never tuned on FinGLM results",
-  "reporting": "negative results reported; Chinese/English results kept separate; question text never reveals filing type to any method (the methods receive only the public question)",
-  "reproducibility": "runners import the frozen LOFin policy code byte-identically (no copy-paste divergence)"
- },
- "amendments": {
-  "amendment_1": {
-   "date": "2026-08-13",
-   "title": "Project-internal method step (v4/v9 family) - Chinese obligation rule and method matrix",
-   "pre_registered": "protocol methods.note already declares the internal-method comparison as a SEPARATE run after this protocol was committed; amendment_1 pins down its exact obligations and retrieval matrix BEFORE any internal-method row is produced",
-   "obligation_rule_internal": {
-    "name": "chinese_internal_obligation_rule",
-    "differs_from_baseline_rule_by": "the baseline chinese_obligation_rule (frozen for the four external baselines) takes the FIRST (20xx)year in the question; the internal-method rule takes ALL explicit (20xx)year occurrences -> one (code, year, 10-K, FY) obligation each, sorted by year. This is a faithful Chinese translation of the LOFin-internal select_years semantics (explicit-year branch keeps every explicit year; LOFin v4/v7/v8/v9 all carry their own obligation parser as part of the method definition, not tuned on FinGLM results).",
-    "range_semantics": "X年至Y年 / 对比X年和Y年 -> the two explicit endpoint years {X, Y} (LOFin's explicit-range branch has no Chinese textual form: no concatenated 20xx20xx tokens; the '至/和' endpoints are the explicit years). 1829/1829 questions contain at least one (20xx)year; the no-year fallback branch is defensive only.",
-    "alias_matching": "identical to the baseline rule: longest alias (full name / short name / code) present in the question",
-    "filing_analogue": "every obligation is the annual report (filing_type=10-K, fiscal_period=FY) of (code, year), doc_id from the registry - identical to the baseline rule"
-   },
-   "method_matrix": {
-    "finplan_v4": "obligations = chinese_internal_obligation_rule; per (code, year) obligation query = question + code + year, required_terms=[generic_path=path<code><year>], limit=1, until budget. Byte-faithful to LOFin run_nonoracle_obligation_planning_v4 (finplan_v3_path_bound: leg query + generic path marker).",
-    "finplan_v9_cascade": "obligations = chinese_internal_obligation_rule; per obligation query = question + code + year + FY + 10-K, required_terms=[precise_path], limit=1, until budget. Byte-faithful to LOFin run_nonoracle_obligation_planning_v7 finplan_v9_cascade.",
-    "metadata_v9_fill": "P4 honesty comparator (same as LOFin): the EXACT SAME v9 obligations and query, metadata-decomposition retrieval (skip already-used doc_id, no cascade) - identical to FinGLM baseline period_metadata_decomposition retrieval on the same obligation; the only difference vs pmd is the obligation rule (all years vs first year).",
-    "v7_v8_equivalence_note": "LOFin v7/v8 differ from v9 only in period_requests (quarter/half-year phrases, first-n, fiscal-year-N). FinGLM 复赛A questions contain NO quarter/half-year phrases (corpus is annual reports only; scanned 1829/1829), so v7/v8/v9 obligation rules coincide on this track and v9_cascade represents all three. v8's half-year alias layer has no ground here; stated honestly, not silently dropped.",
-    "single_run": "v4, v9_cascade, metadata_v9_fill run in ONE process over the SAME corpus index (identical postings/dl, avgdl=55285), same cases, same budget=4, same cutoff semantics as the baseline run."
-   },
-   "equivalence_checks": {
-    "index_equality": "rebuilt index must reproduce avgdl=55285 and unique-term count 1212588 (byte-identical construction as the baseline run)",
-    "single_year_consistency": "on the 1783 single-year cases, finplan_v9_cascade has the same obligation and same retrieval as baseline period_metadata_decomposition -> closure/wrong_doc_rate must match row-for-row (asserted, not assumed)"
-   },
-   "no_tuning": "no method is tuned on FinGLM results; the 46 multi-year cases (22 baseline pmd failures) are NOT used to change any rule; the all-years rule predates this analysis and is the LOFin-internal frozen semantics",
-   "claim_boundary": "same as protocol statistics: pairwise McNemar closure + paired-permutation wrong_doc_rate, overall + 5 strata; no SOTA claim; file-level closure is not answer accuracy"
+  "gold_standard": {
+    "original_document_sets": false,
+    "statement": "FinGLM provides NO original gold document sets (audited: gold_document_sets=False). The per-question gold document set is DERIVED from the answer prompt metadata (ent_name + year -> the single annual report of that company/year). This is a SELF-BUILT evaluation convention and is declared as such; it is not an original dataset annotation.",
+    "derivation": "prompt.ent_name matched to reports_list company full name (exact) -> code; prompt.year -> the (code, year) annual report; gold_doc_ids = [<code>_<year>_annual]",
+    "gold_size_per_question": 1,
+    "note": "single-document closure: closure=1 means the unique gold document was retrieved within budget"
+  },
+  "exclusions": {
+    "total": 171,
+    "rate": "171/2000 = 8.55%",
+    "reasons": {
+      "no_prompt_generic_concept_question": 88,
+      "ent_name_not_in_reports_list": 66,
+      "report_year_missing": 17
+    },
+    "reporting": "excluded cases are recorded with reasons in finglm_full_cases_v1.json and reported honestly; they are never silently dropped"
+  },
+  "cases": {
+    "resolved": 1829,
+    "answer_type_layers": [
+      "1",
+      "1-2",
+      "2-1",
+      "2-2",
+      "3-1"
+    ]
+  },
+  "temporal": {
+    "cutoff_rule": "cutoff = the report's announcement date (date field of reports_list.csv row); a document is visible iff available_at <= cutoff; the gold document's available_at == its own cutoff (always visible)"
+  },
+  "retrieval_interface": {
+    "budget": 4,
+    "index": "per-document single chunk (one annual report = one retrieval unit); BM25 formula IDENTICAL to LOFin's frozen baseline: idf = log(1 + (N - df + 0.5)/(df + 0.5)), k1=2.2, b=0.75, term-frequency formula identical, dedup by document",
+    "tokenizer": "jieba (CJK words with len>=2 or digit strings); declared difference vs LOFin's English tokenizer, both are the frozen baselines' native tokenizers for their respective languages",
+    "obligation_rule": "chinese_obligation_rule: first (20xx)年 in the question + longest alias (full name / short name / code) present in the question -> the single (code, year) annual report; filing_type=10-K, fiscal_period=FY (annual-report analogues)",
+    "path_markers": "chunk terms include generic_path = path<code><year> and precise_path = path<code><year>fy10k, byte-identical construction to LOFin's make_period_chunks (fill_missing matches required_terms against them)"
+  },
+  "methods": {
+    "external_baselines_run_first": [
+      "single_shot",
+      "period_metadata_decomposition",
+      "generic_adaptive_period",
+      "hirec_period"
+    ],
+    "note": "the four external baselines are the same-named frozen baselines as in the LOFin benchmark; all run through retrieve_policy imported byte-identically from run_period_aware_baselines.py (language-agnostic policy reading only obligation fields + BM25 interface). Project-internal methods (v4/v8/v9 family) are a SEPARATE comparison run AFTER this protocol is committed, with zero tuning on FinGLM results."
+  },
+  "metrics": {
+    "primary": [
+      "leg_recall",
+      "closure",
+      "wrong_doc_rate"
+    ],
+    "leg_recall": "|gold & used| / |gold| (single gold doc -> 0/1)",
+    "closure": "file-level: gold_doc_ids subset of used_docs (single gold doc -> gold retrieved within budget)",
+    "wrong_doc_rate": "|used - gold| / |used|",
+    "stratification": "overall + 5 answer_type layers",
+    "note": "closure is FILE-LEVEL document closure, NOT answer accuracy; FinGLM answers are never scored. For single-gold-doc tasks closure reduces to recall; discriminating signal comes from wrong_doc_rate and the layered report."
+  },
+  "statistics": {
+    "pairwise_comparisons": "McNemar on closure and paired permutation (sign-flip, seed 20260812, +1 pseudo-count) on wrong_doc_rate, identical procedure to the LOFin extended tests (audit_lofin_full_extended_tests.py)",
+    "claim_boundary": "any claim of superiority is restricted to these pairwise tests on the declared metrics; no SOTA claim against external leaderboards (FinGLM original papers use answer-accuracy, which this protocol explicitly does not measure)"
+  },
+  "integrity": {
+    "frozen_protocol_discipline": "protocol changes must be committed before any run; the frozen method set is never tuned on FinGLM results",
+    "reporting": "negative results reported; Chinese/English results kept separate; question text never reveals filing type to any method (the methods receive only the public question)",
+    "reproducibility": "runners import the frozen LOFin policy code byte-identically (no copy-paste divergence)"
+  },
+  "amendments": {
+    "amendment_1": {
+      "date": "2026-08-13",
+      "title": "Project-internal method step (v4/v9 family) - Chinese obligation rule and method matrix",
+      "pre_registered": "protocol methods.note already declares the internal-method comparison as a SEPARATE run after this protocol was committed; amendment_1 pins down its exact obligations and retrieval matrix BEFORE any internal-method row is produced",
+      "obligation_rule_internal": {
+        "name": "chinese_internal_obligation_rule",
+        "differs_from_baseline_rule_by": "the baseline chinese_obligation_rule (frozen for the four external baselines) takes the FIRST (20xx)year in the question; the internal-method rule takes ALL explicit (20xx)year occurrences -> one (code, year, 10-K, FY) obligation each, sorted by year. This is a faithful Chinese translation of the LOFin-internal select_years semantics (explicit-year branch keeps every explicit year; LOFin v4/v7/v8/v9 all carry their own obligation parser as part of the method definition, not tuned on FinGLM results).",
+        "range_semantics": "X年至Y年 / 对比X年和Y年 -> the two explicit endpoint years {X, Y} (LOFin's explicit-range branch has no Chinese textual form: no concatenated 20xx20xx tokens; the '至/和' endpoints are the explicit years). 1829/1829 questions contain at least one (20xx)year; the no-year fallback branch is defensive only.",
+        "alias_matching": "identical to the baseline rule: longest alias (full name / short name / code) present in the question",
+        "filing_analogue": "every obligation is the annual report (filing_type=10-K, fiscal_period=FY) of (code, year), doc_id from the registry - identical to the baseline rule"
+      },
+      "method_matrix": {
+        "finplan_v4": "obligations = chinese_internal_obligation_rule; per (code, year) obligation query = question + code + year, required_terms=[generic_path=path<code><year>], limit=1, until budget. Byte-faithful to LOFin run_nonoracle_obligation_planning_v4 (finplan_v3_path_bound: leg query + generic path marker).",
+        "finplan_v9_cascade": "obligations = chinese_internal_obligation_rule; per obligation query = question + code + year + FY + 10-K, required_terms=[precise_path], limit=1, until budget. Byte-faithful to LOFin run_nonoracle_obligation_planning_v7 finplan_v9_cascade.",
+        "metadata_v9_fill": "P4 honesty comparator (same as LOFin): the EXACT SAME v9 obligations and query, metadata-decomposition retrieval (skip already-used doc_id, no cascade) - identical to FinGLM baseline period_metadata_decomposition retrieval on the same obligation; the only difference vs pmd is the obligation rule (all years vs first year).",
+        "v7_v8_equivalence_note": "LOFin v7/v8 differ from v9 only in period_requests (quarter/half-year phrases, first-n, fiscal-year-N). FinGLM 复赛A questions contain NO quarter/half-year phrases (corpus is annual reports only; scanned 1829/1829), so v7/v8/v9 obligation rules coincide on this track and v9_cascade represents all three. v8's half-year alias layer has no ground here; stated honestly, not silently dropped.",
+        "single_run": "v4, v9_cascade, metadata_v9_fill run in ONE process over the SAME corpus index (identical postings/dl, avgdl=55285), same cases, same budget=4, same cutoff semantics as the baseline run."
+      },
+      "equivalence_checks": {
+        "index_equality": "rebuilt index must reproduce avgdl=55285 and unique-term count 1212588 (byte-identical construction as the baseline run)",
+        "single_year_consistency": "on the 1783 single-year cases, finplan_v9_cascade has the same obligation and same retrieval as baseline period_metadata_decomposition -> closure/wrong_doc_rate must match row-for-row (asserted, not assumed)"
+      },
+      "no_tuning": "no method is tuned on FinGLM results; the 46 multi-year cases (22 baseline pmd failures) are NOT used to change any rule; the all-years rule predates this analysis and is the LOFin-internal frozen semantics",
+      "claim_boundary": "same as protocol statistics: pairwise McNemar closure + paired-permutation wrong_doc_rate, overall + 5 strata; no SOTA claim; file-level closure is not answer accuracy"
+    },
+    "amendment_2": {
+      "date": "2026-08-14",
+      "title": "答案层指标 + Dense/Hybrid 基线",
+      "pointer": "docs/04-数据与实验/answer_accuracy_dense_hybrid_protocol_v1.json (Part A 答案支撑率/LLM reader 诊断/拒答诚实度;Part B DenseRAG + Hybrid RRF)",
+      "committed_before_runs": true
+    }
   }
- }
 }

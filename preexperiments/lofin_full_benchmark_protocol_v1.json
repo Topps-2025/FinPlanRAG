@@ -38,7 +38,11 @@
         "sha256": "7211cb088fe622985119506d42af5c63b09d73f1b49e5b07d92c018faee9b830"
       }
     },
-    "benchmark_reads": ["textual_test.jsonl", "numeric_table_test.jsonl", "numeric_text_test.jsonl"],
+    "benchmark_reads": [
+      "textual_test.jsonl",
+      "numeric_table_test.jsonl",
+      "numeric_text_test.jsonl"
+    ],
     "inventory": {
       "n_unique_questions_total": 1595,
       "n_lines_total": 3031,
@@ -265,5 +269,11 @@
     "未注册自建题参与本基准（自建题集另在 validation8 冻结集，报告时分开）",
     "禁止主张：'首个金融多步规划'/'SOTA'/'现有方法不验证'——本基准只测本框架 9 方法的相对 head-to-head",
     "数据源与构建器（build_lofin_multidoc_pilot.py / build_lofin_validation8.py / build_sec_company_registry.py / storage_paths.py）SHA 见上表与 freeze 文件，任何字节变化即失效"
-  ]
+  ],
+  "amendment_5": {
+    "date": "2026-08-14",
+    "title": "答案层指标 + Dense/Hybrid 基线",
+    "pointer": "docs/04-数据与实验/answer_accuracy_dense_hybrid_protocol_v1.json (Part A 答案支撑率/LLM reader 诊断/拒答诚实度;Part B DenseRAG + Hybrid RRF)",
+    "committed_before_runs": true
+  }
 }
