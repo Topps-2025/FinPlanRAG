@@ -1,7 +1,19 @@
 {
   "schema": "finplan-answer-accuracy-dense-hybrid-protocol.v1",
-  "status": "pre-registered-before-any-row",
+  "status": "pre-registered-before-any-claim;amendment_1-appended-2026-08-14",
   "date": "2026-08-14",
+  "amendment_1": {
+    "date": "2026-08-14",
+    "trigger": "LOFin L1 全集结果(未提交、未主张)显示 oracle 支撑率(0.4561)低于多数方法(single_shot 0.4752 / hirec 0.5032),570/1572 题出现'方法支撑但 oracle 不支撑'",
+    "finding": "LOFin gold reference_answer 含大量'派生数字'(比率/百分比由组件计算得出,如 CAPEX/Revenue 5.1%、quick ratio 0.96、FCF conversion 143%->156%),金标文档(XBRL 式 facts 文本)只含组件不含派生结果 → oracle 是'逐字数值支撑率'上限,不是答案准确率上限;缺失核心长度分布:len4=466/len5=208/len3=89,并非只有短数字",
+    "mechanics": "方法超过 oracle 的机制是同公司'兄弟文档'携带:wrong_doc_rate≈0.5 的误检文档多为同公司其他年份/季度申报,内含同一指标数值 → 检索到错误文档仍'支撑'答案;支撑率与 wdr 正相关",
+    "adds": [
+      "random-doc noise floor:seed=20260814,200 题 × 3 个非金标随机文档,归一化核心包含率 → 噪音标定(实测 0.115,方法间 0.43-0.50 显著高于地板,方法支撑并非纯噪音)",
+      "closure 条件化支撑率:方法 used_docs 覆盖 gold 的子集上报告支撑率,把'逐字覆盖'与'误检噪音'分离",
+      "按核心长度分层披露(≤3 / 4-5 / 6+ 字符),落实原协议'按数字长度披露'"
+    ],
+    "consequence": "L1 逐字支撑率在 LOFin 上不是方法检索质量的判别量(0.43-0.50 区间由误检噪音主导);L1 报告为'逐字数值覆盖 + 噪音地板 + closure 条件化',方法间支撑率差异不作检索质量主张;L2 与 Part B 不受影响"
+  },
   "adds_to": [
     "docs/04-数据与实验/finglm_protocol_v1.json (amendment_2)",
     "docs/04-数据与实验/lofin_full_benchmark_protocol_v1.json (amendment_5)"

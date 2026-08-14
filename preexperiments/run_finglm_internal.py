@@ -121,13 +121,18 @@ def retrieve(question: str, cutoff: str, obligations: list[dict],
     return {"used": used, "used_docs": used_docs, "actions": actions}
 
 
-def build_index(corpus_dir: Path, registry: dict) -> CNBM25:
-    """Byte-identical index construction to run_finglm_baselines.run()."""
+def build_index(corpus_dir: Path, registry: dict,
+                code_files: Sequence[Path] | None = None) -> CNBM25:
+    """Byte-identical index construction to run_finglm_baselines.run().
+
+    code_files is an optional subset for smoke tests; the default (None)
+    scans the full corpus exactly as the frozen run did."""
     companies = registry["companies"]
     chunks: list[Chunk] = []
     postings: dict[str, array] = {}
     dl: list[int] = []
-    for code_file in sorted(Path(corpus_dir).glob("*.json")):
+    files = sorted(Path(corpus_dir).glob("*.json")) if code_files is None else code_files
+    for code_file in files:
         code = code_file.stem
         ent = companies.get(code)
         for doc in json.loads(code_file.read_text(encoding="utf-8"))["documents"]:
