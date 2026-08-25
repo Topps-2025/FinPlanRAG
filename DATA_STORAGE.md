@@ -1,22 +1,28 @@
-# FinPlanRAG 外置数据说明
+# External data storage
 
-本 GitHub 工作目录 `C:\Users\Lenovo\Desktop\Paper\FinPlanRAG` 只保留研究框架、核心代码、测试和冻结协议。原始数据、构建语料、模型权重、实验结果与历史归档统一存放在：
+The GitHub working tree contains source code, tests, protocols, and small examples only. Large public datasets, downloaded filings, model weights, and generated results live outside the repository.
 
-`D:\Engineering\FinPlanRAG\database`
+The default location is:
 
-目录约定：
+```text
+D:\Engineering\FinPlanRAG\database
+```
 
-- `preexperiments/data/`：原始公开数据、PDF 与构建后的实验语料；
-- `preexperiments/models/`：本地模型权重；
-- `preexperiments/results/`：实验运行结果；
-- `tmp/`：论文、镜像索引和临时下载；
-- `archive/`：旧版草稿和生成缓存；
-- `storage_manifest_v1.json`：外置资产大小与 SHA-256 清单。
-
-代码默认读取上述路径。迁移到其他机器时设置环境变量：
+Override it on another machine with:
 
 ```powershell
 $env:FINPLANRAG_STORAGE_ROOT = 'E:\YourPath\FinPlanRAG\database'
 ```
 
-不要把外置数据库直接提交到 GitHub。公开数据的来源、许可、下载失败和镜像访问情况仍由各实验审计文件记录。
+The maintained storage layout is:
+
+```text
+database/
+├── data/       # source documents and benchmark inputs
+├── models/     # local model weights
+├── results/    # generated experiment outputs
+├── tmp/        # downloads and intermediate files
+└── archive/    # superseded artifacts
+```
+
+Do not commit credentials, model weights, raw filings, or generated result dumps. Dataset provenance, licenses, download failures, and checksums should be recorded in a small JSON protocol file next to the experiment that uses them.

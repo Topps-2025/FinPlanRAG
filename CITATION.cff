@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+title: "FinPlan-RAG: Point-in-Time Obligation-Aware Retrieval Planning for Financial QA"
+message: "Please cite the repository and the accompanying paper when using this software."
+type: software
+authors:
+  - family-names: "FinPlan-RAG"
+    given-names: "Contributors"
+version: 0.1.0
+date-released: 2026-08-25
+repository-code: "https://github.com/Topps-2025/FinPlanRAG"
+license: MIT
