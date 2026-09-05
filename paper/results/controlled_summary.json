@@ -1,0 +1,21 @@
+{
+  "schema": "finplan-controlled-planning-paper-summary.v1",
+  "source_sha256": "E5D207A28136A91CA74B85D0B373C71E5C5D7346AD497E16799B6DB4E42CAA28",
+  "protocol": {"seeds": 20, "cases_per_world": 40, "budget": 10, "scenarios": 7},
+  "metrics": ["accuracy", "coverage", "closure", "overclaim", "counterevidence_recall", "queries", "utility", "future_leak"],
+  "summary": {
+    "single_shot": {"accuracy": 0.0662, "coverage": 0.1011, "closure": 0.1011, "overclaim": 0.0038, "counterevidence_recall": 0.6509, "queries": 10.0000, "utility": -0.4072, "future_leak": 0.0000},
+    "fixed_decomposition": {"accuracy": 0.1748, "coverage": 0.2930, "closure": 0.2930, "overclaim": 0.0136, "counterevidence_recall": 0.6579, "queries": 10.0000, "utility": -0.3630, "future_leak": 0.0000},
+    "generic_adaptive": {"accuracy": 0.1929, "coverage": 0.3425, "closure": 0.3425, "overclaim": 0.0154, "counterevidence_recall": 0.6319, "queries": 10.0000, "utility": -0.3708, "future_leak": 0.0000},
+    "finplan_state": {"accuracy": 0.1909, "coverage": 0.3655, "closure": 0.3655, "overclaim": 0.0132, "counterevidence_recall": 0.6051, "queries": 8.8721, "utility": -0.3583, "future_leak": 0.0000},
+    "finplan_no_counterevidence": {"accuracy": 0.2864, "coverage": 0.5109, "closure": 0.5109, "overclaim": 0.0350, "counterevidence_recall": 0.3154, "queries": 7.9195, "utility": -0.2840, "future_leak": 0.0000},
+    "finplan_no_stop": {"accuracy": 0.1896, "coverage": 0.3371, "closure": 0.3371, "overclaim": 0.0123, "counterevidence_recall": 0.6056, "queries": 10.0000, "utility": -0.3696, "future_leak": 0.0000},
+    "finplan_no_time": {"accuracy": 0.1788, "coverage": 0.4327, "closure": 0.4327, "overclaim": 0.0211, "counterevidence_recall": 0.5780, "queries": 8.5684, "utility": -0.4384, "future_leak": 0.5020}
+  },
+  "paired_deltas": {
+    "state_vs_single_shot": {"closure": 0.2645, "queries": -1.1279, "utility": 0.0489},
+    "counterevidence_enabled_vs_disabled": {"counterevidence_recall": 0.2897, "overclaim": -0.0218, "utility": -0.0743},
+    "point_in_time_enabled_vs_disabled": {"future_leak": -0.5020, "closure": -0.0671, "utility": 0.0801},
+    "adaptive_stop_vs_no_stop": {"queries": -1.1279, "utility": 0.0113}
+  }
+}

@@ -49,6 +49,11 @@ Run the controlled benchmark from the installed command line:
 finplan-controlled --seeds 2 --cases-per-world 8 --budget 6
 ```
 
+For Codex, Claude Code, and other tool-using agents, register the vendor-neutral
+adapter described in [docs/agent_integrations.md](docs/agent_integrations.md).
+`finplan-rag-agent --schema` prints an OpenAI-compatible function schema, while
+`python -m finplan_rag.agent_adapter` provides a JSONL stdio protocol.
+
 The package requires Python 3.10+ and NumPy only. Reader model integrations are deliberately optional; no API key or model weight is needed for the included tests and smoke run.
 
 ## Data and storage
@@ -57,7 +62,10 @@ Large corpora, downloaded filings, model weights, and generated result tables ar
 
 ## Repository status
 
-The English package is the maintained public surface. Historical Chinese research notes and the pre-refactor experiment scripts were moved, without deletion, to the sibling directory `FinPlanRAG_legacy_cn` so that the GitHub repository remains English-only while the research record stays recoverable.
+The English package is the maintained public code surface. The `paper/`
+directory contains synchronized English and Chinese initial drafts; historical
+Chinese research notes and pre-refactor experiment scripts remain in the sibling
+directory `FinPlanRAG_legacy_cn` when present.
 
 ## Citation and license
 

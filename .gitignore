@@ -16,3 +16,7 @@ __pycache__/
 # Local editor / tool state (Obsidian vault workspace, Claude Code local settings)
 .obsidian/
 .claude/
+
+# Local benchmark outputs used to build the paper summary
+controlled_results*.json
+paper/*/build*/

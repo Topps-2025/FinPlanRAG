@@ -1,0 +1,247 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,graphicx,microtype,natbib,hyperref}
+\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{theorem}{Theorem}
+\newcommand{\FinPlan}{FinPlan\mbox{-}RAG}
+\title{Point-in-Time Obligation-Aware Retrieval Planning for Financial Question Answering}
+\author{Anonymous authors}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Financial questions are often underspecified as retrieval problems: a single
+question can require several entities, fiscal periods and filing types, while
+documents become available only at particular times. We introduce \FinPlan, a
+non-oracle retrieval planner that represents these requirements as explicit
+filing obligations and maintains an auditable evidence state. The planner
+targets one unresolved obligation at a time, applies a point-in-time cutoff,
+and stops only when the obligation set is closed. This design is motivated by
+an identification gap: a relevance score is not, in general, sufficient to
+decide whether the evidence needed for a financial answer is complete. We
+formalize the gap with an observational-equivalence construction and show that
+query budget, temporal availability and counterevidence are separate variables
+in the decision problem. In a deterministic controlled benchmark with 20 seeds,
+seven missingness/conflict scenarios and 5,600 cases, \FinPlan increases closure
+from 0.101 to 0.366 relative to single-shot retrieval and uses 8.87 rather than
+10 queries on average. Removing counterevidence increases closure to 0.511 but
+reduces counterevidence recall from 0.605 to 0.315 and increases overclaiming.
+Removing the cutoff produces future leakage in 50.2\% of cases. These results
+are mechanism evidence rather than a real-world QA or state-of-the-art claim.
+We release a reproducible implementation and a tool/stdio adapter for common
+code agents, including Codex and Claude Code.
+\end{abstract}
+
+\section{Introduction}
+Financial QA systems must align a question with an entity, a reporting period,
+and a filing that was actually available when the question was asked. A system
+can retrieve a highly relevant sentence and still fail because it omitted a
+second required filing, used a later revision, or ignored a limiting disclosure.
+Most RAG pipelines expose a ranked list but leave these obligations implicit.
+
+Our research question is: \emph{does an explicit obligation state improve the
+next retrieval and stopping decision under a fixed cutoff and query budget?}
+We make three bounded contributions. First, we formalize a financial retrieval
+obligation as the tuple $(e,y,f,p)$ for entity, fiscal year, filing type and
+fiscal period. Second, we give a compact identification argument showing why a
+score-only planner cannot guarantee closure when two worlds share the same
+observed score but differ in an unobserved required filing. Third, we implement
+and challenge the resulting planner with controlled baselines, component
+ablations and a temporal leakage stress test. The maintained repository and
+the result hash are part of the evidence boundary; no number is filled in from
+an unverified external run.
+
+\section{Related work and research gap}
+Retrieval-augmented generation combines a retriever with a reader
+\citep{lewis2020rag}. Dense and sparse retrievers optimize relevance or lexical
+coverage, while temporal QA benchmarks expose long-range and multi-hop
+dependencies \citep{maharana2024locomo,wu2024longmemeval}. These systems provide
+useful coverage controls but do not by themselves represent which filings are
+still required. Financial QA adds a stronger constraint: the answer must be
+supported by information available at a declared cutoff.
+
+The gap is therefore not that existing rankers are inaccurate in every case.
+It is that a scalar relevance score is an incomplete state for a stopping rule.
+Our hypothesis is deliberately falsifiable:
+\begin{quote}
+H1: obligation-aware state planning improves closure and query efficiency under
+fixed information and budget, while explicit counterevidence and point-in-time
+filtering trade coverage for lower overclaiming and lower future leakage.
+\end{quote}
+
+\section{Identification gap and theory}
+Let $O(q)=\{(e,y,f,p)\}$ denote the obligations parsed from question $q$ and
+let $D_{\le c}$ be documents with availability timestamp no later than cutoff
+$c$. A planner observes a history $h_t$ and chooses a query target $a_t$ from
+the unresolved obligations. Let $S(h_t)$ be any score-only summary used by a
+baseline.
+
+\begin{definition}[Closure]
+The evidence state is closed if every obligation with a known document id is
+covered by at least one retrieved, point-in-time document and all required
+slots have a resolved vote. Closure is a process property; it is not answer
+correctness.
+\end{definition}
+
+\begin{proposition}[Score insufficiency]
+Suppose there exist two latent worlds $w_+$ and $w_-$ with the same observed
+history and score $S(h_t)$, but with opposite optimal actions for an unresolved
+obligation. For any score-only randomized rule that chooses the positive action
+with probability $p$, its worst-world regret is at least
+\[
+\max\{(1-p)m_+,pm_-\}\ge \frac{m_+m_-}{m_++m_-},
+\]
+where $m_+$ and $m_-$ are the two action margins.
+\end{proposition}
+
+\begin{proof}
+In $w_+$, taking the negative action incurs at least $m_+$ and occurs with
+probability $1-p$; in $w_-$, taking the positive action incurs at least $m_-$
+and occurs with probability $p$. Balancing the two lower bounds gives the
+stated harmonic-mean floor.
+\end{proof}
+
+The construction is financial rather than purely semantic: $w_+$ contains a
+limiting disclosure or a future revision that changes the required filing,
+whereas $w_-$ does not. Both can share the same top-ranked passage. Thus the
+failure is at the estimand/state layer, not only a reader error.
+
+\begin{theorem}[Point-in-time safety]
+If the planner only admits chunks with $available\_at\le c$ into the evidence
+state, then any answer context emitted by the planner contains no future
+document. If the cutoff predicate is removed, a future document can be
+consumed whenever it has higher retrieval relevance than all visible hits.
+\end{theorem}
+
+\begin{proof}
+The first claim follows directly from the retrieval predicate. For the second,
+construct a case with a later chunk whose relevance is strictly larger than all
+chunks available by $c$; the maximum-score selection consumes the later chunk.
+\end{proof}
+
+\section{FinPlan-RAG method}
+\subsection{Obligation parsing}
+The parser maps ``Q2 FY 2024'', ``first half of FY 2024'' and annual language to
+normalized period requests. Annual Q4 requests map to a 10-K/FY obligation;
+quarterly requests map to 10-Q/Q1--Q3. The resolver intersects these signatures
+with visible filing metadata and emits stable, sorted obligations.
+
+\subsection{Obligation-aware retrieval}
+Given question $q$, obligation $o=(e,y,f,p)$, and unresolved set $U_t$, the
+planner forms a targeted query $q\oplus o$ and retrieves one BM25 chunk with
+required terms $e$ and $y$. A chunk is eligible only if its timestamp is no
+later than the cutoff. The state returned to the reader is
+\[
+E_t=(O(q),\;C_t,\;n_t,\;closed_t,\;F_t),
+\]
+where $C_t$ is the covered document set, $n_t$ is query count, $closed_t$ is
+the closure flag, and $F_t$ records future ids observed by diagnostics. The
+reader is allowed to answer only when $closed_t=1$; otherwise it can abstain or
+request more retrieval.
+
+\subsection{Complexity and non-oracle contract}
+For $N$ chunks, BM25 indexing is $O(N)$ in the stored term statistics and each
+query scans the in-memory chunks. Planning is $O(|O(q)|)$ retrieval steps up to
+the budget. The planner receives no hidden document ids, answer labels or
+future gold state. This contract is tested by source inspection and deterministic
+unit tests.
+
+\section{Experiments}
+\subsection{Protocol}
+We ran the repository benchmark with 20 seeds, 40 cases per scenario, seven
+scenarios (balanced, multi-path, counterevidence-dense, sparse, source-conflict,
+future-revision and random-world), and a shared budget of 10. Every method saw
+the same paths, documents, cutoff and resolver. The utility was fixed before
+evaluation: correct answer $=1$, abstention $=-0.15$, other error $=-1$,
+overclaim penalty $=-1$, and query cost $=-0.03$. The full run is identified by
+SHA-256 \texttt{E5D207A2...42CAA28}; its compact summary is committed in
+\texttt{paper/results/controlled\_summary.json}.
+
+\subsection{Main result and baselines}
+Table~\ref{tab:main} reports means across all case-level records. \texttt{single\_shot}
+uses the highest-relevance document, \texttt{fixed\_decomposition} cycles through a
+static slot list, and \texttt{generic\_adaptive} selects the least-confident slot
+without risk weights. \texttt{finplan\_state} is the proposed policy.
+
+\begin{table}[t]
+\centering\small
+\caption{Controlled mechanism benchmark. Higher is better except overclaim,
+future leakage and queries. Values are means over 5,600 cases.}
+\label{tab:main}
+\begin{tabular}{lrrrrrrr}
+\toprule
+Method & Acc. & Closure & Overclaim & Counter recall & Queries & Utility & Future leak\\
+\midrule
+Single-shot & .066 & .101 & .004 & .651 & 10.00 & -.407 & .000\\
+Fixed decomposition & .175 & .293 & .014 & .658 & 10.00 & -.363 & .000\\
+Generic adaptive & .193 & .343 & .015 & .632 & 10.00 & -.371 & .000\\
+FinPlan state & .191 & .366 & .013 & .605 & 8.87 & -.358 & .000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Relative to single-shot, FinPlan increases closure by 0.2645 and reduces query
+count by 1.1279. Accuracy is similar to generic adaptive (difference -0.0020),
+which is an important negative result: obligation state is primarily a process
+and stopping improvement in this benchmark, not a universal answer-accuracy
+advantage.
+
+\subsection{Ablations and stress tests}
+Removing counterevidence raises closure (.511) and lowers queries (7.92), but
+counterevidence recall falls from .605 to .315 and overclaim rises from .013 to
+.035. Removing adaptive stopping uses all 10 queries and gives utility -.370.
+Removing temporal filtering creates future leakage in .502 of cases and gives
+utility -.438. These paired changes isolate the roles of counterevidence,
+stopping and point-in-time filtering without changing the candidate stream.
+
+\section{Discussion}
+The results support H1 only in a bounded sense. Explicit state makes unresolved
+obligations visible and permits early stopping, while counterevidence and time
+filters impose measurable costs. The no-counterevidence ablation is a useful
+challenge to a simplistic ``more closure is better'' interpretation. The
+controlled benchmark does not estimate financial answer quality on SEC filings,
+does not include a learned reader, and does not establish superiority over
+stronger adaptive or dense retrievers. Closure should therefore be reported
+alongside correctness, leakage and cost in any future real-data study.
+
+\section{Reproducibility and agent interfaces}
+The package requires Python 3.10 and NumPy; `python -m pytest -q` runs the
+contract tests. `finplan-rag-agent --schema` emits an OpenAI-compatible tool
+schema. The default command reads one JSON request per line and emits one JSON
+response per line, so a Codex or Claude Code tool wrapper can call it without
+vendor-specific state. The response includes obligations, covered document ids,
+closure, future ids, query count and a conservative recommendation to answer
+or abstain. It never fabricates a reader answer.
+
+\section{Conclusion}
+FinPlan-RAG treats financial retrieval as obligation completion under a cutoff,
+not only ranking. The theory identifies when a score-only stopping rule is
+insufficient; the controlled evidence shows the measurable trade-off introduced
+by explicit counterevidence and temporal filtering. The next decisive step is a
+frozen, independently scored financial filing benchmark with a shared reader,
+strong retrieval baselines and held-out point-in-time splits.
+
+\appendix
+\section{Implementation contract}
+The public data structures are \texttt{DocumentObligation}, \texttt{Chunk}, \texttt{RetrievalResult}
+and \texttt{EvidenceState}. \texttt{EvidenceState.closed} is true only when every obligation
+with a known document id is covered. \texttt{future\_document\_ids} is diagnostic and is
+kept separate from the consumed point-in-time context. Reader output is checked
+by deterministic numeric support and refusal parsing.
+
+\section{Evidence boundary}
+The summary values in Table~\ref{tab:main} trace to the local JSON source hash
+listed above. They are not re-derived from prose, and no external SQCAD result
+is presented as a FinPlan-RAG result. Real-data results, model weights and large
+corpora remain external under the repository storage contract.
+
+\begin{thebibliography}{9}
+\bibitem[Lewis et~al.(2020)]{lewis2020rag} Lewis, P. et~al. Retrieval-augmented generation for knowledge-intensive NLP tasks. \emph{NeurIPS} (2020).
+\bibitem[Maharana et~al.(2024)]{maharana2024locomo} Maharana, A. et~al. LoCoMo: Long-context conversation memory benchmark. \emph{ACL} (2024).
+\bibitem[Wu et~al.(2024)]{wu2024longmemeval} Wu, L. et~al. LongMemEval: Benchmarking long-term memory of large language models. arXiv (2024).
+\end{thebibliography}
+\end{document}
