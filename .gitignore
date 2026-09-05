@@ -20,3 +20,10 @@ __pycache__/
 # Local benchmark outputs used to build the paper summary
 controlled_results*.json
 paper/*/build*/
+paper/*/main.aux
+paper/*/main.bbl
+paper/*/main.blg
+paper/*/main.log
+paper/*/main.out
+paper/*/main.pdf
+paper/*/main.toc
