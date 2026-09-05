@@ -45,9 +45,11 @@ Figure~\ref{fig:overview} shows the current complete system. It is intentionally
 \end{figure}
 
 \section{Related Work and Research Gap}
-Open-domain RAG combines a retriever with a generator, but a top-ranked chunk is not necessarily a complete or temporally admissible answer context \citep{lewis2020rag,mallen2023parametric}. Active retrieval and adaptive-RAG systems condition the number or timing of retrieval calls on question complexity \citep{jiang2023flare,jeong2024adaptiverag}. Agent frameworks such as ReAct and Reflexion demonstrate iterative action and self-correction \citep{yao2023react,shinn2023reflexion}; memory systems add temporal graphs, consolidation, and long-horizon evaluation \citep{packer2023memgpt,rasmussen2025zep,maharana2024locomo,wu2024longmemeval}. POMDP and active-perception theory provides tools for controlled sensing under partial observability \citep{krishnamurthy2017pomdp,shi2025active,satsangi2018active}.
+Open-domain RAG combines a retriever with a generator, but a top-ranked chunk is not necessarily a complete or temporally admissible answer context \citep{lewis2020rag,mallen2023parametric}. Active retrieval and adaptive-RAG systems condition the number or timing of retrieval calls on question complexity \citep{jiang2023flare,jeong2024adaptiverag}. Agent frameworks such as ReAct and Reflexion demonstrate iterative action and self-correction \citep{yao2023react,shinn2023reflexion}; memory systems add temporal graphs, consolidation, and long-horizon evaluation \citep{packer2023memgpt,rasmussen2025zep,maharana2024locomo,wu2024longmemeval}. Financial QA benchmarks emphasize numerical reasoning and hybrid table--text evidence \citep{chen2021finqa,zhu2021tatqa,islam2023financebench}.
 
-The missing link is a finance-specific, auditable state variable. Existing systems generally optimize relevance, answer likelihood, or a generic retrieval budget. They do not require the planner to represent a separate obligation for each entity--filing--year--period combination, to search counterevidence, or to prove that all admissible evidence predates a cutoff. Our hypotheses are therefore deliberately process-level:
+The gap must be stated narrowly because recent work has already closed parts of it. FinRank explicitly separates evidence retrieval from answer correctness and constructs hard negatives across entities and reporting periods \citep{mansouri2026finrank}; Fin-RATE evaluates longitudinal and cross-entity financial analysis \citep{jiang2026finrate}; FinSAgent and HC-RAG use corpus-side structure and typed evidence paths \citep{chi2026finsagent,chen2026hcrag}; FinCARDS casts filing reranking as schema-constrained matching \citep{chen2026fincards}. These papers make the broad claim ``financial RAG ignores provenance'' untenable. Our narrower, testable gap is the absence of a single finite-budget control contract that simultaneously (i) enumerates typed obligations, (ii) enforces an information-set cutoff, (iii) treats counterevidence as an action, (iv) stops only on closure or abstains, and (v) reports a proof-to-answer bridge under a shared reader. POMDP and active-perception theory supplies ingredients for controlled sensing, but does not by itself instantiate this financial evidence contract \citep{krishnamurthy2017pomdp,shi2025active,satsangi2018active}.
+
+This is a gap in an identifiable property, not a claim that no prior system has any of these components. Our hypotheses are therefore deliberately process-level:
 \begin{description}[leftmargin=*]
 \item[H1 (representation).] Explicit obligations increase document and period closure relative to single-shot and entity-year retrieval under the same budget.
 \item[H2 (safety).] Point-in-time filtering eliminates future-document leakage, at the cost of a measurable coverage trade-off when admissible evidence is unavailable.
@@ -81,7 +83,28 @@ If a fibre contains two documents with identical scores but different obligation
 \begin{proof}
 The policy receives the same observation $r$ in both worlds, so it must choose the same action. One action is invalid in one of the two worlds. The uniform-prior Bayes error is therefore at least one half; additional documents only increase the ambiguity.
 \end{proof}
-The result is elementary but operationally important: metadata and obligation identity are not optional reranking features when the score fibre mixes periods or filings.
+The result is elementary but operationally decisive: metadata and obligation identity are not optional reranking features when the score fibre mixes periods or filings. It proves existence of a failure class, not that every existing ranker fails on every corpus.
+
+\begin{theorem}[Multi-obligation closure lower bound]
+Consider $m$ independent obligations, with one valid record and $k$ indistinguishable invalid records per obligation, all having the same relevance score. A score-only policy that selects $m$ records without observing obligation metadata has expected closure at most $(1/(k+1))^m$ under a uniform random presentation order.
+\end{theorem}
+\begin{proof}
+For each obligation, the valid record is exchangeable with $k$ invalid records in the score observation. The probability that the first selected record for that obligation is valid is at most $1/(k+1)$. Independence of the presentation permutations gives the product bound. Any policy that selects records globally rather than per obligation can only lose information, so the bound remains valid.
+\end{proof}
+
+\begin{proposition}[Safe completeness requires abstention]
+If an obligation has no admissible supporting record with $a_z\le c$, no policy can both return a supported answer for that obligation and guarantee zero future leakage. A policy satisfying both requirements must abstain or report the obligation as unresolved.
+\end{proposition}
+\begin{proof}
+Returning an answer without admissible support violates support; using a record with $a_z>c$ violates the cutoff. The two actions exhaust the possibilities, so abstention is necessary.
+\end{proof}
+
+\begin{proposition}[Counterevidence is necessary for selective soundness]
+Suppose two worlds share the same supporting evidence for an obligation, but in one world an admissible limiting record exists and in the other it does not. A policy that never searches counterevidence must issue the same decision in both worlds and therefore overclaim in at least one world.
+\end{proposition}
+\begin{proof}
+The observed supporting evidence is identical, so a no-counterevidence policy has identical output. The correct outputs differ (answer versus limitation/abstention), hence one output is wrong; under equal priors the overclaim probability is at least $1/2$.
+\end{proof}
 
 \subsection{Bellman decomposition}
 Let $a_t$ be a retrieval, verification, or abstention action and $x_{t+1}\sim P(\cdot\mid x_t,a_t)$. Define $V_t(x)$ as optimal future utility with $B-n_t$ queries remaining.
@@ -108,6 +131,25 @@ Closure is not sufficient for answer correctness. Let $G$ be the event that all 
  P(Y)\ge P(G)P(S\mid G)-P(\text{unsupported assertion}\mid G).
 \]
 The inequality follows by subtracting the probability of an unsupported assertion from the probability of a sound, closed context. It identifies the missing experiment: a reader-level soundness and numerical-answer evaluation.
+
+\subsection{Finite research-gap proof experiment}
+To make the lower bounds falsifiable rather than rhetorical, we exhaustively enumerate equal-score presentation orders. For one and two obligations, each obligation has one valid pre-cutoff record and one or two confusable invalid records; a second condition adds a high-score future record. The score-only policy selects the first $m$ records, while the obligation-state policy selects one record per typed obligation after applying the cutoff. The script is \texttt{scripts/run\_gap\_proof.py}; its frozen output is \texttt{paper/results/gap\_proof\_small.json}.
+
+\begin{table}[t]\centering\small
+\caption{Exhaustive finite counterexample. Equal-score records are permuted; closure means all typed obligations receive valid pre-cutoff evidence.}
+\begin{tabular}{lrrrrrr}
+\toprule
+Obligations & Distractors & Future record & Cases & Score-only closure & State closure & Score-only leak\\
+\midrule
+1 & 1 & no & 2 & .5000 & 1.0000 & .0000\\
+2 & 1 & no & 24 & .1667 & 1.0000 & .0000\\
+2 & 2 & no & 720 & .0667 & 1.0000 & .0000\\
+2 & 1 & yes & 720 & .0667 & 1.0000 & .6000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This experiment proves only the constructed mechanism: once relevance observations are observationally equivalent, obligation identity and cutoff metadata are decision-relevant. It does not estimate real-corpus accuracy. The strong empirical follow-up is to reproduce the same permutation test with real hard negatives from FinRank/FinanceBench, preserving a shared reader and reporting paired confidence intervals.
 
 \section{FinPlan-RAG Method}
 \subsection{Parser and obligation contract}
@@ -180,7 +222,7 @@ FinPlan-RAG treats financial RAG as point-in-time obligation completion rather t
 \section{Implementation Contract and Claim--Evidence Map}
 The tool input is one JSON object per line with \texttt{query}, \texttt{cutoff}, \texttt{documents}, and optional \texttt{budget}. The output contains \texttt{closed}, \texttt{evidence}, \texttt{missing\_obligations}, \texttt{query\_count}, \texttt{cost}, \texttt{future\_diagnostics}, and \texttt{recommendation}. The controlled result supports H1/H2/H3 at the process level; LOFin and FinGLM support external closure diagnostics; SEC and Chinese pilots support temporal and mixed-period stress tests; no current artifact supports a general answer-accuracy or investment-performance claim.
 
-\nocite{simplemem,actmem,oblivion,memoryworth,trivium,govmem,zou2026demem,tan2025rmm,yuan2026retrieval,zhou2025mem1,kim2025premem,cai2025fracom,tan2025membench,hu2025memoryagentbench,murphy2003dynamic,manski2003partial,stoye2012minimax,hernan2020causal,imbens2015causal,auer2002bandit,li2006abstraction,abel2020abstraction}
+\nocite{simplemem,actmem,oblivion,memoryworth,trivium,govmem,zou2026demem,tan2025rmm,yuan2026retrieval,zhou2025mem1,kim2025premem,cai2025fracom,tan2025membench,hu2025memoryagentbench,murphy2003dynamic,manski2003partial,stoye2012minimax,hernan2020causal,imbens2015causal,auer2002bandit,li2006abstraction,abel2020abstraction,zhu2025fintmmb}
 \bibliographystyle{plainnat}
 \bibliography{references}
 \end{document}

@@ -29,9 +29,11 @@
 本文采用“研究理念—可证伪假设—证据层级”的组织方式。研究理念是：金融RAG的最小可审计单位不是文本块，而是带有文件和期间约束的义务。研究假设为：H1，显式义务提高文件与期间闭合；H2，时点过滤消除未来泄漏，但在资料缺失时产生覆盖权衡；H3，风险感知停止提高效用和查询效率，同时不增加无支持陈述。闭合率本身不代表答案正确率，后者需要独立读者评测。
 
 \chapter{相关研究与研究缺口}
-开放域RAG将检索器与生成器结合，但高相关段落不一定覆盖全部义务，也不一定属于截止时间允许的信息集\citep{lewis2020rag,mallen2023parametric}。主动检索和自适应RAG根据问题复杂度调整检索时机或次数\citep{jiang2023flare,jeong2024adaptiverag}；ReAct、Reflexion等智能体工作展示了迭代行动和自我修正\citep{yao2023react,shinn2023reflexion}。长期记忆研究进一步引入时间图、记忆巩固和长程评测\citep{packer2023memgpt,rasmussen2025zep,maharana2024locomo,wu2024longmemeval}，POMDP与主动感知理论则为不完全观测下的受控信息获取提供了形式工具\citep{krishnamurthy2017pomdp,shi2025active,satsangi2018active}。
+开放域RAG将检索器与生成器结合，但高相关段落不一定覆盖全部义务，也不一定属于截止时间允许的信息集\citep{lewis2020rag,mallen2023parametric}。主动检索和自适应RAG根据问题复杂度调整检索时机或次数\citep{jiang2023flare,jeong2024adaptiverag}；ReAct、Reflexion等智能体工作展示了迭代行动和自我修正\citep{yao2023react,shinn2023reflexion}。金融问答基准突出数值推理和表格—文本混合证据\citep{chen2021finqa,zhu2021tatqa,islam2023financebench}。
 
-现有工作缺少金融场景的统一证据契约：没有强制每一个实体—文件—财年—期间组合成为独立义务，也没有把反证、可得时间和保守拒答放入同一个状态变量。因此本文不声称提出更强的通用语言模型，而是提出可审计的检索规划层，并用受控机制试验和外部审计检验其边界。
+研究缺口必须收窄。FinRank已把证据检索与答案正确性分开，并构造跨实体、跨报告期间的困难负例\citep{mansouri2026finrank}；Fin-RATE评估纵向和跨实体金融分析\citep{jiang2026finrate}；FinSAgent、HC-RAG利用语料结构和类型化证据路径\citep{chi2026finsagent,chen2026hcrag}；FinCARDS把金融文件重排表述为模式约束匹配\citep{chen2026fincards}。因此不能再声称现有金融RAG都忽略来源。本文的可检验窄缺口是：尚缺一个统一的有限预算控制契约，同时满足类型化义务枚举、信息集截止时间、反证动作、闭合才停止/否则拒答，并在共享读者下给出从证明到答案的可复核桥接。POMDP和主动感知提供了受控感知工具，但没有实例化这一金融证据契约\citep{krishnamurthy2017pomdp,shi2025active,satsangi2018active}。
+
+这不是“没有任何先例”的断言，而是一个可识别属性的缺口。本文不声称训练了更强的通用语言模型，而是提出可审计的检索规划层，并用受控机制试验和外部审计检验其边界。
 
 \chapter{研究目标、理念与形式化定义}
 对问题$q$，解析器输出
@@ -60,6 +62,29 @@
 两个世界向策略提供相同观测$r$，因此策略必须采取相同动作；该动作至少在一个世界中无效。等先验下Bayes错误率至少为一半。
 \end{proof}
 
+该命题证明的是失败类的存在，而不是所有排序器在所有语料上都失败。其直接算法含义是：当分数纤维混合期间或文件时，义务身份与元数据必须进入状态。
+
+\begin{theorem}[多义务闭合下界]
+考虑$m$个相互独立的义务，每个义务有一个有效记录和$k$个相关性分数相同的无效记录。若策略只观察分数并在不使用义务元数据的情况下选择$m$条记录，在展示顺序等可能时，其期望闭合率至多为$(1/(k+1))^m$。
+\end{theorem}
+\begin{proof}
+对每个义务，有效记录与$k$个无效记录在分数观测下可交换，首次选中有效记录的概率至多为$1/(k+1)$；展示顺序独立时，多义务闭合概率为乘积。全局选择而非按义务选择不会增加信息，因此下界仍成立。
+\end{proof}
+
+\begin{proposition}[安全完备性要求拒答]
+若某义务不存在满足$a_z\le c$的支持记录，则任何策略都不能同时返回有支持的答案并保证零未来泄漏；满足两项要求的策略必须拒答或报告该义务未解决。
+\end{proposition}
+\begin{proof}
+无可得支持时直接回答违反支持条件，使用$a_z>c$的记录违反截止时间条件，剩余动作只有拒答。
+\end{proof}
+
+\begin{proposition}[选择性可靠性需要反证]
+若两个世界拥有相同的支持证据，但仅其中一个世界存在可得的限制性记录，则从不检索反证的策略必须在至少一个世界中过度主张。
+\end{proposition}
+\begin{proof}
+无反证策略在相同支持证据下输出相同结果，而两个世界的正确输出不同（回答或限制/拒答），因此至少一个输出错误；等先验下过度主张概率至少为$1/2$。
+\end{proof}
+
 \section{义务状态的动态规划}
 设$a_t$为检索、核验或拒答动作，$x_{t+1}\sim P(\cdot\mid x_t,a_t)$，$V_t(x)$为剩余预算下的最优未来效用。
 \begin{theorem}[义务状态Bellman递推]
@@ -85,6 +110,22 @@
  P(Y)\ge P(G)P(S\mid G)-P(\text{无支持陈述}\mid G).
 \]
 该不等式说明闭合与答案正确之间还缺少读者级声音性、数值准确率和校准实验。
+
+\section{研究缺口证明小实验}
+为使下界不是修辞而是可证伪机制，本文穷举相关性分数完全相同的展示顺序。对一个或两个义务，每个义务包含一个截止时间前的有效记录和一至两个混淆记录；另一组加入高分未来记录。分数策略选择前$m$条记录，义务状态策略按义务类型选择记录并执行截止过滤。脚本为\texttt{scripts/run\_gap\_proof.py}，冻结输出为\texttt{paper/results/gap\_proof\_small.json}。
+
+\begin{table}[htbp]\centering\small
+\caption{有限反例穷举结果。所有记录分数相同；闭合表示每个义务都获得有效且不晚于截止时间的证据。}
+\begin{tabular}{lrrrrrr}\toprule
+义务数&每义务混淆数&未来记录&案例数&仅分数闭合&状态闭合&仅分数泄漏\\\midrule
+1&1&否&2&.5000&1.0000&.0000\\
+2&1&否&24&.1667&1.0000&.0000\\
+2&2&否&720&.0667&1.0000&.0000\\
+2&1&是&720&.0667&1.0000&.6000\\\bottomrule
+\end{tabular}
+\end{table}
+
+该实验只证明构造机制：当相关性观测不可区分时，义务身份和截止时间元数据必然具有决策价值，不估计真实语料答案准确率。强实证下一步应使用FinRank或FinanceBench的真实困难负例重复排列检验，在共享读者下报告配对置信区间。
 
 \chapter{FinPlan-RAG算法框架}
 \section{解析与检索}
@@ -137,7 +178,7 @@ LOFin公开数据集（$n=1,572$，预算4）上，FinPlan v9闭合率为.8919�
 FinPlan-RAG将金融RAG定义为带时点约束的义务完成问题。理论证明说明为何必须维护义务状态，受控实验显示闭合、反证召回和查询效率改善，外部审计则验证可迁移性并暴露答案级金标准不足。当前最稳健的结论是一个可复现、可审计的规划契约，而不是已经证明的答案准确率或投资绩效提升。
 
 \backmatter
-\nocite{simplemem,actmem,oblivion,memoryworth,trivium,govmem,zou2026demem,tan2025rmm,yuan2026retrieval,zhou2025mem1,kim2025premem,cai2025fracom,tan2025membench,hu2025memoryagentbench,murphy2003dynamic,manski2003partial,stoye2012minimax,hernan2020causal,imbens2015causal,auer2002bandit,li2006abstraction,abel2020abstraction}
+\nocite{simplemem,actmem,oblivion,memoryworth,trivium,govmem,zou2026demem,tan2025rmm,yuan2026retrieval,zhou2025mem1,kim2025premem,cai2025fracom,tan2025membench,hu2025memoryagentbench,murphy2003dynamic,manski2003partial,stoye2012minimax,hernan2020causal,imbens2015causal,auer2002bandit,li2006abstraction,abel2020abstraction,zhu2025fintmmb}
 \bibliographystyle{plainnat}
 \bibliography{../en/references}
 \end{document}

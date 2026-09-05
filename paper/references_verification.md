@@ -26,6 +26,8 @@ The Crossref endpoint did not resolve the ACL Anthology DOI strings for `jeong20
 
 ## Citation hygiene
 
+The 2026 landscape check added four directly relevant primary records: [FinRank](https://arxiv.org/abs/2608.07400), [Fin-RATE](https://arxiv.org/abs/2602.07294), [FinSAgent](https://arxiv.org/abs/2607.18102), [HC-RAG](https://arxiv.org/abs/2608.12335), and the ACL Anthology record for [FinCARDS](https://aclanthology.org/2026.findings-acl.1244/). Their presence narrows the defensible FinPlan-RAG gap to a unified budgeted control contract and proof-to-reader validation, rather than generic provenance-aware retrieval.
+
 - The drafts use author--year citations and an expanded bibliography; `plainnat` is a compile-time fallback, not the final QF style.
 - Every empirical number in the drafts points to a local result JSON or provenance file, not to a literature citation.
 - No SQCAD result is presented as a FinPlan-RAG result. SQCAD is used only as a protocol and evidence-ladder reference.

@@ -38,6 +38,32 @@ LOFin 中强时段元数据填充基线闭合率约为 .895，而 FinPlan v9 为
 
 ## 4. 必须补齐的理论
 
+### 4.0 重新定义 gap（必须先改）
+
+截至 2026 年，FinRank 已将金融证据检索与答案正确性分开并使用跨期间 hard negatives；Fin-RATE 覆盖纵向/跨实体分析；FinSAgent、HC-RAG 和 FinCARDS 分别从语料对齐、类型化证据路径和模式约束重排角度推进了相邻问题。因此“现有方法只做相关性排序”已经不是可防守的 gap。正文应改为：**尚缺一个统一的有限预算控制契约，将类型化义务、point-in-time cutoff、反证、闭合停止/拒答和共享 reader 的答案级验证放进同一个可审计目标。** 这个 gap 是“统一可检验属性”的缺口，不是“组件从未被提出”的缺口。
+
+### 4.1 已加入的 strong-proof 链条
+
+正文现在包含四个逻辑层：
+
+1. 分数纤维不可识别性：构造相同 relevance、相反 obligation validity 的两个世界，得到 score-only error >= 1/2。
+2. 多义务闭合下界：每个义务一个有效记录和 `k` 个同分无效记录时，score-only closure <= `(1/(k+1))^m`。
+3. 安全完备性与反证必要性：没有 admissible support 必须 abstain；不搜索 counterevidence 时，存在两个支持证据相同但正确输出不同的世界，过度主张至少 1/2。
+4. Bellman + cutoff safety + closure--accuracy boundary：把上述必要信息映射为状态字段、动作集合、停止规则和 reader gate。
+
+### 4.2 Gap proof 小实验
+
+`scripts/run_gap_proof.py` 对等分数展示顺序做穷举，输出 `paper/results/gap_proof_small.json`。当前结果：
+
+| 设置 | score-only closure | obligation-state closure | score-only future leak |
+|---|---:|---:|---:|
+| 1 obligation, 1 distractor | .5000 | 1.0000 | .0000 |
+| 2 obligations, 1 distractor each | .1667 | 1.0000 | .0000 |
+| 2 obligations, 2 distractors each | .0667 | 1.0000 | .0000 |
+| 2 obligations + future record | .0667 | 1.0000 | .6000 |
+
+这是命题的**机制验证**，不是现实语料准确率。Strong proof 的下一步是把 FinRank/FinanceBench 的真实 hard negatives 按同样方式做 permutation test，固定 reader、top-k、budget 和 cutoff，报告 paired bootstrap CI；若真实 hard-negative 试验不复现，下界仍成立但“现实重要性”需要收窄。
+
 1. **读者声音性桥接。** 形式化“闭合上下文 + 引用”到数值答案正确的条件，给出 unsupported assertion 和引用遗漏的上界。
 2. **预算化 value-of-information。** 把每次检索的预期闭合增益、查询成本和反证价值写成可估计的停止阈值，而不只给 Bellman 形式。
 3. **解析与时间戳鲁棒性。** 对期间解析错误率、可得时间误差和修订文件重复给出风险界，配套扰动实验。
@@ -113,6 +139,7 @@ SEC、LOFin、FinGLM、中国混合期间、不同财年制度和公司规模做
 ## 9. 交付物映射
 
 - 英文初稿：`paper/en/main.tex`；中文初稿：`paper/zh/main.tex`。
+- 本轮理论增强编译 PDF：`paper/en/FinPlanRAG_English_Draft_0905.pdf`、`paper/zh/FinPlanRAG_Chinese_Draft_0905.pdf`（原交付 PDF 保留，避免覆盖正在打开的文件）。
 - 框架图：`paper/FinPlanRAG.png`；正文已插图并标注复杂度边界。
 - 结果和溯源：`paper/results/`、`paper/real_data_provenance.md`、`paper/claim_evidence_matrix.md`。
 - 参考文献：`paper/en/references.bib`；条目状态见 `paper/references_verification.md`。
