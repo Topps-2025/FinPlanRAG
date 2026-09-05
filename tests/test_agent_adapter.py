@@ -10,7 +10,7 @@ def _request():
     return {
         "question": "FY 2024 revenue", "entities": ["ACME"],
         "filings": [{"entity": "ACME", "fiscal_year": 2024, "filing_type": "10-K", "fiscal_period": "FY", "document_id": "acme-2024", "available_at": "2025-02-01T00:00:00Z"}],
-        "documents": [{"document_id": "acme-2024", "entity": "ACME", "available_at": "2025-02-01T00:00:00Z", "text": "ACME 2024 FY revenue was 100."}],
+        "documents": [{"document_id": "acme-2024", "entity": "ACME", "fiscal_year": 2024, "filing_type": "10-K", "fiscal_period": "FY", "available_at": "2025-02-01T00:00:00Z", "text": "ACME 2024 FY revenue was 100."}],
         "cutoff": "2025-03-01T00:00:00Z",
     }
 

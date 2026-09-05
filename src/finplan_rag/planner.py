@@ -37,7 +37,22 @@ class ObligationPlanner:
                 break
             query = f"{question} {obligation.entity} {obligation.fiscal_year} {obligation.filing_type} {obligation.fiscal_period}"
             required = (obligation.entity.lower(), str(obligation.fiscal_year))
-            hits = self.index.search(query, cutoff, limit=1, exclude=used_ids, required_terms=required)
+            required_metadata = {
+                "entity": obligation.entity,
+                "fiscal_year": obligation.fiscal_year,
+                "filing_type": obligation.filing_type,
+                "fiscal_period": obligation.fiscal_period,
+            }
+            if obligation.document_id:
+                required_metadata["document_id"] = obligation.document_id
+            hits = self.index.search(
+                query,
+                cutoff,
+                limit=1,
+                exclude=used_ids,
+                required_terms=required,
+                required_metadata=required_metadata,
+            )
             if not hits:
                 continue
             hit = hits[0].chunk

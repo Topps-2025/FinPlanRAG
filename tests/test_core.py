@@ -19,8 +19,8 @@ def test_planner_is_point_in_time_and_covers_filing_obligations():
     ]
     obligations = plan_obligations("FY 2024 revenue", filings, ["ACME"])
     documents = [
-        {"document_id": "acme-2024", "entity": "ACME", "available_at": "2025-02-01T00:00:00Z", "text": "ACME 2024 FY revenue was 100."},
-        {"document_id": "future", "entity": "ACME", "available_at": "2026-01-01T00:00:00Z", "text": "ACME 2024 FY revenue was 999."},
+        {"document_id": "acme-2024", "entity": "ACME", "fiscal_year": 2024, "filing_type": "10-K", "fiscal_period": "FY", "available_at": "2025-02-01T00:00:00Z", "text": "ACME 2024 FY revenue was 100."},
+        {"document_id": "future", "entity": "ACME", "fiscal_year": 2024, "filing_type": "10-K", "fiscal_period": "FY", "available_at": "2026-01-01T00:00:00Z", "text": "ACME 2024 FY revenue was 999."},
     ]
     planner = ObligationPlanner(BM25Index(make_chunks(documents)), budget=2)
     state = planner.run("FY 2024 revenue", obligations, datetime(2025, 3, 1, tzinfo=timezone.utc))
@@ -28,6 +28,21 @@ def test_planner_is_point_in_time_and_covers_filing_obligations():
     assert state.covered_document_ids == ("acme-2024",)
     assert state.future_document_ids == ()
     assert state.retrieved_chunks[0].document_id == "acme-2024"
+
+
+def test_planner_hard_binds_filing_type_and_period_metadata():
+    filings = [
+        {"entity": "ACME", "fiscal_year": 2024, "filing_type": "10-K", "fiscal_period": "FY", "document_id": "annual", "available_at": "2025-02-01T00:00:00Z"},
+    ]
+    obligations = plan_obligations("FY 2024 revenue", filings, ["ACME"])
+    documents = [
+        {"document_id": "wrong-quarter", "entity": "ACME", "fiscal_year": 2024, "filing_type": "10-Q", "fiscal_period": "Q3", "available_at": "2025-01-01T00:00:00Z", "text": "ACME 2024 FY revenue was 999."},
+        {"document_id": "annual", "entity": "ACME", "fiscal_year": 2024, "filing_type": "10-K", "fiscal_period": "FY", "available_at": "2025-02-01T00:00:00Z", "text": "ACME 2024 FY revenue was 100."},
+    ]
+    planner = ObligationPlanner(BM25Index(make_chunks(documents)), budget=1)
+    state = planner.run("FY 2024 revenue", obligations, datetime(2025, 3, 1, tzinfo=timezone.utc))
+    assert state.closed
+    assert state.covered_document_ids == ("annual",)
 
 
 def test_answer_support_and_reader_fallback_are_deterministic():

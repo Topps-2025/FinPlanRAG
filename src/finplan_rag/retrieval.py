@@ -6,7 +6,7 @@ import math
 import re
 from collections import Counter
 from datetime import datetime, timezone
-from typing import Iterable, Sequence
+from typing import Iterable, Mapping, Sequence
 
 from .models import Chunk, RetrievalResult
 
@@ -61,9 +61,19 @@ class BM25Index:
             self.document_frequency.update(tf.keys())
         self.average_length = sum(len(c.terms) for c in self.chunks) / max(1, len(self.chunks))
 
-    def search(self, query: str, cutoff: datetime | None = None, *, limit: int = 5, exclude: Iterable[str] = (), required_terms: Iterable[str] = ()) -> list[RetrievalResult]:
+    def search(
+        self,
+        query: str,
+        cutoff: datetime | None = None,
+        *,
+        limit: int = 5,
+        exclude: Iterable[str] = (),
+        required_terms: Iterable[str] = (),
+        required_metadata: Mapping[str, object] | None = None,
+    ) -> list[RetrievalResult]:
         excluded = set(exclude)
         required = set(required_terms)
+        metadata = {str(key): str(value).lower() for key, value in (required_metadata or {}).items()}
         qterms = tokens(query)
         n = len(self.chunks)
         scored: list[RetrievalResult] = []
@@ -71,6 +81,8 @@ class BM25Index:
             if chunk.chunk_id in excluded or (cutoff is not None and chunk.available_at > cutoff):
                 continue
             if required and not required.issubset(tf):
+                continue
+            if metadata and any(str(chunk.metadata.get(key, "")).lower() != value for key, value in metadata.items()):
                 continue
             length = len(chunk.terms)
             score = 0.0

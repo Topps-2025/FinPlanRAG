@@ -64,6 +64,8 @@ LOFin 中强时段元数据填充基线闭合率约为 .895，而 FinPlan v9 为
 
 这是命题的**机制验证**，不是现实语料准确率。Strong proof 的下一步是把 FinRank/FinanceBench 的真实 hard negatives 按同样方式做 permutation test，固定 reader、top-k、budget 和 cutoff，报告 paired bootstrap CI；若真实 hard-negative 试验不复现，下界仍成立但“现实重要性”需要收窄。
 
+实现一致性要求：输入文档必须提供 `entity`、`fiscal_year`、`filing_type`、`fiscal_period`、`available_at`，并在可解析时提供 `document_id`。检索器已对这些字段执行硬过滤；若数据缺少字段，结果应记为未解决/拒答，不得把语义命中当成理论中的 typed binding。
+
 1. **读者声音性桥接。** 形式化“闭合上下文 + 引用”到数值答案正确的条件，给出 unsupported assertion 和引用遗漏的上界。
 2. **预算化 value-of-information。** 把每次检索的预期闭合增益、查询成本和反证价值写成可估计的停止阈值，而不只给 Bellman 形式。
 3. **解析与时间戳鲁棒性。** 对期间解析错误率、可得时间误差和修订文件重复给出风险界，配套扰动实验。
@@ -139,7 +141,7 @@ SEC、LOFin、FinGLM、中国混合期间、不同财年制度和公司规模做
 ## 9. 交付物映射
 
 - 英文初稿：`paper/en/main.tex`；中文初稿：`paper/zh/main.tex`。
-- 本轮理论增强编译 PDF：`paper/en/FinPlanRAG_English_Draft_0905.pdf`、`paper/zh/FinPlanRAG_Chinese_Draft_0905.pdf`（原交付 PDF 保留，避免覆盖正在打开的文件）。
+- 本轮理论增强编译 PDF：`paper/en/FinPlanRAG_English_Draft_0905_v2.pdf`、`paper/zh/FinPlanRAG_Chinese_Draft_0905_v2.pdf`（原交付 PDF 保留，避免覆盖正在打开的文件）。
 - 框架图：`paper/FinPlanRAG.png`；正文已插图并标注复杂度边界。
 - 结果和溯源：`paper/results/`、`paper/real_data_provenance.md`、`paper/claim_evidence_matrix.md`。
 - 参考文献：`paper/en/references.bib`；条目状态见 `paper/references_verification.md`。
