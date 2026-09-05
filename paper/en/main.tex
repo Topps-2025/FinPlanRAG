@@ -255,6 +255,37 @@ Thus budget 10 is a reproducible operating point, not a universal optimum; the
 full sensitivity artifact and per-run hashes are in
 \texttt{paper/results/budget\_sensitivity.json}.
 
+\subsection{Audited real-data external validity}
+To avoid treating the controlled worlds as financial evidence, we separately
+audited read-only result artifacts from the earlier FinPlanRAG experiments. The
+public LOFin run contains 1,572 questions at budget 4. FinPlan v9 closes
+0.8919 of file-level obligations, compared with 0.8925 for the generic
+period-aware baseline, 0.8588 for the HiREC-style baseline, and 0.6425 for
+single-shot retrieval; its wrong-document rate is 0.3108 versus 0.4742, 0.6244,
+and 0.7983, respectively. The extended paired tests support lower wrong-document
+rate and a multi-document closure advantage over these baselines, but the full
+closure comparison against the strong period-aware baseline is a tie. Most
+importantly, obligation exactness is only 0.4637, and the metadata-fill control
+is exactly tied with the cascade. These results support a representation-layer
+claim, not an independent action-policy or answer-accuracy claim.
+
+The Chinese FinGLM audit covers 1,829 questions over 11,587 annual-report
+documents. FinPlan v9 and its metadata-fill control both obtain 0.9978 file
+closure and 0.0126 wrong-document rate, versus 0.9858/0.0120 for the
+period-metadata baseline, 0.9885/0.2712 for generic adaptive retrieval, and
+0.7594/0.8087 for single-shot retrieval. This track uses self-derived,
+single-document gold sets and does not score the original answers; the gain is
+therefore evidence for multi-year obligation parsing only. A point-in-time SEC
+pilot (17 exploratory and 12 holdout lineages) reports 5/12 future-leak cases
+without the time filter versus 0/12 with it in the holdout audit, while the
+paired test is descriptive ($p=0.0625$). Finally, the Chinese mixed-period
+pilot has only five cases (three frozen): period-aware planning closes 3/3
+frozen cases while entity-year planning closes 0/3, but the reader is a
+regex-anchored field oracle and no significance claim is made. Hashes and
+source paths for all four tracks are recorded in
+\texttt{paper/results/real\_data\_summary.json} and
+\texttt{paper/real\_data\_provenance.md}.
+
 \section{Discussion}
 The results support H1 only in a bounded sense. Explicit state makes unresolved
 obligations visible and permits early stopping, while counterevidence and time

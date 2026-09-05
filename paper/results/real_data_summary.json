@@ -1,0 +1,81 @@
+{
+  "schema": "finplan-real-data-summary.v1",
+  "status": "audited_external_evidence_not_recomputed_in_this_repo",
+  "storage": {
+    "root": "D:/Engineering/FinPlanRAG/database/preexperiments/results",
+    "readonly": true,
+    "note": "Large corpora, source PDFs and model outputs remain outside Git; the hashes below identify the audited result artifacts."
+  },
+  "lofin_public_full": {
+    "artifact": "lofin_full_benchmark_audit_v1.json",
+    "sha256": "892268C093340F1BBA903D377FBD6D545A0E0945ED3E23F980B87A37F0D6048C",
+    "n_questions": 1572,
+    "budget": 4,
+    "metrics": {
+      "finplan_v9_cascade": {"closure": 0.8919, "wrong_doc_rate": 0.3108, "obligation_exact": 0.4637},
+      "finplan_v8": {"closure": 0.8950, "wrong_doc_rate": 0.3182, "obligation_exact": 0.4497},
+      "period_metadata_decomposition": {"closure": 0.8950, "wrong_doc_rate": 0.3182},
+      "generic_adaptive_period": {"closure": 0.8925, "wrong_doc_rate": 0.4742},
+      "hirec_period": {"closure": 0.8588, "wrong_doc_rate": 0.6244},
+      "single_shot": {"closure": 0.6425, "wrong_doc_rate": 0.7983}
+    },
+    "interpretation": [
+      "Planner-family full-layer closure is 0.892--0.895 and does not establish a strategy advantage over the strong period-aware baselines.",
+      "The paired extended audit reports lower wrong-document rate and a multi-document closure advantage against generic, HiREC-style and single-shot baselines.",
+      "Obligation exactness is only 0.45--0.46; file closure is not answer accuracy.",
+      "metadata_v9_fill is exactly tied with finplan_v9_cascade, so the public full set attributes the gain to obligation representation rather than cascade policy."
+    ],
+    "extended_artifact": {
+      "file": "lofin_full_benchmark_extended_tests_v1.json",
+      "sha256": "93EB7D17BC18F2D295BFD18E7AC110F02942392CD429406B46A95AB6768054B3"
+    }
+  },
+  "lofin_validation8": {
+    "artifact": "lofin_validation8_statistical_audit_v1.json",
+    "sha256": "B0A21EBEE3CC91EB331B5323D865D9BC1A1B6BF9C2F082F98C3709012E49BD61",
+    "n_questions": 24,
+    "metrics": {"finplan_v9_cascade_closure": 24, "metadata_v9_fill_closure": 24, "finplan_v7_closure": 10},
+    "tests": {"v9_vs_v7_exact_mcnemar_p": 0.0001220703125, "v9_vs_metadata_fill_exact_mcnemar_p": 1.0, "future_leak_v9": "0/24"},
+    "interpretation": "Frozen validation supports the representation-layer hypothesis; it does not identify an independent retrieval-policy gain."
+  },
+  "finglm_public_full": {
+    "artifact": "finglm_full_combined_audit_v1.json",
+    "sha256": "368566E0095A290187F5DB3E45D7FA92D47F6E2F1C069C77DDB7EB8812FC351B",
+    "n_questions": 1829,
+    "corpus_documents": 11587,
+    "budget": 4,
+    "metrics": {
+      "finplan_v9_cascade": {"closure": 0.9978130126, "wrong_doc_rate": 0.0125751777},
+      "metadata_v9_fill": {"closure": 0.9978130126, "wrong_doc_rate": 0.0125751777},
+      "period_metadata_decomposition": {"closure": 0.9857845817, "wrong_doc_rate": 0.0120284308},
+      "generic_adaptive_period": {"closure": 0.9885183160, "wrong_doc_rate": 0.2711864407},
+      "hirec_period": {"closure": 0.9912520503, "wrong_doc_rate": 0.5602332787},
+      "single_shot": {"closure": 0.7594313833, "wrong_doc_rate": 0.8087297248}
+    },
+    "interpretation": [
+      "The benchmark uses self-derived single-document gold sets and reports file-level closure, not answer accuracy.",
+      "The internal method is significantly higher in closure than the listed baselines in the combined audit, but v9 and metadata-fill are identical because the annual-report corpus leaves little retrieval-policy freedom.",
+      "No comparison here is a leaderboard or SOTA claim."
+    ],
+    "audit_artifact": {"file": "finglm_full_audit_v1.json", "sha256": "FA925D9EA634C0339BF5B6B092B8A42566F33DC05D5B618091091F3F7EFF13CE"}
+  },
+  "sec_real_point_in_time": {
+    "artifact": "sec_real_pilot_ablation_audit_v1.json",
+    "sha256": "9865B60BB9530924215BD0A3B94351657A8161D334EC320329B8C77F9D6290E6",
+    "exploratory_lineages": 17,
+    "holdout_lineages": 12,
+    "holdout_no_time": {"closure": "7/12 vs 10/12 reference", "future_leak": "5/12 vs 0/12 reference", "exact_mcnemar_p_future_leak": 0.0625},
+    "interpretation": "Point-in-time filtering is supported as a leakage-control mechanism; the pilot is descriptive and not a confirmatory strategy comparison."
+  },
+  "china_mixed_period_pilot": {
+    "artifact": "china_mixed_period_pilot_v1.json",
+    "sha256": "DA7A6020C2D4B6FFABBC47AC5B697F579F448FE710F59A091501619C951ABCCE",
+    "cases": 5,
+    "documents": 15,
+    "pages": 1894,
+    "frozen_cases": 3,
+    "metrics_frozen": {"finplan_period_aware_closure": "3/3", "entity_year_closure": "0/3", "metadata_decomposition_closure": "3/3"},
+    "interpretation": "Mechanism pilot only; page-level field-oracle and regex reader results are not an LLM answer benchmark and have no significance claim.",
+    "reader_artifact": {"file": "china_mixed_period_reader_v1.json", "sha256": "5B6CD9B36B6650EF57E1778B59335ACB6C59F98EF885B5D551EAA770F27E9DF0"}
+  }
+}

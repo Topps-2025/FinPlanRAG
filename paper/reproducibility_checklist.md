@@ -11,6 +11,10 @@
 - [x] English and Chinese sources compile with XeLaTeX and are UTF-8 clean.
 - [x] Claims, evidence types and non-claims are listed in
   `claim_evidence_matrix.md`.
+- [x] Audited real-data artifacts have read-only paths, SHA-256 hashes, and
+  interpretation boundaries in `results/real_data_summary.json`.
+- [x] The drafts separate file-level closure, document correctness, field-oracle
+  diagnostics, and answer accuracy.
 
 ## Required before a top-journal empirical claim
 

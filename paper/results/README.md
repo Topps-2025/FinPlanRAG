@@ -19,3 +19,10 @@ comparison.
 Budget sensitivity is in `budget_sensitivity.json` (budgets 1, 2, 4, 6, 10,
 16 with the same seeds and scenarios). It shows the quality-cost frontier and
 prevents the main budget from being treated as a universally optimal setting.
+
+`real_data_summary.json` is a compact audit of read-only legacy FinPlanRAG
+results (LOFin, FinGLM, SEC lineages and a Chinese mixed-period pilot). It stores
+source paths, SHA-256 hashes and claim boundaries; the large corpora and model
+outputs remain outside Git. These values are file-level closure/document
+diagnostics unless explicitly labelled otherwise, and are not an answer-accuracy
+leaderboard or SOTA claim.
