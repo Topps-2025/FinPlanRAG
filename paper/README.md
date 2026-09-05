@@ -10,7 +10,12 @@ FinPlan-RAG implementation and the SQCAD evidence discipline.
 - `results/controlled_summary.json`: frozen summary of the local controlled
   mechanism run. The full run is generated with the command in
   `results/README.md` and is not a claim of real-world QA superiority.
+- `results/budget_sensitivity.json`: same-contract runs across six query
+  budgets, used as a robustness and cost-frontier check.
 
 Both drafts use the same claim boundary: controlled evidence demonstrates the
 planning mechanism, while document closure is not answer correctness and no
 SOTA claim is made.
+
+The SQCAD-style audit is in `claim_evidence_matrix.md`; remaining empirical
+gates are listed in `reproducibility_checklist.md`.

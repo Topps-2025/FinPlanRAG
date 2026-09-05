@@ -81,6 +81,17 @@ class FinPlanRAGAdapter:
             "queries": state.queries,
             "closed": state.closed,
             "future_document_ids": list(state.future_document_ids),
+            "evidence": [
+                {
+                    "chunk_id": chunk.chunk_id,
+                    "document_id": chunk.document_id,
+                    "entity": chunk.entity,
+                    "available_at": chunk.available_at.isoformat().replace("+00:00", "Z"),
+                    "text": chunk.text,
+                    "metadata": dict(chunk.metadata),
+                }
+                for chunk in state.retrieved_chunks
+            ],
             "recommendation": "answer_with_reader" if state.closed else "abstain_or_retrieve_more",
         }
 

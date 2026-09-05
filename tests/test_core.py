@@ -27,6 +27,7 @@ def test_planner_is_point_in_time_and_covers_filing_obligations():
     assert state.closed
     assert state.covered_document_ids == ("acme-2024",)
     assert state.future_document_ids == ()
+    assert state.retrieved_chunks[0].document_id == "acme-2024"
 
 
 def test_answer_support_and_reader_fallback_are_deterministic():

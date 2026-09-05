@@ -3,6 +3,7 @@
   "source_sha256": "E5D207A28136A91CA74B85D0B373C71E5C5D7346AD497E16799B6DB4E42CAA28",
   "protocol": {"seeds": 20, "cases_per_world": 40, "budget": 10, "scenarios": 7},
   "metrics": ["accuracy", "coverage", "closure", "overclaim", "counterevidence_recall", "queries", "utility", "future_leak"],
+  "confidence_interval": {"level": 0.95, "unit": "scenario_seed", "estimator": "1.96 * sample_sd / sqrt(n)"},
   "summary": {
     "single_shot": {"accuracy": 0.0662, "coverage": 0.1011, "closure": 0.1011, "overclaim": 0.0038, "counterevidence_recall": 0.6509, "queries": 10.0000, "utility": -0.4072, "future_leak": 0.0000},
     "fixed_decomposition": {"accuracy": 0.1748, "coverage": 0.2930, "closure": 0.2930, "overclaim": 0.0136, "counterevidence_recall": 0.6579, "queries": 10.0000, "utility": -0.3630, "future_leak": 0.0000},

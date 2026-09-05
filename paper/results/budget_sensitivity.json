@@ -1,0 +1,13 @@
+{
+  "schema": "finplan-controlled-planning-budget-sensitivity.v1",
+  "protocol": {"seeds": 20, "cases_per_world": 40, "scenarios": 7},
+  "runs": [
+    {"budget": 1, "source_sha256": "42D2008A7E501A0F9D2D2DFF9663A275D060C3D54958228A7BDAC00659009203", "accuracy": 0.0000, "closure": 0.0000, "overclaim": 0.0000, "counterevidence_recall": 0.3154, "queries": 1.0000, "utility": -0.1800, "future_leak": 0.0000},
+    {"budget": 2, "source_sha256": "180FF7293EF971B6D1FD0A032B8F22A43AD3F3B1C77F308D9495BD8C98123CD9", "accuracy": 0.0000, "closure": 0.0000, "overclaim": 0.0000, "counterevidence_recall": 0.4898, "queries": 2.0000, "utility": -0.2100, "future_leak": 0.0000},
+    {"budget": 4, "source_sha256": "73B07033C504CF9B3A39B822C2A89C940009D726916E6E40BCFEFD1B66EA8E0B", "accuracy": 0.0148, "closure": 0.0293, "overclaim": 0.0004, "counterevidence_recall": 0.5694, "queries": 4.0000, "utility": -0.2656, "future_leak": 0.0000},
+    {"budget": 6, "source_sha256": "D1235B0A85A2386FF632B1AAD9996754C6913F574B83AD68C2EE03ED8AAE028C", "accuracy": 0.0952, "closure": 0.1816, "overclaim": 0.0055, "counterevidence_recall": 0.5908, "queries": 5.8405, "utility": -0.2948, "future_leak": 0.0000},
+    {"budget": 10, "source_sha256": "E5D207A28136A91CA74B85D0B373C71E5C5D7346AD497E16799B6DB4E42CAA28", "accuracy": 0.1909, "closure": 0.3655, "overclaim": 0.0132, "counterevidence_recall": 0.6051, "queries": 8.8721, "utility": -0.3583, "future_leak": 0.0000},
+    {"budget": 16, "source_sha256": "D0BC2696D32B3BC2D6E83FC53376CB960531EEFB256C58432180D311DA72618E", "accuracy": 0.2370, "closure": 0.4552, "overclaim": 0.0170, "counterevidence_recall": 0.6329, "queries": 12.3837, "utility": -0.4514, "future_leak": 0.0000}
+  ],
+  "interpretation": "Closure and counterevidence recall increase with budget, while the declared query-cost utility decreases after the benchmark's fixed cost dominates. This is a sensitivity result, not a claim that budget 10 is optimal outside this contract."
+}

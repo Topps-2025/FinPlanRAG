@@ -20,6 +20,7 @@ def test_tool_schema_and_facade_are_stable():
     result = FinPlanRAGAdapter().handle(_request())
     assert result["closed"] is True
     assert result["covered_document_ids"] == ["acme-2024"]
+    assert result["evidence"][0]["text"] == "ACME 2024 FY revenue was 100."
     assert result["recommendation"] == "answer_with_reader"
 
 

@@ -15,3 +15,7 @@ Source SHA-256 (the local full JSON run):
 The benchmark is a controlled mechanism diagnostic. It has synthetic hidden
 worlds and should not be read as a financial filing QA benchmark or an SOTA
 comparison.
+
+Budget sensitivity is in `budget_sensitivity.json` (budgets 1, 2, 4, 6, 10,
+16 with the same seeds and scenarios). It shows the quality-cost frontier and
+prevents the main budget from being treated as a universally optimal setting.

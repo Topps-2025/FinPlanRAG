@@ -47,7 +47,14 @@ class ObligationPlanner:
                 future_ids.append(hit.document_id)
         covered = tuple(sorted({chunk.document_id for chunk in used_chunks}))
         required_ids = {item.document_id for item in obligations if item.document_id}
-        return EvidenceState(tuple(obligations), covered, len(used_chunks), required_ids.issubset(covered) if required_ids else bool(covered), tuple(sorted(set(future_ids))))
+        return EvidenceState(
+            tuple(obligations),
+            covered,
+            len(used_chunks),
+            required_ids.issubset(covered) if required_ids else bool(covered),
+            tuple(sorted(set(future_ids))),
+            tuple(used_chunks),
+        )
 
     def run(self, question: str, obligations: Sequence[DocumentObligation], cutoff: datetime) -> EvidenceState:
         return self.retrieve(question, obligations, cutoff)

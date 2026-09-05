@@ -66,6 +66,9 @@ supported by information available at a declared cutoff.
 
 The gap is therefore not that existing rankers are inaccurate in every case.
 It is that a scalar relevance score is an incomplete state for a stopping rule.
+Following the lifecycle-aware separation used by SQCAD, we keep candidate
+proposal, evidence qualification and reader generation distinct; FinPlan-RAG
+specializes that separation to financial filings and point-in-time obligations.
 Our hypothesis is deliberately falsifiable:
 \begin{quote}
 H1: obligation-aware state planning improves closure and query efficiency under
@@ -103,6 +106,34 @@ In $w_+$, taking the negative action incurs at least $m_+$ and occurs with
 probability $1-p$; in $w_-$, taking the positive action incurs at least $m_-$
 and occurs with probability $p$. Balancing the two lower bounds gives the
 stated harmonic-mean floor.
+\end{proof}
+
+\begin{theorem}[Obligation-state value decomposition]
+Let $x_t=(U_t,E_t,c)$ contain the unresolved obligation set, evidence state and
+cutoff, and let $a_t$ be either a targeted retrieval action or stop. If the
+one-step utility is $g(x_t,a_t)$ and the transition/observation kernel is
+$K_a(dx_{t+1},do_{t+1}\mid x_t)$, then the finite-horizon action value satisfies
+\[
+Q_t(x,a)=\mathbb{E}[g(x,a)]+\gamma\,\mathbb{E}_{K_a}V_{t+1}(x'),
+\qquad V_t(x)=\max_a Q_t(x,a).
+\]
+For two actions $a,b$, the lifecycle contrast is
+\[
+\Delta_t(x)=Q_t(x,a)-Q_t(x,b)=\Delta_t^{\mathrm{immediate}}(x)+
+\gamma\Delta_t^{\mathrm{continuation}}(x).
+\]
+Consequently, a score summary $S(x)$ can support an optimal score-only policy
+only if $\Delta_t(x)$ is measurable with respect to $S(x)$; otherwise an
+observation-equivalent pair with different signs of $\Delta_t$ exists.
+\end{theorem}
+
+\begin{proof}
+The first identity is the Bellman recursion obtained by conditioning on the
+next state and observation. Subtracting the recursion for $b$ from that for
+$a$ gives the contrast decomposition. If $\Delta_t$ is not measurable with
+respect to $S$, there are $x_+,x_-$ with equal score and opposite contrast
+signs; applying the score-insufficiency proposition yields a strictly positive
+worst-world regret for every score-only rule.
 \end{proof}
 
 The construction is financial rather than purely semantic: $w_+$ contains a
@@ -198,6 +229,32 @@ Removing temporal filtering creates future leakage in .502 of cases and gives
 utility -.438. These paired changes isolate the roles of counterevidence,
 stopping and point-in-time filtering without changing the candidate stream.
 
+\begin{table}[t]
+\centering\small
+\caption{Component ablations under the same 5,600-case contract.}
+\label{tab:ablation}
+\begin{tabular}{lrrrrrr}
+\toprule
+Variant & Closure & Overclaim & Counter recall & Queries & Utility & Future leak\\
+\midrule
+FinPlan state & .366 & .013 & .605 & 8.87 & -.358 & .000\\
+No counterevidence & .511 & .035 & .315 & 7.92 & -.284 & .000\\
+No adaptive stop & .337 & .012 & .606 & 10.00 & -.370 & .000\\
+No point-in-time & .433 & .021 & .578 & 8.57 & -.438 & .502\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Budget sensitivity}
+The quality--cost frontier was checked at budgets $1,2,4,6,10,16$ with the
+same 20 seeds and seven scenarios. FinPlan closure increased monotonically from
+0.000, 0.000, 0.029, 0.182, 0.366 to 0.455, while counterevidence recall rose
+from 0.315 to 0.633. Declared utility decreased from -0.180 to -0.451 because
+the fixed query charge eventually dominated the gain from additional closure.
+Thus budget 10 is a reproducible operating point, not a universal optimum; the
+full sensitivity artifact and per-run hashes are in
+\texttt{paper/results/budget\_sensitivity.json}.
+
 \section{Discussion}
 The results support H1 only in a bounded sense. Explicit state makes unresolved
 obligations visible and permits early stopping, while counterevidence and time
@@ -214,7 +271,7 @@ contract tests. `finplan-rag-agent --schema` emits an OpenAI-compatible tool
 schema. The default command reads one JSON request per line and emits one JSON
 response per line, so a Codex or Claude Code tool wrapper can call it without
 vendor-specific state. The response includes obligations, covered document ids,
-closure, future ids, query count and a conservative recommendation to answer
+selected evidence chunks, closure, future ids, query count and a conservative recommendation to answer
 or abstain. It never fabricates a reader answer.
 
 \section{Conclusion}

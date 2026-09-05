@@ -50,3 +50,4 @@ class EvidenceState:
     queries: int
     closed: bool
     future_document_ids: Tuple[str, ...] = ()
+    retrieved_chunks: Tuple[Chunk, ...] = ()

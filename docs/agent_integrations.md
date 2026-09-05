@@ -13,8 +13,9 @@ finplan-rag-agent --schema
 
 Register the returned object as a function tool. Pass `question`, `entities`,
 `filings`, `documents`, `cutoff` (ISO-8601) and an optional `budget`. The result
-contains `obligations`, `covered_document_ids`, `closed`, `future_document_ids`
-and `recommendation`. A `closed=false` result should cause the agent to retrieve
+contains `obligations`, `covered_document_ids`, `closed`, `future_document_ids`,
+`evidence` and `recommendation`. The `evidence` array contains selected
+point-in-time chunks for a reader. A `closed=false` result should cause the agent to retrieve
 more or abstain; it is not permission to invent an answer.
 
 ## Claude Code and local MCP wrappers
