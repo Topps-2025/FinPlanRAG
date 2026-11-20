@@ -3,7 +3,7 @@
 - 源文件：`main.tex`
 - 参考文献：`references_sufe.tex`（条目源信息见 `references.bib`）
 - 图片：`figures/`
-- 输出：`../FinPlanRAG_Chinese_SUFE_Master_2026_ContractRouting.pdf`
+- 输出：`../FinPlanRAG：面向金融混合查询的契约路由与锚点演化框架.pdf`
 - 模板：`ctexbook`，A4，上/下 3.8cm，左/右 3.2cm，页眉/页脚距边界 3.0cm
 - 正文：小四宋体，行距 20 磅，首行缩进 2 字符
 

@@ -10,7 +10,7 @@ artifacts.
 
 The current pre-defense thesis is the two-branch FinPlanRAG version at
 `zh/sufe_master/`, compiled to
-`zh/FinPlanRAG_Chinese_SUFE_Master_2026_ContractRouting.pdf`. The title is
+`zh/FinPlanRAG：面向金融混合查询的契约路由与锚点演化框架.pdf`. The title is
 "FinPlanRAG: Contract Routing and Anchor Evolution for Mixed Financial
 Queries". The router distinguishes determinate questions from forward-looking
 claims; the determinate branch uses obligation retrieval, and the vague branch
