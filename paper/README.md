@@ -6,33 +6,26 @@ v2 decision-interface research design is in `v2/`; it is the current research
 direction, while the v1 conference drafts below remain the completed paper
 artifacts.
 
-## Current master's thesis (2026-11-19)
+## Current pre-defense thesis (2026-11-20)
 
-The current Chinese master's thesis is the single-line FinPlanRAG version at
-`zh/sufe_master_vague/`, compiled to
-`zh/FinPlanRAG_Chinese_SUFE_Master_2026_AnchorEvolution.pdf`. FinPlanRAG is the
-overall RAG framework and AnchorEvolve is its anchor-evolution core module. The
-thesis focuses only on the forward-looking branch: the claim contract,
-three-layer anchors, five-type qualification, temporal Beta evolution, and the
-full-action loss-aware readout as the module's decision interface.
-The router, obligation-retrieval branch, DocFinQA main experiment and mixed
-workload are not part of this version; the older two-branch thesis at
-`zh/sufe_master/` remains as a historical artifact.
+The current pre-defense thesis is the two-branch FinPlanRAG version at
+`zh/sufe_master/`, compiled to
+`zh/FinPlanRAG_Chinese_SUFE_Master_2026_ContractRouting.pdf`. The title is
+"FinPlanRAG: Contract Routing and Anchor Evolution for Mixed Financial
+Queries". The router distinguishes determinate questions from forward-looking
+claims; the determinate branch uses obligation retrieval, and the vague branch
+uses the latest AnchorEvolve implementation with full-action readout,
+validation-gated type-library extension, numeric bridges, and a 470-claim
+A-share annual-report backtest. The vague branch also reports a 150-claim
+FinDVer component check and a no-anchor architecture ablation.
 
-The thesis uses the 1,005-claim revenue-guidance benchmark for the main
-quantitative results, a 470-claim A-share annual-report backtest for the
-Chinese-market check, and 150 FinDVer claims for a component-level check.
-DocFinQA, FinQA, TAT-QA and FinanceBench are treated as protocol-level or
-component-level references, not as end-to-end forward-looking benchmarks. The
-A-share benchmark covers 40 non-financial companies and fiscal years 2023-2025;
-Qwen3-8B is evaluated on a 250-claim stratified subsample. The thesis is now 70
-pages with separate experiment and ablation chapters, and the case study is in
-the appendix. Cloud results for DeepSeek Flash, GLM 5.3 Flash and Qwen3-8B are
-in `results/cloud_2026-11-20/`; they include the full-action readout,
-qualification ablation, expanded A-share backtest, FinDVer component run and
-validation-gated type-library extension. The companion CLI, Claude Code MCP
-interface and Codex CLI interface are documented in `../docs/anchor_cli.md` and
-`../docs/codex.md`.
+The single-branch version at `zh/sufe_master_vague/` remains the source for the
+forward-looking branch and is retained as a backup. It is 70 pages and focuses
+only on the forward-looking claim contract, anchor state, qualification,
+temporal evolution, and full-action readout. The two-branch version is the
+submission candidate because it preserves the contract-routing contribution
+that distinguishes the framework from selective-forecasting work such as
+FinAbstain.
 
 The forward-looking conference paper is `en/FinPlanRAG_Conference_2026_Forward.pdf`,
 with LaTeX source in `en/finplanrag_conference_2026/main_forward.tex`. It is a

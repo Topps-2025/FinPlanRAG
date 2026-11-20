@@ -1,0 +1,197 @@
+\section{前瞻性断言裁决结果}
+
+表\ref{tab:main}按方法列出三套基座的结果。纵向是方法，横向是基座和指标，每个基座给出准确率、平衡准确率、宏F1和全动作决策损失。DeepSeek使用验证集接受的扩展类型库，GLM和Qwen保留基础类型库。
+
+\begin{table}[htbp]
+\centering
+\zihao{-5}
+\setlength{\tabcolsep}{2.2pt}
+\caption{主结果（227条核验断言）。Acc.为准确率，Bal.为平衡准确率，Macro为宏F1，Loss为全动作决策损失。}
+\label{tab:main}
+\begin{tabular}{lrrrrrrrrrrrrr}
+\toprule
+\multirow{2}{*}{方法} & \multicolumn{4}{c}{DeepSeek Flash} & \multicolumn{4}{c}{GLM 5.3 Flash} & \multicolumn{4}{c}{Qwen3-8B} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+ & Acc. & Bal. & Macro & Loss & Acc. & Bal. & Macro & Loss & Acc. & Bal. & Macro & Loss \\
+\midrule
+FinDVer & .515 & .424 & .423 & 3.128 & .507 & .456 & .458 & 3.198 & .463 & .441 & .429 & 5.339 \\
+Fin-Fact & .524 & .428 & .429 & 3.251 & .489 & .401 & .400 & 3.410 & .507 & .473 & .459 & 4.881 \\
+Self-RAG & .546 & .460 & .468 & 3.031 & .507 & .454 & .460 & 3.181 & .485 & .446 & .431 & 5.119 \\
+CRAG & .515 & .412 & .407 & 3.004 & .498 & .424 & .427 & 3.480 & .467 & .433 & .417 & 5.251 \\
+FLARE & .511 & .418 & .412 & 3.278 & .489 & .407 & .408 & 3.559 & .326 & .298 & .212 & 6.661 \\
+Adaptive-RAG & .489 & .402 & .396 & 3.612 & .436 & .366 & .366 & 4.070 & .352 & .325 & .290 & 6.396 \\
+\midrule
+LLM-only & .498 & .397 & .362 & 3.445 & .533 & .428 & .414 & 3.427 & .410 & .357 & .267 & 5.498 \\
+RF & .533 & .491 & .486 & 2.987 & .533 & .491 & .486 & 2.987 & .533 & .491 & .486 & 2.987 \\
+\textbf{FinPlanRAG (Ours)} & \textbf{.577} & \textbf{.526} & \textbf{.530} & \textbf{2.907} & \textbf{.551} & \textbf{.504} & \textbf{.503} & \textbf{2.943} & \textbf{.542} & \textbf{.501} & \textbf{.499} & \textbf{2.925} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+表中的FinPlanRAG指锚点后验与随机森林后验按验证集权重融合后的系统，融合权重只在验证集选择。DeepSeek的FinPlanRAG使用验证集扩展后的类型库，GLM和Qwen使用基础类型库；类型库扩展是训练步骤，不是另一个预测模块。FinPlanRAG在三个基座的准确率、平衡准确率、宏F1和决策损失上均为最高。DeepSeek的FinPlanRAG相对最强基线CRAG把损失从3.004降到2.907，准确率从.515提高到.577；GLM相对Self-RAG把损失从3.181降到2.943，准确率从.507提高到.551；Qwen相对Fin-Fact把损失从4.881降到2.925，准确率从.507提高到.542。配对自助法给出的损失差分别为$-0.097$ $[-0.502,0.300]$、$-0.238$ $[-0.661,0.176]$和$-1.956$ $[-2.617,-1.322]$，只有Qwen的区间排除零。
+
+{\sloppy FinPlanRAG相对随机森林的损失差为$-0.079$ $[-0.300,0.141]$、$-0.044$ $[-0.203,0.115]$和$-0.062$ $[-0.282,0.159]$，三个区间均包含零。\par}融合在点估计上低于随机森林，但总体差异不足以主张稳定优势。把测试集按真实结果分层后，融合在区间内样本上的优势更清楚，见第\ref{sec:within}节。
+
+表\ref{tab:calibration}给出概率质量指标。融合系统在三个基座上的AUROC为.713、.711和.707，ECE为.064、.030和.069，Brier为.555、.557和.561；对应的随机森林AUROC为.706，ECE为.033，Brier为.566。FinPlanRAG的排序能力和Brier分数优于随机森林；ECE在DeepSeek和Qwen上略高，在GLM上略低，说明融合后验的排序更准，但置信度校准仍有改进空间。
+
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{4pt}
+\caption{概率质量与校准（227条核验断言）。AUROC和AUPRC越高越好，ECE和Brier越低越好。}
+\label{tab:calibration}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\multirow{2}{*}{方法} & \multicolumn{3}{c}{DeepSeek Flash} & \multicolumn{3}{c}{GLM 5.3 Flash} & \multicolumn{3}{c}{Qwen3-8B} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+ & AUROC & ECE & Brier & AUROC & ECE & Brier & AUROC & ECE & Brier \\
+\midrule
+LLM-only & .668 & .110 & .612 & .651 & .101 & .609 & .493 & .439 & .975 \\
+RF & .706 & .033 & .566 & .706 & .033 & .566 & .706 & .033 & .566 \\
+\textbf{FinPlanRAG (Ours)} & \textbf{.713} & \textbf{.064} & \textbf{.555} & \textbf{.711} & \textbf{.030} & \textbf{.557} & \textbf{.707} & \textbf{.069} & \textbf{.561} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{决策读出的作用}
+
+表\ref{tab:readout}在同一后验上比较受限可信集门与全动作读出。受限门只比较点答案和最高密度可信集，全动作门在点答案、非单元素裁决集和弃权上选择期望损失最小的动作。融合后验在三个基座上的全动作损失相对受限门分别下降0.749、0.581和0.696，95\%配对区间均排除零。随机森林后验的下降为0.467，区间同样排除零。全动作读出没有改变后验，也没有增加训练数据，它改变的是给定后验时的动作选择。
+
+\begin{table}[htbp]
+\centering
+\zihao{-5}
+\setlength{\tabcolsep}{2.5pt}
+\caption{受限门与全动作读出的决策损失（227条核验断言）。$\Delta$为全动作减受限门。}
+\label{tab:readout}
+\begin{tabular}{lrrrrrrrrr}
+\toprule
+\multirow{2}{*}{方法} & \multicolumn{3}{c}{DeepSeek} & \multicolumn{3}{c}{GLM} & \multicolumn{3}{c}{Qwen3} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}\cmidrule(lr){8-10}
+ & 受限门 & 全动作 & $\Delta$ & 受限门 & 全动作 & $\Delta$ & 受限门 & 全动作 & $\Delta$ \\
+\midrule
+\textbf{FinPlanRAG (Ours)} & \textbf{3.656} & \textbf{2.907} & \textbf{$-0.749$} & \textbf{3.524} & \textbf{2.943} & \textbf{$-0.581$} & \textbf{3.621} & \textbf{2.925} & \textbf{$-0.696$} \\
+RF & 3.454 & 2.987 & $-0.467$ & 3.454 & 2.987 & $-0.467$ & 3.454 & 2.987 & $-0.467$ \\
+LLM-only & 3.674 & 3.445 & $-0.229$ & 3.454 & 3.427 & $-0.026$ & 5.048 & 5.498 & $+0.449$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+全动作读出的作用集中在高不确定性区域。融合后验在227条测试断言中有217条选择裁决集、10条选择点答案、0条弃权；平均集合大小为2.12。点答案不是唯一合理的输出，当两个相邻结果的期望损失接近时，返回二元裁决集可以降低误判成本。这一结果说明，前瞻性断言的核心问题不只是预测哪个标签，还包括给定后验应当输出什么。
+
+\section{指导区间内的分层结果}
+\label{sec:within}
+
+总体损失打平时，锚点层是否在某个误差层上提供互补信号，是一个独立问题。表\ref{tab:within}报告真实结果落在指引区间内的82条测试断言。FinPlanRAG在三个基座上均低于随机森林：DeepSeek从3.146降到2.780，GLM从3.146降到2.902，Qwen从3.146降到2.732（以第一个随机森林种子为例）。五个随机森林种子中，DeepSeek和Qwen的五个区间全部排除零，GLM有四个区间排除零。
+
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{4pt}
+\caption{指导区间内样本的分层比较（82条测试断言）。差值为FinPlanRAG减随机森林，负值表示FinPlanRAG损失更低。}
+\label{tab:within}
+\begin{tabular}{lrrrr}
+\toprule
+基座 & FinPlanRAG & 随机森林 & 损失差 [95\% CI] & 种子一致性 \\
+\midrule
+DeepSeek & \textbf{2.780} & 3.146 & $-0.366$ $[-0.732,-0.049]$ & 5/5 \\
+GLM & \textbf{2.902} & 3.146 & $-0.244$ $[-0.537,-0.024]$ & 4/5 \\
+Qwen3 & \textbf{2.732} & 3.146 & $-0.415$ $[-0.732,-0.170]$ & 5/5 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+这个分层结果说明锚点层在高密度、低极端误差的区域提供了互补信号。分层依据是真实结果，预测时不可知，因此它只能解释误差来源，不能作为部署时的路由规则。总体损失上的差异仍按不显著报告。
+
+\section{A股年报历史回测}
+\label{sec:ashare}
+
+表\ref{tab:ashare}给出A股断言的分类与决策结果，DeepSeek和GLM使用470条全样本，Qwen3使用250条分层子样本。上年外推基线把上年增速或上年毛利率直接外推，季度年化基线把三季报年化后外推；完整系统使用锚点、资格判定、时间演化、数值桥和全动作读出，去桥变体关闭数值桥。
+
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{4pt}
+\caption{A股年报历史回测。Acc.为准确率，Bal.为平衡准确率，Macro为宏F1，Loss为全动作决策损失。Qwen3在250条分层子样本上评估，其余方法在470条全样本上评估。}
+\label{tab:ashare}
+\begin{tabular}{llrrrr}
+\toprule
+方法 & 样本 & Acc. & Bal. & Macro & Loss \\
+\midrule
+\multicolumn{6}{l}{\textit{传统基线}} \\
+上年外推 & 470 & .491 & .402 & .401 & 5.094 \\
+季度年化 & 470 & .777 & .786 & .785 & 2.270 \\
+\midrule
+\multicolumn{6}{l}{\textit{DeepSeek}} \\
+\textbf{FinPlanRAG} & 470 & \textbf{.783} & \textbf{.778} & \textbf{.776} & \textbf{2.179} \\
+去数值桥 & 470 & .638 & .591 & .590 & 2.421 \\
+\midrule
+\multicolumn{6}{l}{\textit{GLM}} \\
+\textbf{FinPlanRAG} & 470 & \textbf{.549} & \textbf{.485} & \textbf{.483} & \textbf{3.332} \\
+去数值桥 & 470 & .549 & .485 & .483 & 3.332 \\
+\midrule
+\multicolumn{6}{l}{\textit{Qwen3}} \\
+季度年化 & 250 & .772 & .789 & .789 & 2.324 \\
+\textbf{FinPlanRAG} & 250 & \textbf{.580} & \textbf{.523} & \textbf{.522} & \textbf{4.208} \\
+去数值桥 & 250 & .564 & .500 & .499 & 3.864 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+DeepSeek基座上的完整系统取得.783的准确率和2.179的决策损失，高于季度年化的.777和2.270，也明显高于去桥变体的.638和2.421。完整系统相对去桥变体的损失差为$-0.243$ $[-0.404,-0.077]$，准确率差为$+0.145$ $[0.109,0.183]$，两个区间均排除零。数值桥把营业收入和归母净利润的增速判断从标签后验推进到可计算的数值区间，是DeepSeek增益的主要来源。GLM基座上完整系统与去桥变体相同，说明该基座的抽取结果没有提供足够的数值锚点，桥接未触发；完整系统也低于季度年化。Qwen3的250条子样本上，完整系统的准确率比去桥变体高$+0.016$ $[0.004,0.032]$，但损失高$+0.344$ $[0.064,0.640]$，说明数值桥改善了部分区间判断，却没有改善整体决策校准。A股结果因此分为两类：DeepSeek上数值桥带来明确增益，GLM和Qwen上抽取质量不足以支撑桥接，标签后验仍是更稳的回退。
+
+表\ref{tab:ashare-numeric}给出数值误差。DeepSeek完整系统的数值MAE为9.86个百分点，季度年化为7.40个百分点；完整系统的分类损失更低，但数值点估计不如简单年化。这个差异说明两种目标并不等价：数值桥改善的是区间判断和决策损失，不保证点值误差最小。披露日期窗口准确率为.788，高于季度年化的.729。Qwen3的数值MAE为39.21个百分点，日期窗口准确率为.690，说明其抽取器输出的数值字段噪声较大。
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{4pt}
+\caption{A股回测的数值与日期指标。MAE为增速或毛利率的百分点误差，MAPE只在真实值非零时计算。}
+\label{tab:ashare-numeric}
+\begin{tabular}{llrrr}
+\toprule
+方法 & 样本 & 数值MAE & 数值MAPE & 日期窗口准确率 \\
+\midrule
+季度年化 & 470 & 7.40 & 459.7 & .729 \\
+\midrule
+\multicolumn{5}{l}{\textit{DeepSeek}} \\
+\textbf{FinPlanRAG} & 470 & \textbf{9.86} & \textbf{408.7} & \textbf{.788} \\
+去数值桥 & 470 & -- & -- & .788 \\
+\midrule
+\multicolumn{5}{l}{\textit{GLM}} \\
+\textbf{FinPlanRAG} & 470 & -- & -- & \textbf{.754} \\
+\midrule
+\multicolumn{5}{l}{\textit{Qwen3}} \\
+\textbf{FinPlanRAG} & 250 & \textbf{39.21} & \textbf{508.7} & \textbf{.690} \\
+去数值桥 & 250 & -- & -- & .690 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{公开基准的组件级检查}
+
+表\ref{tab:findver-component}给出FinDVer前150条断言的结果。状态条件式获取从两条证据开始，只有在阅读器报告证据不足时才扩展，最多八条；固定预算条件直接给4条或8条；金标条件给出专家标注的证据段落。
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{4pt}
+\caption{FinDVer组件检查（150条断言）。Acc.为断言判定准确率，Macro为宏F1，Recall为证据段落召回率，Para.为平均证据段落数。}
+\label{tab:findver-component}
+\zihao{-5}
+\setlength{\tabcolsep}{2.2pt}
+\begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+\multirow{2}{*}{条件} & \multicolumn{4}{c}{DeepSeek} & \multicolumn{4}{c}{GLM} & \multicolumn{4}{c}{Qwen3} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}\cmidrule(lr){10-13}
+ & Acc. & Macro & Recall & Para. & Acc. & Macro & Recall & Para. & Acc. & Macro & Recall & Para. \\
+\midrule
+固定4条 & .767 & .550 & .620 & 4.00 & .760 & .485 & .620 & 4.00 & .733 & .438 & .620 & 4.00 \\
+固定8条 & .847 & .570 & .755 & 8.00 & .860 & .573 & .755 & 8.00 & .700 & .426 & .755 & 8.00 \\
+金标证据 & .913 & .577 & 1.000 & 2.99 & .933 & .603 & 1.000 & 2.99 & .707 & .441 & 1.000 & 2.99 \\
+\textbf{FinPlanRAG 获取} & \textbf{.873} & \textbf{.559} & \textbf{.603} & \textbf{4.63} & \textbf{.913} & \textbf{.592} & \textbf{.628} & \textbf{4.95} & \textbf{.660} & \textbf{.397} & \textbf{.517} & \textbf{4.01} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+DeepSeek和GLM上，FinPlanRAG的状态条件式获取在约一半段落数下取得高于固定8条的判定准确率：DeepSeek为.873对.847，GLM为.913对.860。证据召回率低于固定8条，说明它没有覆盖全部金标段落，但覆盖了足以判定的段落。Qwen3上的方向相反：固定4条为.733，状态条件式为.660，低于金标条件.707。Qwen3的阅读器在短上下文下更稳定，扩展证据反而引入噪声。这个结果把状态条件式获取的适用条件限定在阅读器能够利用新增证据的基座上。
+
