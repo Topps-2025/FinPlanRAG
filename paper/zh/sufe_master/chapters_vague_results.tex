@@ -109,60 +109,53 @@ Qwen3 & \textbf{2.732} & 3.146 & $-0.415$ $[-0.732,-0.170]$ & 5/5 \\
 
 \begin{table}[htbp]
 \centering
-\zihao{5}
-\setlength{\tabcolsep}{4pt}
-\caption{A股年报历史回测。Acc.为准确率，Bal.为平衡准确率，Macro为宏F1，Loss为全动作决策损失。Qwen3在250条分层子样本上评估，其余方法在470条全样本上评估。}
+\zihao{-5}
+\setlength{\tabcolsep}{3pt}
+\caption{A股年报历史回测。Acc.为准确率，Bal.为平衡准确率，Macro为宏F1，Loss为全动作决策损失，日期为披露日期窗口准确率。Qwen3在250条分层子样本上评估，其余方法在470条全样本上评估。}
 \label{tab:ashare}
-\begin{tabular}{llrrrr}
+\begin{tabular}{llrrrrr}
 \toprule
-方法 & 样本 & Acc. & Bal. & Macro & Loss \\
+方法 & 样本 & Acc. & Bal. & Macro & Loss & 日期 \\
 \midrule
-\multicolumn{6}{l}{\textit{传统基线}} \\
-上年外推 & 470 & .491 & .402 & .401 & 5.094 \\
-季度年化 & 470 & .777 & .786 & .785 & 2.270 \\
+\multicolumn{7}{l}{\textit{传统基线}} \\
+上年外推 & 470 & .491 & .402 & .401 & 5.094 & .780 \\
+季度年化 & 470 & .777 & .786 & .785 & 2.270 & .729 \\
 \midrule
-\multicolumn{6}{l}{\textit{DeepSeek}} \\
-\textbf{FinPlanRAG} & 470 & \textbf{.783} & \textbf{.778} & \textbf{.776} & \textbf{2.179} \\
-去数值桥 & 470 & .638 & .591 & .590 & 2.421 \\
+\multicolumn{7}{l}{\textit{DeepSeek}} \\
+\textbf{FinPlanRAG} & 470 & \textbf{.783} & \textbf{.778} & \textbf{.776} & \textbf{2.179} & \textbf{.788} \\
+去数值桥 & 470 & .638 & .591 & .590 & 2.421 & .788 \\
 \midrule
-\multicolumn{6}{l}{\textit{GLM}} \\
-\textbf{FinPlanRAG} & 470 & \textbf{.549} & \textbf{.485} & \textbf{.483} & \textbf{3.332} \\
-去数值桥 & 470 & .549 & .485 & .483 & 3.332 \\
+\multicolumn{7}{l}{\textit{GLM}} \\
+\textbf{FinPlanRAG} & 470 & \textbf{.549} & \textbf{.485} & \textbf{.483} & \textbf{3.332} & \textbf{.754} \\
+去数值桥 & 470 & .549 & .485 & .483 & 3.332 & .754 \\
 \midrule
-\multicolumn{6}{l}{\textit{Qwen3}} \\
-季度年化 & 250 & .772 & .789 & .789 & 2.324 \\
-\textbf{FinPlanRAG} & 250 & \textbf{.580} & \textbf{.523} & \textbf{.522} & \textbf{4.208} \\
-去数值桥 & 250 & .564 & .500 & .499 & 3.864 \\
+\multicolumn{7}{l}{\textit{Qwen3}} \\
+季度年化 & 250 & .772 & .789 & .789 & 2.324 & .714 \\
+\textbf{FinPlanRAG} & 250 & \textbf{.580} & \textbf{.523} & \textbf{.522} & \textbf{4.208} & \textbf{.690} \\
+去数值桥 & 250 & .564 & .500 & .499 & 3.864 & .690 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 DeepSeek基座上的完整系统取得.783的准确率和2.179的决策损失，高于季度年化的.777和2.270，也明显高于去桥变体的.638和2.421。完整系统相对去桥变体的损失差为$-0.243$ $[-0.404,-0.077]$，准确率差为$+0.145$ $[0.109,0.183]$，两个区间均排除零。数值桥把营业收入和归母净利润的增速判断从标签后验推进到可计算的数值区间，是DeepSeek增益的主要来源。GLM基座上完整系统与去桥变体相同，说明该基座的抽取结果没有提供足够的数值锚点，桥接未触发；完整系统也低于季度年化。Qwen3的250条子样本上，完整系统的准确率比去桥变体高$+0.016$ $[0.004,0.032]$，但损失高$+0.344$ $[0.064,0.640]$，说明数值桥改善了部分区间判断，却没有改善整体决策校准。A股结果因此分为两类：DeepSeek上数值桥带来明确增益，GLM和Qwen上抽取质量不足以支撑桥接，标签后验仍是更稳的回退。
 
-表\ref{tab:ashare-numeric}给出数值误差。DeepSeek完整系统的数值MAE为9.86个百分点，季度年化为7.40个百分点；完整系统的分类损失更低，但数值点估计不如简单年化。这个差异说明两种目标并不等价：数值桥改善的是区间判断和决策损失，不保证点值误差最小。披露日期窗口准确率为.788，高于季度年化的.729。Qwen3的数值MAE为39.21个百分点，日期窗口准确率为.690，说明其抽取器输出的数值字段噪声较大。
+表
+表\ref{tab:ashare-numeric}给出数值桥的点估计。DeepSeek完整系统的数值MAE为9.86个百分点，季度年化为7.40个百分点；完整系统的分类损失更低，但数值点估计不如简单年化。这说明两种目标并不等价：数值桥改善的是区间判断和决策损失，不保证点值误差最小。Qwen3完整系统的数值MAE为39.21个百分点，明显高于DeepSeek，说明其抽取器输出的数值字段噪声较大。GLM没有产生可用的数值点估计，数值桥未触发。披露日期窗口准确率见表\ref{tab:ashare}：DeepSeek为.788，GLM为.754，Qwen3为.690；对应的季度年化分别为.729、.729和.714。
+ef{tab:ashare}：DeepSeek为.788，GLM为.754，Qwen3为.690；对应的季度年化分别为.729、.729和.714。
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \zihao{5}
 \setlength{\tabcolsep}{4pt}
-\caption{A股回测的数值与日期指标。MAE为增速或毛利率的百分点误差，MAPE只在真实值非零时计算。}
+\caption{A股回测的数值桥点估计。MAE为增速或毛利率的百分点误差，MAPE只在真实值非零时计算。GLM没有产生可用的数值点估计，数值桥未触发。}
 \label{tab:ashare-numeric}
-\begin{tabular}{llrrr}
+\begin{tabular}{llrr}
 \toprule
-方法 & 样本 & 数值MAE & 数值MAPE & 日期窗口准确率 \\
+方法 & 样本 & 数值MAE & 数值MAPE \\
 \midrule
-季度年化 & 470 & 7.40 & 459.7 & .729 \\
-\midrule
-\multicolumn{5}{l}{\textit{DeepSeek}} \\
-\textbf{FinPlanRAG} & 470 & \textbf{9.86} & \textbf{408.7} & \textbf{.788} \\
-去数值桥 & 470 & -- & -- & .788 \\
-\midrule
-\multicolumn{5}{l}{\textit{GLM}} \\
-\textbf{FinPlanRAG} & 470 & -- & -- & \textbf{.754} \\
-\midrule
-\multicolumn{5}{l}{\textit{Qwen3}} \\
-\textbf{FinPlanRAG} & 250 & \textbf{39.21} & \textbf{508.7} & \textbf{.690} \\
-去数值桥 & 250 & -- & -- & .690 \\
+季度年化 & 470 & 7.40 & 459.7 \\
+\textbf{FinPlanRAG (DeepSeek)} & 470 & \textbf{9.86} & \textbf{408.7} \\
+\textbf{FinPlanRAG (Qwen3)} & 250 & \textbf{39.21} & \textbf{508.7} \\
 \bottomrule
 \end{tabular}
 \end{table}
