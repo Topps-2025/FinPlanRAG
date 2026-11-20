@@ -20,9 +20,9 @@ FinDVer testmini包含700条带财务报告的断言验证样本\citep{zhao2024f
 
 本文使用三套基座：DeepSeek Flash、GLM 5.3 Flash和Qwen3-8B\citep{qwen2025qwen3}。Qwen3-8B在本地部署。所有方法使用同一基座和相同的提示模板，以比较证据策略和输出契约的差异。
 
-义务检索分支与固定BM25预算1、2、4、8、16段、Self-RAG-style、CRAG-style、FLARE-style、Adaptive-RAG-style以及义务检索规划器比较。四个具名RAG方法根据原论文描述和公开接口进行同基座适配，保留各自的检索或反思策略，使用与义务检索分支相同的段落块、阅读器和评分，因此差异来自证据策略。
+义务检索分支与固定BM25预算1、2、4、8、16段、Self-RAG、CRAG、FLARE、Adaptive-RAG以及义务检索规划器比较。四个具名RAG方法根据原论文描述和公开接口进行同基座适配，保留各自的检索或反思策略，使用与义务检索分支相同的段落块、阅读器和评分，因此差异来自证据策略。
 
-AnchorEvolve与六个具名方法比较：FinDVer-style\citep{zhao2024findver}、Fin-Fact-style\citep{rangapur2025finfact}、Self-RAG-style\citep{asai2024selfrag}、CRAG-style\citep{yan2024crag}、FLARE-style\citep{jiang2023flare}和Adaptive-RAG-style\citep{jeong2024adaptiverag}。每个方法根据原论文描述和公开接口进行同基座适配，通过同一个三分类适配层运行。适配层把原始输出映射为低于、区间内、高于，并提供相同的时点证据块和相同的六条历史断言。学习组件不可用或不兼容时，用使用官方判据的API调用替代，并记录替代关系。六个条件保留各自原论文的判据，不是原系统在其原始数据上的未修改端到端运行。
+AnchorEvolve与六个具名方法比较：FinDVer \citep{zhao2024findver}、Fin-Fact \citep{rangapur2025finfact}、Self-RAG \citep{asai2024selfrag}、CRAG \citep{yan2024crag}、FLARE \citep{jiang2023flare}和Adaptive-RAG \citep{jeong2024adaptiverag}。每个方法根据原论文描述和公开接口进行同基座适配，通过同一个三分类适配层运行。适配层把原始输出映射为低于、区间内、高于，并提供相同的时点证据块和相同的六条历史断言。学习组件不可用或不兼容时，用使用官方判据的API调用替代，并记录替代关系。六个条件保留各自原论文的判据，不是原系统在其原始数据上的未修改端到端运行。
 
 评价指标分为三组。DocFinQA报告精确匹配、词级F1、答案覆盖率、平均获取段落数、平均输入token和银标准证据召回率。收入指引报告准确率、平衡准确率、宏F1、MCC、AUROC、AUPRC、ECE、Brier、决策损失、可信集覆盖率和平均集合大小。A股回测报告准确率、平衡准确率、宏F1、决策损失、数值MAE、数值MAPE和日期窗口准确率。平衡准确率是各类召回率的平均\citep{brodersen2010balanced,sokolova2009performance}。决策损失使用第\ref{ch:anchor}章参数。损失、ECE和Brier越低越好。置信区间由断言级配对自助法给出，准确率差异使用McNemar检验。路由报告路由准确率、混淆矩阵和混合效用。
 
@@ -63,7 +63,7 @@ Qwen3-8B & .867 & .263 & .018 & .298 & .316 \\
 
 义务检索分支在准确率和证据成本上优于固定16段基线：准确率更高、证据更少。规划器单独运行时成本更低，但在GLM 5.3 Flash上留下小缺口；置信度门控回退在不对每个问题支付16段成本的情况下补上了缺口。这一结果的含义是证据预算应当由证据状态决定，而不是由查询前固定的$k$决定。对于简单问题，规划器在少量证据后停止；对于复杂问题，回退提供额外证据。
 
-表\ref{tab:docfinqa}同时报告四个具名RAG适配基线。DeepSeek Flash上，Self-RAG-style与CRAG-style取得0.373，Adaptive-RAG-style取得0.363，FLARE-style取得0.330；GLM 5.3 Flash上，Self-RAG-style与CRAG-style取得0.447，Adaptive-RAG-style与FLARE-style取得0.393。义务检索分支在DeepSeek Flash上比最好的具名基线高0.084，在GLM 5.3 Flash上高0.050，且平均段落数不高于这些基线。四个条件保留各自的检索或反思策略，使用相同的段落块、阅读器和评分，因此差异来自证据策略而不是阅读器。
+表\ref{tab:docfinqa}同时报告四个具名RAG适配基线。DeepSeek Flash上，Self-RAG与CRAG取得0.373，Adaptive-RAG取得0.363，FLARE取得0.330；GLM 5.3 Flash上，Self-RAG与CRAG取得0.447，Adaptive-RAG与FLARE取得0.393。义务检索分支在DeepSeek Flash上比最好的具名基线高0.084，在GLM 5.3 Flash上高0.050，且平均段落数不高于这些基线。四个条件保留各自的检索或反思策略，使用相同的段落块、阅读器和评分，因此差异来自证据策略而不是阅读器。
 
 Qwen3-8B的DocFinQA结果放在附录\ref{app:qwen}：所有条件的精确匹配都低于0.11，主要原因是阅读器返回解释性文字而不是短答案，该基座不用于义务检索分支的主比较。该结果反映短答案抽取任务对阅读器格式遵循能力的要求，Qwen3-8B的阅读器更偏向解释性输出。框架的分支设计不依赖特定基座，但阅读器的格式遵循能力是实际部署的前提。
 
