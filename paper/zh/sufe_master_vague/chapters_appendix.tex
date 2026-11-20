@@ -3,7 +3,7 @@
 \chapter{锚点抽取提示词}
 \label{app:prompt}
 
-本节及附录 F 中的仓库路径均相对于 GitHub 仓库\url{\finplanrepo}。本节给出锚点抽取提示词的要点，完整提示词位于\texttt{experiments/anchor\_cli/prompts/anchor\_general.txt}。
+本节及附录 F 中的仓库路径均相对于 GitHub 仓库\url{\finplanrepo}。本节给出锚点抽取提示词的要点，完整提示词位于\repolink{experiments/anchor_cli/prompts/anchor_general.txt}{\texttt{experiments/anchor\_cli/prompts/anchor\_general.txt}}。
 
 提示词的第一部分给出断言契约，包括公司、代码、目标期间、指标、截止时点、参考口径、结果标签及其定义。标签定义必须互斥且穷尽，例如“低于140\%”“140\%至170\%”“高于170\%”。提示词明确说明，指引区间定义三个标签，但区间本身不是“结果落在区间内”的证据。
 
@@ -31,7 +31,7 @@ A股回测覆盖40家非金融上市公司和2023年至2025年三个财年，共
 \chapter{审计报告示例}
 \label{app:audit}
 
-本节给出中际旭创案例的审计报告结构。审计报告的生成方式与字段说明见仓库中的\texttt{docs/anchor\_cli.md}；运行后报告保存在本地结果目录的\texttt{audit.md}和\texttt{audit.json}中。
+本节给出中际旭创案例的审计报告结构。审计报告的生成方式与字段说明见\repolink{docs/anchor_cli.md}{\texttt{docs/anchor\_cli.md}}；运行后报告保存在本地结果目录的\texttt{audit.md}和\texttt{audit.json}中。
 
 审计报告的第一部分是运行元数据：运行编号、生成时间、截止时点、问题、公司、代码、模型和配置。第二部分是结论摘要：每条断言的动作、点答案、裁决集、期望损失和披露日期估计。第三部分是断言契约：指标、类型、参考口径、结果标签及其定义。
 
@@ -125,7 +125,7 @@ A股回测覆盖40家非金融上市公司和2023年至2025年三个财年，共
 \chapter{本地命令行与Claude Code接口}
 \label{app:cli}
 
-{\sloppy 本文实现了一个本地命令行工具和一个MCP服务。命令行工具为\texttt{scripts/anchor\_cli.py}，MCP服务为\texttt{scripts/anchor\_mcp.py}，仓库根目录的\texttt{.mcp.json}注册了\texttt{finplan-anchor}服务。终端运行和Claude Code运行调用同一个引擎，生成同样的审计文件。\par}
+{\sloppy 本文实现了一个本地命令行工具和一个MCP服务。命令行工具为\repolink{scripts/anchor_cli.py}{\texttt{scripts/anchor\_cli.py}}，MCP服务为\repolink{scripts/anchor_mcp.py}{\texttt{scripts/anchor\_mcp.py}}，仓库根目录的\repolink{.mcp.json}{\texttt{.mcp.json}}注册了\texttt{finplan-anchor}服务。终端运行和Claude Code运行调用同一个引擎，生成同样的审计文件。\par}
 
 命令行提供五个命令。\texttt{case}运行\texttt{configs/anchor\_cases}下的预置案例；\texttt{ask}把自然语言问题解析成断言契约并运行；\texttt{search}只检索证据，不做推断；\texttt{audit}打印某次运行的审计报告；\texttt{serve}启动MCP服务。典型用法为：
 
