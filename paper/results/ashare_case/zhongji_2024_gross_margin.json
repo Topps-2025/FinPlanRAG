@@ -1,0 +1,635 @@
+{
+  "claim": {
+    "claim_id": "ashare_300308_2024_gross_margin",
+    "company": "中际旭创",
+    "ticker": "300308.SZ",
+    "year": 2024,
+    "cutoff": "2025-01-31",
+    "target_period": "2024年年度报告",
+    "metric": "综合毛利率",
+    "metric_kind": "margin",
+    "model_template": "margin_bridge",
+    "labels": [
+      "低于31.99pp",
+      "31.99pp至33.99pp",
+      "高于33.99pp"
+    ],
+    "thresholds": [
+      {
+        "label": "低于31.99pp",
+        "low": null,
+        "high": 31.992275999999997
+      },
+      {
+        "label": "31.99pp至33.99pp",
+        "low": 31.992275999999997,
+        "high": 33.992276
+      },
+      {
+        "label": "高于33.99pp",
+        "low": 33.992276,
+        "high": null
+      }
+    ],
+    "label_defs": {
+      "低于31.99pp": "实际值低于31.99pp",
+      "31.99pp至33.99pp": "实际值在31.99pp至33.99pp之间（含下限，不含上限）",
+      "高于33.99pp": "实际值不低于33.99pp"
+    },
+    "reference_value": 32.992276,
+    "reference_unit": "%",
+    "unit": "%",
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "2023年年度报告",
+        "date": "2023-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "text": "2023年年度报告：综合毛利率 32.99%。",
+        "facet": "prior_period",
+        "metric": "毛利率",
+        "value": 32.992276,
+        "unit": "%",
+        "period": "2023FY"
+      },
+      {
+        "id": "E2",
+        "title": "2024年三季度报告",
+        "date": "2024-09-30",
+        "url": "",
+        "text": "2024年三季度报告：前三季度综合毛利率 33.32%。",
+        "facet": "latest_period",
+        "metric": "毛利率",
+        "value": 33.321447,
+        "unit": "%",
+        "period": "2024Q1-Q3"
+      },
+      {
+        "id": "E3",
+        "title": "2023年三季度报告",
+        "date": "2023-09-30",
+        "url": "",
+        "text": "2023年三季度报告：前三季度综合毛利率 31.75%。",
+        "facet": "prior_period",
+        "metric": "毛利率",
+        "value": 31.746521,
+        "unit": "%",
+        "period": "2023Q1-Q3"
+      }
+    ],
+    "outcome": {
+      "label": "31.99pp至33.99pp",
+      "value": 33.804958,
+      "unit": "%",
+      "date": "2025-04-21",
+      "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+    }
+  },
+  "result": {
+    "contract": {
+      "claim_id": "ashare_300308_2024_gross_margin",
+      "text": "",
+      "metric": "综合毛利率",
+      "claim_type": "metric",
+      "labels": [
+        "低于31.99pp",
+        "31.99pp至33.99pp",
+        "高于33.99pp"
+      ],
+      "label_defs": {
+        "低于31.99pp": "实际值低于31.99pp",
+        "31.99pp至33.99pp": "实际值在31.99pp至33.99pp之间（含下限，不含上限）",
+        "高于33.99pp": "实际值不低于33.99pp"
+      },
+      "target_period": "2024年年度报告",
+      "unit": "%",
+      "reference": "",
+      "queries": [],
+      "date_windows": [],
+      "prior": {},
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "anchor_types": [],
+      "query_facets": [],
+      "thresholds": [
+        {
+          "label": "低于31.99pp",
+          "low": null,
+          "high": 31.992275999999997
+        },
+        {
+          "label": "31.99pp至33.99pp",
+          "low": 31.992275999999997,
+          "high": 33.992276
+        },
+        {
+          "label": "高于33.99pp",
+          "low": 33.992276,
+          "high": null
+        }
+      ],
+      "reference_value": 32.992276,
+      "reference_unit": "%"
+    },
+    "cutoff": "2025-01-31",
+    "queries": [
+      "中际旭创 2024年三季报 综合毛利率",
+      "中际旭创 2023年 综合毛利率",
+      "中际旭创 2024年年度报告 综合毛利率",
+      "中际旭创 2024年 业绩 预告 综合毛利率",
+      "中际旭创 2024年 股权激励 考核 综合毛利率",
+      "中际旭创 所属行业 2024年 综合毛利率 趋势"
+    ],
+    "query_plan": [
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2024年三季报 综合毛利率",
+        "required": true
+      },
+      {
+        "facet": "prior_period",
+        "query": "中际旭创 2023年 综合毛利率",
+        "required": true
+      },
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2024年年度报告 综合毛利率",
+        "required": true
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2024年 业绩 预告 综合毛利率",
+        "required": false
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2024年 股权激励 考核 综合毛利率",
+        "required": false
+      },
+      {
+        "facet": "industry",
+        "query": "中际旭创 所属行业 2024年 综合毛利率 趋势",
+        "required": false
+      }
+    ],
+    "coverage_gaps": [],
+    "coverage_penalty": 0.0,
+    "search_log": [],
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "2023年年度报告",
+        "date": "2023-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "text": "2023年年度报告：综合毛利率 32.99%。",
+        "facet": "prior_period",
+        "metric": "毛利率",
+        "value": 32.992276,
+        "unit": "%",
+        "period": "2023FY",
+        "source_id": "E1",
+        "prompt_text": "2023年年度报告：综合毛利率 32.99%。"
+      },
+      {
+        "id": "E2",
+        "title": "2024年三季度报告",
+        "date": "2024-09-30",
+        "url": "",
+        "text": "2024年三季度报告：前三季度综合毛利率 33.32%。",
+        "facet": "latest_period",
+        "metric": "毛利率",
+        "value": 33.321447,
+        "unit": "%",
+        "period": "2024Q1-Q3",
+        "source_id": "E2",
+        "prompt_text": "2024年三季度报告：前三季度综合毛利率 33.32%。"
+      },
+      {
+        "id": "E3",
+        "title": "2023年三季度报告",
+        "date": "2023-09-30",
+        "url": "",
+        "text": "2023年三季度报告：前三季度综合毛利率 31.75%。",
+        "facet": "prior_period",
+        "metric": "毛利率",
+        "value": 31.746521,
+        "unit": "%",
+        "period": "2023Q1-Q3",
+        "source_id": "E3",
+        "prompt_text": "2023年三季度报告：前三季度综合毛利率 31.75%。"
+      }
+    ],
+    "excluded_evidence": [],
+    "llm": {
+      "prompt_sha256": "c88f5bfe9e8a8a92",
+      "request_digest": "f44244ca85f3f90bf3e5a59893dcc7caa2d09b6e05f5bdc583de6f87ebe0cf64",
+      "raw_text": "{\n  \"claim_id\": \"ashare_300308_2024_gross_margin\",\n  \"anchors\": [\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2023年综合毛利率32.99%\",\n      \"scope\": \"company\",\n      \"source_id\": \"E1\",\n      \"quote\": \"2023年年度报告：综合毛利率 32.99%。\",\n      \"date\": \"2023-12-31\",\n      \"reliability\": 0.9,\n      \"hard\": false,\n      \"implied_label\": \"31.99pp至33.99pp\",\n      \"numeric_value\": 32.99,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"%\",\n      \"numeric_period\": \"2023FY\",\n      \"model_role\": \"prior_margin\",\n      \"rationale\": \"2023年全年综合毛利率为32.99%，落在中间区间，作为先验基准。\"\n    },\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2024年前三季度综合毛利率33.32%\",\n      \"scope\": \"company\",\n      \"source_id\": \"E2\",\n      \"quote\": \"2024年三季度报告：前三季度综合毛利率 33.32%。\",\n      \"date\": \"2024-09-30\",\n      \"reliability\": 0.9,\n      \"hard\": false,\n      \"implied_label\": \"31.99pp至33.99pp\",\n      \"numeric_value\": 33.32,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"%\",\n      \"numeric_period\": \"2024Q1-Q3\",\n      \"model_role\": \"current_margin\",\n      \"rationale\": \"2024年前三季度累计毛利率33.32%，接近中间区间上限，但全年可能因Q4波动而变化。\"\n    },\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"trend\",\n      \"value\": \"2024Q1-Q3毛利率较2023Q1-Q3提升1.57pp\",\n      \"scope\": \"company\",\n      \"source_id\": \"E3\",\n      \"quote\": \"2023年三季度报告：前三季度综合毛利率 31.75%。\",\n      \"date\": \"2023-09-30\",\n      \"reliability\": 0.85,\n      \"hard\": false,\n      \"implied_label\": \"31.99pp至33.99pp\",\n      \"numeric_value\": 31.75,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"%\",\n      \"numeric_period\": \"2023Q1-Q3\",\n      \"model_role\": \"prior_margin\",\n      \"rationale\": \"2023年同期毛利率31.75%，2024年同期提升至33.32%，显示毛利率改善趋势，支持全年落在中间区间。\"\n    }\n  ],\n  \"label_scores\": {\n    \"低于31.99pp\": 0.1,\n    \"31.99pp至33.99pp\": 0.65,\n    \"高于33.99pp\": 0.25\n  },\n  \"date_estimate\": null,\n  \"numeric_estimate\": {\n    \"point\": 33.1,\n    \"low\": 32.0,\n    \"high\": 34.2,\n    \"unit\": \"%\",\n    \"basis\": \"基于2024年前三季度毛利率33.32%及2023年全年32.99%，考虑Q4季节性波动，估计全年毛利率在32%-34.2%之间。\",\n    \"source_ids\": [\"E1\", \"E2\", \"E3\"]\n  },\n  \"confidence\": 0.7,\n  \"missing\": \"缺少2024年Q4单季度毛利率数据及全年业绩指引，无法精确判断全年毛利率是否突破33.99%。\"\n}",
+      "parsed": {
+        "claim_id": "ashare_300308_2024_gross_margin",
+        "anchors": [
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2023年综合毛利率32.99%",
+            "scope": "company",
+            "source_id": "E1",
+            "quote": "2023年年度报告：综合毛利率 32.99%。",
+            "date": "2023-12-31",
+            "reliability": 0.9,
+            "hard": false,
+            "implied_label": "31.99pp至33.99pp",
+            "numeric_value": 32.99,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "%",
+            "numeric_period": "2023FY",
+            "model_role": "prior_margin",
+            "rationale": "2023年全年综合毛利率为32.99%，落在中间区间，作为先验基准。"
+          },
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2024年前三季度综合毛利率33.32%",
+            "scope": "company",
+            "source_id": "E2",
+            "quote": "2024年三季度报告：前三季度综合毛利率 33.32%。",
+            "date": "2024-09-30",
+            "reliability": 0.9,
+            "hard": false,
+            "implied_label": "31.99pp至33.99pp",
+            "numeric_value": 33.32,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "%",
+            "numeric_period": "2024Q1-Q3",
+            "model_role": "current_margin",
+            "rationale": "2024年前三季度累计毛利率33.32%，接近中间区间上限，但全年可能因Q4波动而变化。"
+          },
+          {
+            "type": "company_history",
+            "relation": "trend",
+            "value": "2024Q1-Q3毛利率较2023Q1-Q3提升1.57pp",
+            "scope": "company",
+            "source_id": "E3",
+            "quote": "2023年三季度报告：前三季度综合毛利率 31.75%。",
+            "date": "2023-09-30",
+            "reliability": 0.85,
+            "hard": false,
+            "implied_label": "31.99pp至33.99pp",
+            "numeric_value": 31.75,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "%",
+            "numeric_period": "2023Q1-Q3",
+            "model_role": "prior_margin",
+            "rationale": "2023年同期毛利率31.75%，2024年同期提升至33.32%，显示毛利率改善趋势，支持全年落在中间区间。"
+          }
+        ],
+        "label_scores": {
+          "低于31.99pp": 0.1,
+          "31.99pp至33.99pp": 0.65,
+          "高于33.99pp": 0.25
+        },
+        "date_estimate": null,
+        "numeric_estimate": {
+          "point": 33.1,
+          "low": 32.0,
+          "high": 34.2,
+          "unit": "%",
+          "basis": "基于2024年前三季度毛利率33.32%及2023年全年32.99%，考虑Q4季节性波动，估计全年毛利率在32%-34.2%之间。",
+          "source_ids": [
+            "E1",
+            "E2",
+            "E3"
+          ]
+        },
+        "confidence": 0.7,
+        "missing": "缺少2024年Q4单季度毛利率数据及全年业绩指引，无法精确判断全年毛利率是否突破33.99%。"
+      },
+      "usage": {
+        "input_tokens": 1959,
+        "output_tokens": 856
+      },
+      "error": null
+    },
+    "anchors": [
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2023年综合毛利率32.99%",
+        "scope": "company",
+        "source_id": "E1",
+        "quote": "2023年年度报告：综合毛利率 32.99%。",
+        "date": "2023-12-31",
+        "reliability": 0.9,
+        "hard": false,
+        "implied_label": "31.99pp至33.99pp",
+        "numeric_value": 32.99,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "%",
+        "numeric_period": "2023FY",
+        "model_role": "prior_margin",
+        "rationale": "2023年全年综合毛利率为32.99%，落在中间区间，作为先验基准。",
+        "implied_label_matched": "31.99pp至33.99pp",
+        "implied_label_raw": "31.99pp至33.99pp",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.9,
+        "hard_effective": false,
+        "qualification": "soft",
+        "status": "accepted",
+        "reasons": [],
+        "evidence_title": "2023年年度报告",
+        "evidence_url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "evidence_date": "2023-12-31"
+      },
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2024年前三季度综合毛利率33.32%",
+        "scope": "company",
+        "source_id": "E2",
+        "quote": "2024年三季度报告：前三季度综合毛利率 33.32%。",
+        "date": "2024-09-30",
+        "reliability": 0.9,
+        "hard": false,
+        "implied_label": "31.99pp至33.99pp",
+        "numeric_value": 33.32,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "%",
+        "numeric_period": "2024Q1-Q3",
+        "model_role": "current_margin",
+        "rationale": "2024年前三季度累计毛利率33.32%，接近中间区间上限，但全年可能因Q4波动而变化。",
+        "implied_label_matched": "31.99pp至33.99pp",
+        "implied_label_raw": "31.99pp至33.99pp",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.9,
+        "hard_effective": false,
+        "qualification": "soft",
+        "status": "accepted",
+        "reasons": [],
+        "evidence_title": "2024年三季度报告",
+        "evidence_url": "",
+        "evidence_date": "2024-09-30"
+      },
+      {
+        "type": "company_history",
+        "relation": "trend",
+        "value": "2024Q1-Q3毛利率较2023Q1-Q3提升1.57pp",
+        "scope": "company",
+        "source_id": "E3",
+        "quote": "2023年三季度报告：前三季度综合毛利率 31.75%。",
+        "date": "2023-09-30",
+        "reliability": 0.85,
+        "hard": false,
+        "implied_label": "31.99pp至33.99pp",
+        "numeric_value": 31.75,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "%",
+        "numeric_period": "2023Q1-Q3",
+        "model_role": "prior_margin",
+        "rationale": "2023年同期毛利率31.75%，2024年同期提升至33.32%，显示毛利率改善趋势，支持全年落在中间区间。",
+        "implied_label_matched": "31.99pp至33.99pp",
+        "implied_label_raw": "31.99pp至33.99pp",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.85,
+        "hard_effective": false,
+        "qualification": "soft",
+        "status": "accepted",
+        "reasons": [],
+        "evidence_title": "2023年三季度报告",
+        "evidence_url": "",
+        "evidence_date": "2023-09-30"
+      },
+      {
+        "type": "model_bridge",
+        "relation": "level",
+        "value": "current margin = 33.32%",
+        "scope": "company",
+        "source_id": "MODEL",
+        "quote": "current margin = 33.32%",
+        "date": "2025-01-31",
+        "reliability": 0.55,
+        "hard": false,
+        "implied_label": "31.99pp至33.99pp",
+        "implied_label_matched": "31.99pp至33.99pp",
+        "rationale": "current margin = 33.32%",
+        "qualification": "model",
+        "status": "accepted",
+        "quote_verified": true,
+        "synthetic": true,
+        "reliability_effective": 0.55,
+        "model_role": "model_bridge",
+        "numeric_value": 33.32,
+        "numeric_unit": "%",
+        "numeric_period": "2024年年度报告",
+        "reasons": []
+      }
+    ],
+    "belief": {
+      "prior": {
+        "低于31.99pp": 0.333333,
+        "31.99pp至33.99pp": 0.333333,
+        "高于33.99pp": 0.333333
+      },
+      "anchor_only": {
+        "低于31.99pp": 0.007128,
+        "31.99pp至33.99pp": 0.985745,
+        "高于33.99pp": 0.007128
+      },
+      "final": {
+        "低于31.99pp": 0.053564,
+        "31.99pp至33.99pp": 0.817872,
+        "高于33.99pp": 0.128564
+      },
+      "hard_projection": [],
+      "trace": [
+        {
+          "anchor_index": 0,
+          "implied_label": "31.99pp至33.99pp",
+          "qualification": "soft",
+          "reliability_effective": 0.9,
+          "before": {
+            "低于31.99pp": 0.333333,
+            "31.99pp至33.99pp": 0.333333,
+            "高于33.99pp": 0.333333
+          },
+          "after": {
+            "低于31.99pp": 0.166655,
+            "31.99pp至33.99pp": 0.66669,
+            "高于33.99pp": 0.166655
+          }
+        },
+        {
+          "anchor_index": 1,
+          "implied_label": "31.99pp至33.99pp",
+          "qualification": "soft",
+          "reliability_effective": 0.9,
+          "before": {
+            "低于31.99pp": 0.166655,
+            "31.99pp至33.99pp": 0.66669,
+            "高于33.99pp": 0.166655
+          },
+          "after": {
+            "低于31.99pp": 0.055545,
+            "31.99pp至33.99pp": 0.88891,
+            "高于33.99pp": 0.055545
+          }
+        },
+        {
+          "anchor_index": 2,
+          "implied_label": "31.99pp至33.99pp",
+          "qualification": "soft",
+          "reliability_effective": 0.85,
+          "before": {
+            "低于31.99pp": 0.055545,
+            "31.99pp至33.99pp": 0.88891,
+            "高于33.99pp": 0.055545
+          },
+          "after": {
+            "低于31.99pp": 0.01632,
+            "31.99pp至33.99pp": 0.96736,
+            "高于33.99pp": 0.01632
+          }
+        },
+        {
+          "anchor_index": 3,
+          "implied_label": "31.99pp至33.99pp",
+          "qualification": "model",
+          "reliability_effective": 0.55,
+          "before": {
+            "低于31.99pp": 0.01632,
+            "31.99pp至33.99pp": 0.96736,
+            "高于33.99pp": 0.01632
+          },
+          "after": {
+            "低于31.99pp": 0.007128,
+            "31.99pp至33.99pp": 0.985745,
+            "高于33.99pp": 0.007128
+          }
+        }
+      ]
+    },
+    "readout": {
+      "action": "answer",
+      "point": "31.99pp至33.99pp",
+      "argmax_label": "31.99pp至33.99pp",
+      "set": [
+        "31.99pp至33.99pp"
+      ],
+      "expected_loss": 1.821276,
+      "credible_set": [
+        "31.99pp至33.99pp",
+        "高于33.99pp"
+      ],
+      "credible_set_mass": 0.946436,
+      "alpha": 0.1,
+      "action_losses": [
+        {
+          "action": "answer",
+          "label": "31.99pp至33.99pp",
+          "expected_loss": 1.821276
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "31.99pp至33.99pp",
+            "高于33.99pp"
+          ],
+          "expected_loss": 2.42851
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于31.99pp",
+            "31.99pp至33.99pp"
+          ],
+          "expected_loss": 3.02851
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于31.99pp",
+            "31.99pp至33.99pp",
+            "高于33.99pp"
+          ],
+          "expected_loss": 4.0
+        },
+        {
+          "action": "abstain",
+          "expected_loss": 5.0
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于31.99pp",
+            "高于33.99pp"
+          ],
+          "expected_loss": 8.542979
+        },
+        {
+          "action": "answer",
+          "label": "高于33.99pp",
+          "expected_loss": 8.82149
+        },
+        {
+          "action": "answer",
+          "label": "低于31.99pp",
+          "expected_loss": 9.207234
+        }
+      ]
+    },
+    "date_estimate": null,
+    "forecast": {
+      "template": "margin_bridge",
+      "point": 33.32,
+      "low": 29.988,
+      "high": 36.652,
+      "unit": "%",
+      "formula": "current margin = 33.32%",
+      "inputs": {
+        "current_margin": 33.32
+      },
+      "input_sources": {
+        "current_margin": "E2"
+      },
+      "missing": [],
+      "method": "current_level",
+      "interval_method": "heuristic",
+      "label": "31.99pp至33.99pp"
+    },
+    "calibration": null,
+    "numeric_estimate": {
+      "point": 33.1,
+      "low": 32.0,
+      "high": 34.2,
+      "unit": "%",
+      "basis": "基于2024年前三季度毛利率33.32%及2023年全年32.99%，考虑Q4季节性波动，估计全年毛利率在32%-34.2%之间。",
+      "source_ids": [
+        "E1",
+        "E2",
+        "E3"
+      ]
+    },
+    "seconds": 0.0,
+    "error": null
+  },
+  "outcome": {
+    "label": "31.99pp至33.99pp",
+    "value": 33.804958,
+    "unit": "%",
+    "date": "2025-04-21",
+    "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+  }
+}

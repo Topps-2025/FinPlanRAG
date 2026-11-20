@@ -1,0 +1,138 @@
+{
+  "schema": "finplan-findver-summary-v1",
+  "n_rows": 600,
+  "conditions": {
+    "fixed_k_4": {
+      "n": 150,
+      "accuracy": 0.76,
+      "macro_f1": 0.4852924852924853,
+      "evidence_recall": 0.6195555555555555,
+      "mean_paragraphs": 4.0,
+      "mean_input_tokens": 1281.6533333333334,
+      "mean_output_tokens": 125.40666666666667,
+      "mean_latency_seconds": 2.333219739596049,
+      "insufficient_rate": 0.2,
+      "verdicts": {
+        "entailed": 14,
+        "insufficient": 30,
+        "refuted": 106
+      }
+    },
+    "fixed_k_8": {
+      "n": 150,
+      "accuracy": 0.86,
+      "macro_f1": 0.5731058521372225,
+      "evidence_recall": 0.7553333333333332,
+      "mean_paragraphs": 8.0,
+      "mean_input_tokens": 2320.7266666666665,
+      "mean_output_tokens": 128.92666666666668,
+      "mean_latency_seconds": 2.355478237469991,
+      "insufficient_rate": 0.11333333333333333,
+      "verdicts": {
+        "entailed": 21,
+        "insufficient": 17,
+        "refuted": 112
+      }
+    },
+    "oracle_gold": {
+      "n": 150,
+      "accuracy": 0.9333333333333333,
+      "macro_f1": 0.6029810298102981,
+      "evidence_recall": 1.0,
+      "mean_paragraphs": 2.986666666666667,
+      "mean_input_tokens": 1014.6733333333333,
+      "mean_output_tokens": 118.31333333333333,
+      "mean_latency_seconds": 2.188172885576884,
+      "insufficient_rate": 0.04,
+      "verdicts": {
+        "entailed": 23,
+        "insufficient": 6,
+        "refuted": 121
+      }
+    },
+    "planner": {
+      "n": 150,
+      "accuracy": 0.9133333333333333,
+      "macro_f1": 0.5917809746849559,
+      "evidence_recall": 0.6278888888888889,
+      "mean_paragraphs": 4.946666666666666,
+      "mean_input_tokens": 1729.6,
+      "mean_output_tokens": 134.32,
+      "mean_latency_seconds": 2.394792682329814,
+      "insufficient_rate": 0.04666666666666667,
+      "verdicts": {
+        "entailed": 24,
+        "insufficient": 7,
+        "refuted": 119
+      }
+    }
+  },
+  "subsets": {
+    "ie": {
+      "fixed_k_4": {
+        "n": 150,
+        "accuracy": 0.76,
+        "macro_f1": 0.4852924852924853,
+        "evidence_recall": 0.6195555555555555,
+        "mean_paragraphs": 4.0,
+        "mean_input_tokens": 1281.6533333333334,
+        "mean_output_tokens": 125.40666666666667,
+        "mean_latency_seconds": 2.333219739596049,
+        "insufficient_rate": 0.2,
+        "verdicts": {
+          "entailed": 14,
+          "insufficient": 30,
+          "refuted": 106
+        }
+      },
+      "fixed_k_8": {
+        "n": 150,
+        "accuracy": 0.86,
+        "macro_f1": 0.5731058521372225,
+        "evidence_recall": 0.7553333333333332,
+        "mean_paragraphs": 8.0,
+        "mean_input_tokens": 2320.7266666666665,
+        "mean_output_tokens": 128.92666666666668,
+        "mean_latency_seconds": 2.355478237469991,
+        "insufficient_rate": 0.11333333333333333,
+        "verdicts": {
+          "entailed": 21,
+          "insufficient": 17,
+          "refuted": 112
+        }
+      },
+      "oracle_gold": {
+        "n": 150,
+        "accuracy": 0.9333333333333333,
+        "macro_f1": 0.6029810298102981,
+        "evidence_recall": 1.0,
+        "mean_paragraphs": 2.986666666666667,
+        "mean_input_tokens": 1014.6733333333333,
+        "mean_output_tokens": 118.31333333333333,
+        "mean_latency_seconds": 2.188172885576884,
+        "insufficient_rate": 0.04,
+        "verdicts": {
+          "entailed": 23,
+          "insufficient": 6,
+          "refuted": 121
+        }
+      },
+      "planner": {
+        "n": 150,
+        "accuracy": 0.9133333333333333,
+        "macro_f1": 0.5917809746849559,
+        "evidence_recall": 0.6278888888888889,
+        "mean_paragraphs": 4.946666666666666,
+        "mean_input_tokens": 1729.6,
+        "mean_output_tokens": 134.32,
+        "mean_latency_seconds": 2.394792682329814,
+        "insufficient_rate": 0.04666666666666667,
+        "verdicts": {
+          "entailed": 24,
+          "insufficient": 7,
+          "refuted": 119
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,128 @@
+% ==================== 附录 G（修订版补充结果） ====================
+\chapter{全动作读出与演化版补充结果}
+\label{app:evolution}
+
+\begin{revbox}
+\noindent 本附录给出修订版的全动作读出、公平基线和 DeepSeek 演化版补充结果。附录 A 的十一项指标和原表 6.2/6.3 是旧受限 gate 口径；本节表格使用全动作 gate。所有表格的测试集为 227 条 XBRL 核验断言（2022--2025），配对区间为 10,000 次 claim 级 bootstrap。
+\end{revbox}
+
+\section{全动作读出与受限 gate}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{受限 gate 与全动作 gate 的决策损失（227 条）。}
+\label{tab:g-fullaction}
+\begin{tabular}{lrrrr}
+\toprule
+基座 & Fusion 受限 & Fusion 全动作 & RF 受限 & RF 全动作 \\
+\midrule
+DeepSeek & 3.604 & \cellcolor{yellow!25}2.863 & 3.454 & \cellcolor{yellow!25}2.881 \\
+GLM 5.3 & 3.648 & \cellcolor{yellow!25}2.956 & 3.460 & \cellcolor{yellow!25}2.885 \\
+Qwen3-8B & 3.577 & \cellcolor{yellow!25}2.837 & 3.454 & \cellcolor{yellow!25}2.881 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent Fusion 的全动作减损：DeepSeek $-0.740$ $[-1.031,-0.423]$；GLM $-0.690$ $[-1.000,-0.363]$；Qwen $-0.740$ $[-1.048,-0.423]$。RF 的全动作减损：DeepSeek $-0.573$ $[-0.855,-0.282]$；GLM $-0.575$ $[-0.858,-0.274]$；Qwen $-0.573$ $[-0.855,-0.282]$。六个区间均排除零。
+\end{revbox}
+
+\section{公平 gated 基线}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{Fusion 全动作 vs 最好 gated 具名基线（同一全动作 gate）。}
+\label{tab:g-fair}
+\begin{tabular}{llrrr}
+\toprule
+基座 & 最好 gated baseline & 基线损失 & Fusion 损失 & 差 [95\% CI] \\
+\midrule
+DeepSeek & Self-RAG-style & 3.048 & 2.863 & $-0.185$ $[-0.581,0.211]$ \\
+GLM 5.3 & FinDVer-style & 3.221 & 2.956 & $-0.265$ $[-0.699,0.177]$ \\
+Qwen3-8B & Fin-Fact-style & 4.846 & 2.837 & $-2.009$ $[-2.687,-1.330]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent 公平 gate 下 Fusion 的点估计低于全部基线；Qwen 显著，DeepSeek/GLM 相对最强基线不显著。原稿的“显著低于所有基线”只成立于“baseline 只能点答案、FinPlanRAG 可以用集合/弃权”的不对等设定。
+\end{revbox}
+
+\section{DeepSeek 演化版与消融}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{2.5pt}
+\caption{DeepSeek 演化版系统与消融（227 条；全动作 Loss）。}
+\label{tab:g-evolution}
+\begin{tabular}{lrrrr}
+\toprule
+系统 & Acc & Bal & Macro & Loss \\
+\midrule
+旧论文 Fusion（受限 gate） & .524 & .471 & .468 & 3.604 \\
+\rowcolor{yellow!18} 新锚点 + 演化 + 演化先验 RF（$w=.20$） & \textbf{.551} & \textbf{.489} & \textbf{.503} & \textbf{2.890} \\
+\rowcolor{yellow!18} 演化先验 RF 单独（诊断） & \textbf{.555} & \textbf{.503} & \textbf{.508} & \textbf{2.828} \\
+\rowcolor{yellow!18} 新锚点 + 演化 + baseline RF（$w=.05$） & .542 & .499 & .497 & 2.855 \\
+\rowcolor{yellow!18} 新锚点，静态（$w=.05$） & .546 & .505 & .503 & 2.908 \\
+\rowcolor{yellow!18} 旧锚点 + 演化（$w=.30$） & .520 & .439 & .438 & 2.793 \\
+\rowcolor{yellow!18} 旧锚点，静态（$w=.20$） & .507 & .450 & .450 & 2.899 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent 最终系统相对旧系统损失差 $-0.714$ $[-1.057,-0.352]$；相对演化先验 RF 诊断 $+0.062$ $[-0.141,0.273]$。准确率 +2.7 点，McNemar $p\approx0.69$；点估计，不作为显著优势。
+\end{revbox}
+
+\section{演化先验特征}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{演化先验特征（无 LLM；validation 185 条，test 227 条；3 seeds/300 trees）。}
+\label{tab:g-prior}
+\begin{tabular}{llrrrr}
+\toprule
+Split & 特征集 & Acc & Bal & Macro & Loss \\
+\midrule
+Validation & baseline & .557 & .556 & .536 & 3.784 \\
+\rowcolor{yellow!18} Validation & all evolved, no artifact & \textbf{.605} & \textbf{.572} & \textbf{.566} & \textbf{3.740} \\
+Test & baseline RF（受限 / 全动作） & .520 & .476 & .473 & 3.463 / 2.908 \\
+\rowcolor{yellow!18} Test & evolved-prior RF（受限 / 全动作） & \textbf{.555} & \textbf{.503} & \textbf{.508} & \textbf{3.278 / 2.828} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Router 集成}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\caption{固定 router 预测、替换前瞻分支损失后的混合效用（527 条已验证子集）。}
+\label{tab:g-router}
+\begin{tabular}{lrr}
+\toprule
+分支 & 旧前瞻损失 & 新前瞻损失 \\
+\midrule
+Router & .389 & \cellcolor{yellow!25}.437 \\
+Always-Anchor & .258 & \cellcolor{yellow!25}.306 \\
+Always-RAG & .131 & .131 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{修订版提示词与配置摘要}
+
+\begin{revbox}
+\noindent 修订版锚点提示词要求：锚点引用 \texttt{P\#}/\texttt{E\#} 来源与不晚于 cutoff 的日期；\texttt{reliability} 为隐含桶正确的校准概率；指引区间本身不作为“区间内”的证据；证据不足时返回 \texttt{missing}；公司名默认脱敏。配置项包括：硬锚点阈值 .65、软锚点 $p_e=.7$、混合权重 $\gamma=.5$、收缩系数 $\lambda=.5$、Beta 先验 $(1,1)$、损失 $(12,8,10,8,2,5)$、融合权重网格 $\{0,.05,.1,.2,.3,.5,1\}$、RF 600 棵树/叶节点 5/5 seeds。完整 prompt、配置和逐条结果随代码发布。
+\end{revbox}
+
+\begin{revbox}
+\noindent\textbf{旧附录说明。}附录 A 的十一项指标、原表 6.2/6.3 以及旧锚点消融是\textbf{旧受限 gate} 口径，保留用于历史对照。修订版论文的主结果以本节和表\ref{tab:fullaction}、表\ref{tab:evolution}、表\ref{tab:prior} 为准。
+\end{revbox}

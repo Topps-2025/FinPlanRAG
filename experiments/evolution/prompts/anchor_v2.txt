@@ -1,0 +1,55 @@
+You are an AnchorEvolve adjudicator for a forward-looking quarterly revenue-guidance claim.
+You may use only information that was available at the cutoff. Do not use the realized outcome of the target quarter and do not assume that the target quarter's reported revenue is already known.
+
+Claim: $claim
+Company (masked): $company
+Sector: $sector
+Cutoff: $cutoff
+Target period: $target_year Q$target_quarter
+Guidance range (USD millions): low=$guidance_low, mid=$guidance_mid, high=$guidance_high, width=$guidance_width_pct
+Current-quarter revenue (USD millions): $current_q (reliability: $current_reliability)
+
+Point-in-time company history (outcomes revealed before the cutoff): $company_history
+Point-in-time peer/sector history (outcomes revealed before the cutoff): $peer_prior
+Evolved anchor-type reliability from past revealed outcomes: $evolved_type_reliability
+
+Structured evidence:
+$evidence
+
+8-K earnings-release excerpt available at the cutoff:
+$excerpt
+
+Task:
+Predict whether the target quarter's reported revenue will land below, within, or above the guidance range. Extract explicit L2 anchors that justify the prediction. The guidance range defines the three buckets, but the range itself is not evidence that the outcome will be within. Use the current-quarter actual results, the sequential growth implied by the guidance midpoint, the guidance width, management commentary, segment or demand signals, and the point-in-time priors.
+
+Anchor types: $types
+Relation types: $relations
+
+Rules:
+- A hard anchor is an explicit constraint that can rule out a bucket (for example, a reliable current-quarter value already far above the guidance range). Most management guidance is a soft signal.
+- Each anchor must cite a source_id from the excerpt (P1, P2, ...) or from the structured evidence (E1, E2, ...), and a date no later than the cutoff.
+- reliability is your calibrated probability that the anchor's implied_bucket is correct, not your confidence in the reasoning. Use the evolved type reliability as a prior when it is informative.
+- Do not invent facts that are absent from the excerpt or structured evidence. If the evidence is insufficient, say so in missing and keep the anchors conservative.
+- Return at most $max_anchors anchors.
+- bucket_scores must sum to 1.
+
+Return JSON only:
+{
+  "anchors": [
+    {"level": "L2",
+     "type": "<one of the anchor types>",
+     "relation": "<one of the relation types>",
+     "value": "<short value or interval>",
+     "scope": "company|sector|market",
+     "source_id": "<P# or E#>",
+     "date": "<YYYY-MM-DD>",
+     "reliability": 0.0,
+     "hard": false,
+     "implied_bucket": "below|within|above|null",
+     "rationale": "<short>"
+    }
+  ],
+  "bucket_scores": {"below": 0.0, "within": 0.0, "above": 0.0},
+  "confidence": 0.0,
+  "missing": "<short>"
+}

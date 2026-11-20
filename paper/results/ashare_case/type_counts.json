@@ -1,0 +1,17 @@
+{
+  "disclosure_history": {
+    "m": 1,
+    "n": 1,
+    "reliability": 0.6666666666666666
+  },
+  "company_history": {
+    "m": 1,
+    "n": 5,
+    "reliability": 0.2857142857142857
+  },
+  "model_bridge": {
+    "m": 2,
+    "n": 3,
+    "reliability": 0.6
+  }
+}

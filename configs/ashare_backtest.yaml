@@ -1,0 +1,32 @@
+# Historical A-share annual-report backtest.
+#
+# The builder reads public financial statements through akshare and official
+# announcement records through cninfo.  It does not invent outcomes or labels.
+# A claim is emitted only when the prior-year, year-to-date and realized values
+# are all present.
+version: 1
+updated: "2026-11-20"
+
+years: [2024, 2025]
+# For fiscal year Y, the question is asked on January 31 of Y+1.  At that
+# point the Q3 report is public and the annual report is not.
+cutoff_template: "{next_year}-01-31"
+output_dir: paper/data/ashare_backtest
+
+bands:
+  revenue_growth_pp: 10.0
+  net_profit_growth_pp: 15.0
+  gross_margin_pp: 1.0
+
+companies:
+  - {name: 中际旭创, ticker: 300308.SZ}
+  - {name: 新易盛, ticker: 300502.SZ}
+  - {name: 贵州茅台, ticker: 600519.SH}
+  - {name: 宁德时代, ticker: 300750.SZ}
+  - {name: 比亚迪, ticker: 002594.SZ}
+
+metrics:
+  - revenue_growth
+  - net_profit_growth
+  - gross_margin
+  - disclosure_date

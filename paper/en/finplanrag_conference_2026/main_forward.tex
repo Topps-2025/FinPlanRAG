@@ -1,0 +1,226 @@
+\documentclass[11pt]{article}
+\usepackage[preprint]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\makeatletter
+\ifacl@linenumbers
+  \font\aclhvsmall=phvb at 6.5pt
+  \renewcommand\linenumberfont{\aclhvsmall\color{lightgray}}
+  \setlength{\linenumbersep}{8pt}
+\fi
+\makeatother
+
+\newtheorem{proposition}{Proposition}
+\newcommand{\method}{FinPlanRAG}
+\newcommand{\anchor}{\textsc{AnchorEvolve}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+
+\title{\method: Anchored Decision Making for Unresolved Financial Claims}
+\author{Anonymous ACL submission}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Financial question answering and claim verification assume that the answer, or the evidence supporting it, already exists at the cutoff. We study a different decision problem: an unresolved financial claim must be adjudicated from point-in-time, heterogeneous evidence under asymmetric loss, and the system may answer, return a non-singleton set, or abstain. We formulate the problem, instantiate an evidence state with source-grounded anchors, qualification, reveal-date reliability evolution, and a validation-gated anchor-type self-evolution loop, and evaluate it on XBRL-verified revenue-guidance claims, a historical A-share annual-report backtest, and component-level public checks. Across DeepSeek Flash, GLM 5.3 Flash, and a locally served Qwen3-8B, the full-action loss-aware readout significantly lowers decision loss relative to a restricted credible-set gate. The anchor layer is statistically indistinguishable from a strong random forest on overall loss, but on claims whose realized outcome lies inside the guidance range, GLM fusion significantly lowers loss, with four of five forest seeds excluding zero. Anchor-type self-evolution lowers DeepSeek test loss from 2.881 to 2.863. The results support a layered claim: the decision interface is the robust contribution; the evidence state is competitive and auditable; type evolution is a small, verifiable extension.
+\end{abstract}
+
+\section{Introduction}
+
+A financial analyst often asks a question whose answer is not yet in any document: whether next year's revenue growth will exceed a threshold, whether gross margin will hold, whether guidance will be met, or when an annual report will be disclosed. At the cutoff, the outcome is unrealized. A retrieval-augmented generator can produce a fluent answer, but it cannot express ``the evidence is insufficient'' and ``the cost of over-prediction differs from the cost of under-prediction'' in the same output. A claim verifier can return supported, refuted, or insufficient, but its label space describes textual entailment, not the distribution of an unrealized outcome.
+
+This paper treats the output as a decision rather than a single label. Given a claim contract $(e,p,m,\mathcal H,c)$ with company $e$, period $p$, metric $m$, finite outcome space $\mathcal H$, and cutoff $c$, the system chooses an action $a$ from the set of point answers, non-singleton adjudication sets, and abstention. The evidence state is an explicit object: source-grounded anchors with type, value, scope, source, date, reliability, and implied outcome label. The state is qualified before it enters a belief update, and type reliabilities evolve only after outcomes are publicly revealed.
+
+\paragraph{Why existing work does not settle the problem.}
+Financial QA benchmarks such as FinQA, TAT-QA, FinanceBench, DocFinQA, and FinBen evaluate reading, numerical reasoning, or evidence selection over documents whose answers already exist \citep{chen2021finqa,zhu2021tatqa,islam2023financebench,reddy2024docfinqa,xie2024finben}. FinDVer and Fin-Fact evaluate claim verification with support/refute/insufficient labels \citep{zhao2024findver,rangapur2025finfact}. ForecastBench and EPSBench evaluate future predictions and calibration, and EPSBench finds that several LLMs do not significantly beat analyst consensus while nominal 80\% intervals cover only 37--70\% of outcomes \citep{karger2025forecastbench,yin2026epsbench}. TempFinRAG enforces as-of filing boundaries and reduces temporal evidence leakage \citep{tao2026tempfinrag}; ChronoBERT trains on temporally restricted corpora \citep{he2026chrono}. Sufficient Context, FinVerify, and SelectLLM study evidence sufficiency, financial claim verification with abstention, and selective prediction \citep{joren2025sufficient,guan2026finverify,mao2025selectllm}.
+
+Each line covers one constraint. None jointly models an unrealized outcome, point-in-time evidence, source admissibility, type-level reliability evolution, and an asymmetric action set. When combined, the assumptions break: a valid date does not imply an admissible source; textual support does not imply an outcome probability; interval calibration does not imply evidence audit; and exchangeability does not imply stationarity of financial evidence.
+
+\paragraph{Contributions.}
+First, we formulate unresolved financial claims as a decision problem with a point-in-time evidence state and an explicit risk. Second, we instantiate the state with three anchor layers, five qualification types, reveal-date Beta evolution, a validation-gated type self-evolution loop, and a full-action loss-aware readout. Third, we evaluate the framework on a 1,005-claim revenue-guidance benchmark, a historical A-share annual-report backtest, and component-level public checks, with three backbones and six retrieval and verification baselines. We report a layered claim rather than a uniform superiority claim.
+
+\section{Related Work}
+
+\paragraph{Financial QA and verification.}
+FinQA and TAT-QA require numerical reasoning over tables and text \citep{chen2021finqa,zhu2021tatqa}; FinanceBench and DocFinQA extend this to real filings and long 10-K contexts \citep{islam2023financebench,reddy2024docfinqa}; FinBen aggregates a broad set of financial tasks \citep{xie2024finben}. FinDVer and Fin-Fact test whether a claim is supported, refuted, or unverifiable \citep{zhao2024findver,rangapur2025finfact}. These tasks assume that the relevant facts are already disclosed. They measure reading and entailment, not the probability that an unrealized outcome falls in a range.
+
+\paragraph{Forecasting and calibration.}
+ForecastBench evaluates dynamically generated future questions \citep{karger2025forecastbench}. EPSBench forecasts quarterly EPS before the announcement and shows that analyst consensus is a hard baseline and that interval calibration is poor \citep{yin2026epsbench}. These benchmarks measure numerical accuracy and calibration, but not whether the evidence used for a forecast is admissible, traceable, or sufficient. They also do not choose among point, set, and abstention actions under a domain loss.
+
+\paragraph{Temporal retrieval and leakage.}
+TempFinRAG enforces an as-of filing boundary before retrieval and reports a large reduction in temporal evidence leakage \citep{tao2026tempfinrag}. ChronoBERT and ChronoGPT train on temporally restricted corpora to reduce lookahead bias \citep{he2026chrono}. These methods establish that time validity must be designed into the system. They do not model source-type reliability, nor do they connect evidence qualification to a downstream decision loss.
+
+\paragraph{Evidence sufficiency and selective prediction.}
+Sufficient Context asks whether retrieved context is sufficient to answer and uses the judgment to guide abstention \citep{joren2025sufficient}. FinVerify checks numerical claims for temporal integrity, source fidelity, comparability, and accounting consistency, and returns accept, reject, or abstain \citep{guan2026finverify}. SelectLLM integrates selective prediction into training to balance coverage and risk \citep{mao2025selectllm}. These methods provide abstention and risk-control tools, but they do not maintain a time-indexed evidence state or evolve type-level reliability.
+
+\section{Problem Formulation}
+
+Let $Y\in\mathcal H$ be the unresolved outcome and $c$ the cutoff. Let $\mathcal E_{\le c}$ be the evidence available at $c$, and $X$ the structured features. A system produces a posterior $b(Y)$ and an action $a\in\mathcal A$, where
+\begin{equation}
+\mathcal A=\mathcal H\cup\{R\subseteq\mathcal H:|R|\ge2\}\cup\{\bot\}.
+\end{equation}
+For three labels, $\mathcal A$ contains three point answers, four non-singleton sets, and abstention. The risk of an action is
+\begin{equation}
+R(a)=\sum_{y\in\mathcal H}p(y\mid\mathcal E_{\le c},X)L(a,y),
+\end{equation}
+and the Bayes action is $a^\star=\arg\min_{a\in\mathcal A}R(a)$. The risk difference from an oracle decomposes into a decision error and a posterior approximation error:
+\begin{equation}
+\begin{aligned}
+R(\hat a)-R(a^\star_{\text{oracle}})
+={}& \underbrace{R(\hat a)-R(a^\star_{\hat b})}_{\text{decision}}\\
+&+\underbrace{R(a^\star_{\hat b})-R(a^\star_{\text{oracle}})}_{\text{posterior}}.
+\end{aligned}
+\end{equation}
+This decomposition separates the evaluation of the action space from the evaluation of the evidence state. The main experiment reports both.
+
+\paragraph{Anchor state.}
+An anchor is a tuple $a=(id,\tau,v,u,s,src,d,r,\mathrm{hard},\hat h,\mathrm{note})$, where $\tau$ is a type, $v$ a value or interval, $u$ a unit, $s$ a scope, $src$ a source, $d$ a source date, $r$ a reliability, and $\hat h$ an implied label. The type library has three layers: stable relations (L0), industry schemas (L1), and instances (L2). L0 includes bound, precedence, lead time, duration, conservation, ratio, unit conversion, and scope.
+
+\section{Method}
+
+\subsection{Contract and evidence}
+The claim contract fixes the company, period, metric, labels, thresholds, and cutoff. Evidence is collected through a facet portfolio: latest period, prior period, forward disclosure, industry, and disclosure date. Required facets are reserved before optional facets and parser-proposed queries. Every evidence item carries a source id, date, title, URL, and excerpt. Evidence after the cutoff is excluded.
+
+\subsection{Extraction and qualification}
+An LLM extracts anchors in JSON with a source id, verbatim quote, date, scope, reliability, hard flag, implied label, and optional numeric fields. Qualification is deterministic: vacuous anchors have no implied label; stale anchors postdate the cutoff; adversarial anchors cite a source outside the evidence set or use a mismatched scope; hard anchors are explicit constraints whose quote and date pass; soft anchors are the remaining valid anchors. Failed quotes are down-weighted and cannot become hard.
+
+\subsection{Reveal-date evolution}
+For each type $\tau$, let $m_\tau$ be the number of revealed anchors whose implied label matches the outcome and $n_\tau$ the total revealed. The Beta reliability is
+\begin{equation}
+r_\tau=\frac{m_\tau+\alpha}{n_\tau+\alpha+\beta},
+\end{equation}
+with $\alpha=\beta=1$. The effective reliability shrinks the LLM reliability toward the type reliability:
+\begin{equation}
+\rho_\tau=\lambda r_\tau+(1-\lambda)r_{\mathrm{LLM}}.
+\end{equation}
+Only outcomes with a public reveal date earlier than the current cutoff update $m_\tau,n_\tau$ or the label prior. Soft anchors update the belief by $b(h)\propto b(h)L_a(h)^{\rho_\tau}$; hard anchors project the belief to the implied label with a small floor. The anchor belief is blended with the LLM label scores and fused with a calibrated random forest. The fusion weight is selected on validation only.
+
+\subsection{Validation-gated type self-evolution}
+Fixed type libraries depend on manual design. We add a loop that uses validation errors to propose new anchor types. The validation set is split by company into a mining split and a selection split. The LLM receives error cases from the mining split and proposes at most $k$ candidate types, each with a name, an L0 relation, fields, and an applicability condition. The candidate types and extraction rules are added to a candidate library, which is re-extracted on the selection split. A candidate is accepted only if
+\begin{equation}
+L_{\mathrm{val}}(\mathcal T_t)-L_{\mathrm{val}}(\mathcal T_t\cup\mathcal T')>\delta.
+\end{equation}
+Prompt-only, type-only, and combined candidates are evaluated separately; the best accepted candidate is kept. The test set is evaluated once after the loop is frozen. This makes type discovery falsifiable: a linguistically plausible type that does not lower validation loss is rejected.
+
+\subsection{Full-action readout and numeric bridges}
+Given the fused posterior $b_F$, the system evaluates all point answers, all non-singleton adjudication sets, and abstention under the configured loss. The default loss penalizes over-prediction more than under-prediction, penalizes a missed set, and charges a width cost. A credible set is still reported for coverage, but it does not choose the action.
+
+For numeric claims, a deterministic bridge combines anchors rather than asking the LLM for a point estimate. The templates are level (year-to-date plus remaining quarter, seasonal Q4, or run-rate), growth (level divided by prior-year actual minus one), margin (current margin plus price/mix and cost deltas), capacity (current plus expansion minus retirement), and production (capacity times utilization times yield). The bridge writes its formula, inputs, sources, and missing slots into the audit.
+
+\section{Experimental Design}
+
+\paragraph{Benchmarks.}
+The main benchmark contains 1,005 quarterly revenue-guidance claims from SEC 8-K filings, split into 529 development, 203 validation, and 273 test claims; 227 test claims have XBRL-verified or XBRL-overridden labels. The temporal variant evaluates 2022--2025 year by year with company-disjoint folds and five seeds. The A-share historical backtest asks, for fiscal year $Y$, a question at January 31 of $Y+1$, using only the Q3 report and earlier filings; outcomes come from the later annual report. The current smoke set has 40 claims from five companies; the target is 250--400. FinDVer and DocFinQA are component-level checks, not main outcome benchmarks. Two A-share 2026 cases are frozen at cutoff 2026-11-19 and resolve in 2027.
+
+\paragraph{Backbones and baselines.}
+We use DeepSeek Flash and GLM 5.3 Flash through their APIs and Qwen3-8B served locally by vLLM on a 32GB GPU. Baselines include a calibrated random forest, an LLM-only branch, an anchor-only branch, anchor--RF fusion, static versus evolved reliability, full versus restricted readout, no-anchor and old-prompt variants, qualification ablations, no-bridge variants, last-year and run-rate numeric baselines, and six RAG/verification adaptations: FinDVer-style, Fin-Fact-style, Self-RAG-style, CRAG-style, FLARE-style, and Adaptive-RAG-style. All methods use the same backbone, evidence budget, label space, and readout where applicable.
+
+\paragraph{Protocol.}
+Test labels never select weights, temperatures, thresholds, or prompts. The main benchmark uses company-disjoint, year-wise training; validation years are 2019--2021 and test years 2022--2025. We report paired bootstrap intervals (10,000 resamples), McNemar tests, and per-backbone results rather than pooled averages. External component benchmarks are not pooled with the main outcome benchmark. Full-action losses are computed under the same loss for every method.
+
+\section{Results}
+
+\paragraph{Decision readout.}
+Table~\ref{tab:readout} compares the full-action readout with the restricted credible-set gate. All six paired intervals exclude zero. The improvement does not change the posterior or the classifier; it changes the action space. This is the most robust result in the paper.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Full-action readout versus restricted credible-set gate (227 verified claims). Rows are methods; columns are backbones.}
+\label{tab:readout}
+\begin{tabular}{lrrr}
+\toprule
+Method & DeepSeek & GLM & Qwen3 \\
+\midrule
+Ours, restricted gate & 3.604 & 3.604 & 3.604 \\
+Ours, full action & 2.881 & 2.837 & 2.881 \\
+RF, restricted gate & 3.454 & 3.454 & 3.454 \\
+RF, full action & 2.881 & 2.881 & 2.881 \\
+LLM-only, full action & 3.383 & 3.489 & 4.661 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Main comparison.}
+Table~\ref{tab:main} reports the three-backbone results. Fusion is at or slightly below RF on loss. It is lower than the best retrieval/verification baseline in point estimate on all three backbones, but the interval excludes zero only on Qwen3-8B. The DeepSeek and GLM differences are not significant. We therefore do not claim a uniform advantage over these baselines.
+
+\begin{table*}[t]
+\centering
+\small
+\setlength{\tabcolsep}{6pt}
+\caption{Main results on DeepSeek Flash and GLM 5.3 Flash (227 verified claims). Rows are methods; columns are models and metrics.}
+\label{tab:main}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+\multirow{2}{*}{Method} & \multicolumn{4}{c}{DeepSeek Flash} & \multicolumn{4}{c}{GLM 5.3 Flash} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+ & Acc. & Bal. & Macro & Loss & Acc. & Bal. & Macro & Loss \\
+\midrule
+FinDVer-style & .515 & .424 & .423 & 3.128 & .507 & .456 & .458 & 3.198 \\
+Fin-Fact-style & .524 & .428 & .429 & 3.251 & .489 & .401 & .400 & 3.410 \\
+Self-RAG-style & .546 & .460 & .468 & 3.031 & .507 & .454 & .460 & 3.181 \\
+CRAG-style & .515 & .412 & .407 & 3.004 & .498 & .424 & .427 & 3.480 \\
+FLARE-style & .511 & .418 & .412 & 3.278 & .489 & .407 & .408 & 3.559 \\
+Adaptive-RAG-style & .489 & .402 & .396 & 3.612 & .436 & .366 & .366 & 4.070 \\
+\midrule
+LLM-only & .498 & .397 & .362 & 3.383 & .533 & .428 & .414 & 3.489 \\
+RF & .533 & .491 & .486 & 2.881 & .533 & .491 & .486 & 2.881 \\
+Ours (Fusion) & .542 & .499 & .496 & 2.881 & .551 & .504 & .503 & 2.837 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\paragraph{Type self-evolution.}
+Table~\ref{tab:self} reports the DeepSeek self-evolution result. The type-only candidate lowered validation loss from 3.943 to 3.792 and was accepted; prompt-only and combined candidates were rejected. On test, accuracy rises from .542 to .551 and loss falls from 2.881 to 2.863. The gain is small, and the paired interval includes zero. The result supports a validation-gated extension, not a claim of large improvement.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Anchor-type self-evolution on DeepSeek (227 verified claims).}
+\label{tab:self}
+\begin{tabular}{lrrrr}
+\toprule
+System & Acc. & Bal. & Macro & Loss \\
+\midrule
+Base library & .542 & .499 & .496 & 2.881 \\
+Type evolution & .551 & .507 & .505 & 2.863 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Qualification and A-share backtest.}
+Qualification improves the anchor-only loss in point estimate on all three backbones, but the paired intervals include zero: DeepSeek $+0.203$ [$-0.106$, $0.520$], GLM $+0.088$ [$-0.176$, $0.361$], Qwen $+0.053$ [$-0.141$, $0.256$] for accepting every parsed anchor. On the 40-claim A-share smoke backtest, the numeric bridge improves accuracy and loss on DeepSeek (.825/2.050 versus .650/2.150 without the bridge), is neutral on GLM, and raises accuracy but worsens loss on Qwen. The bridge is therefore an auditable decomposition, not a uniform accuracy gain.
+
+\paragraph{Where the anchor layer helps.}
+On GLM, the overall loss difference from RF is not significant. On the 82 test claims whose realized outcome is inside the guidance range, fusion loss is 3.024 versus 3.244 for RF, a difference of $-0.220$ [$-0.488$, $-0.024$]; four of five RF seeds exclude zero. This is an error-stratified result, not a deployable routing rule, because the realized class is unknown at prediction time. It shows where the semantic state provides complementary signal: the high-density, non-extreme region where a structured model is overconfident.
+
+\section{Discussion}
+
+The evidence supports a layered claim. The decision interface is robust: full-action loss-aware readout improves over a credible-set gate on every backbone with intervals excluding zero. The evidence state is competitive and auditable: it matches a strong RF on overall loss and significantly improves the within-range stratum. Type self-evolution is a small, validation-gated extension. The numeric bridge is useful on some backbones but not all.
+
+This layering matters for financial use. A system that cannot beat a strong structured baseline on average can still be useful if it exposes evidence, qualification, and type reliability, and if it improves the error region where the structured model is overconfident. The paper therefore separates posterior improvement from decision improvement and reports both.
+
+\paragraph{Limitations.}
+The main benchmark covers US quarterly revenue guidance. The A-share backtest is a 40-claim smoke set, and its bridge results are mixed. The within-range result is stratified by a realized label and is not a routing rule. The self-evolution loop is single-round and was completed only on DeepSeek. Qualification and evolution effects are directional but not individually significant on 227 claims. The audit trail is a design property; a user study is future work.
+
+\section{Conclusion}
+
+We formulated unresolved financial claims as a point-in-time decision problem and instantiated it with a source-grounded anchor state, reveal-date reliability evolution, validation-gated type self-evolution, and a full-action loss-aware readout. The robust result is the decision interface: it lowers loss over a restricted gate on three backbones. The anchor state is competitive with a strong structured baseline and provides a significant advantage on the within-range stratum. The framework offers a reusable evidence-to-action contract for financial analysis, with an audit trail that makes each step inspectable.
+
+\bibliography{references_forward}
+
+\end{document}

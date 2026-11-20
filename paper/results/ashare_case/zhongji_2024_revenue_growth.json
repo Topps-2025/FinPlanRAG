@@ -1,0 +1,686 @@
+{
+  "claim": {
+    "claim_id": "ashare_300308_2024_revenue_growth",
+    "company": "中际旭创",
+    "ticker": "300308.SZ",
+    "year": 2024,
+    "cutoff": "2025-01-31",
+    "target_period": "2024年年度报告",
+    "metric": "营业收入同比增速",
+    "metric_kind": "growth",
+    "model_template": "growth_bridge",
+    "labels": [
+      "低于1.162%",
+      "1.162%至21.16%",
+      "高于21.16%"
+    ],
+    "thresholds": [
+      {
+        "label": "低于1.162%",
+        "low": null,
+        "high": 1.1617155421732672
+      },
+      {
+        "label": "1.162%至21.16%",
+        "low": 1.1617155421732672,
+        "high": 21.16171554217327
+      },
+      {
+        "label": "高于21.16%",
+        "low": 21.16171554217327,
+        "high": null
+      }
+    ],
+    "label_defs": {
+      "低于1.162%": "实际值低于1.162%",
+      "1.162%至21.16%": "实际值在1.162%至21.16%之间（含下限，不含上限）",
+      "高于21.16%": "实际值不低于21.16%"
+    },
+    "reference_value": 107.1798447103,
+    "reference_unit": "亿元",
+    "unit": "%",
+    "prior_growth": 11.161715542173267,
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "2022年年度报告",
+        "date": "2022-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2023-04-24/1216523562.PDF",
+        "text": "2022年年度报告：营业总收入 96.42 亿元。",
+        "facet": "prior_period",
+        "metric": "营业收入",
+        "value": 96.4179476608,
+        "unit": "亿元",
+        "period": "2022FY"
+      },
+      {
+        "id": "E2",
+        "title": "2023年年度报告",
+        "date": "2023-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "text": "2023年年度报告：营业总收入 107.18 亿元。",
+        "facet": "prior_period",
+        "metric": "营业收入",
+        "value": 107.1798447103,
+        "unit": "亿元",
+        "period": "2023FY"
+      },
+      {
+        "id": "E3",
+        "title": "2024年三季度报告",
+        "date": "2024-09-30",
+        "url": "",
+        "text": "2024年三季度报告：前三季度营业总收入 173.13 亿元。",
+        "facet": "latest_period",
+        "metric": "营业收入",
+        "value": 173.12601820150002,
+        "unit": "亿元",
+        "period": "2024Q1-Q3"
+      },
+      {
+        "id": "E4",
+        "title": "2023年三季度报告",
+        "date": "2023-09-30",
+        "url": "",
+        "text": "2023年三季度报告：前三季度营业总收入 70.30 亿元。",
+        "facet": "prior_period",
+        "metric": "营业收入",
+        "value": 70.302903716,
+        "unit": "亿元",
+        "period": "2023Q1-Q3"
+      }
+    ],
+    "outcome": {
+      "label": "高于21.16%",
+      "value": 122.63663287503195,
+      "unit": "%",
+      "date": "2025-04-21",
+      "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+    }
+  },
+  "result": {
+    "contract": {
+      "claim_id": "ashare_300308_2024_revenue_growth",
+      "text": "",
+      "metric": "营业收入同比增速",
+      "claim_type": "metric",
+      "labels": [
+        "低于1.162%",
+        "1.162%至21.16%",
+        "高于21.16%"
+      ],
+      "label_defs": {
+        "低于1.162%": "实际值低于1.162%",
+        "1.162%至21.16%": "实际值在1.162%至21.16%之间（含下限，不含上限）",
+        "高于21.16%": "实际值不低于21.16%"
+      },
+      "target_period": "2024年年度报告",
+      "unit": "%",
+      "reference": "",
+      "queries": [],
+      "date_windows": [],
+      "prior": {
+        "1.162%至21.16%": 0.242718,
+        "高于21.16%": 0.199029,
+        "低于1.162%": 0.558252
+      },
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "anchor_types": [],
+      "query_facets": [],
+      "thresholds": [
+        {
+          "label": "低于1.162%",
+          "low": null,
+          "high": 1.1617155421732672
+        },
+        {
+          "label": "1.162%至21.16%",
+          "low": 1.1617155421732672,
+          "high": 21.16171554217327
+        },
+        {
+          "label": "高于21.16%",
+          "low": 21.16171554217327,
+          "high": null
+        }
+      ],
+      "reference_value": 107.1798447103,
+      "reference_unit": "亿元"
+    },
+    "cutoff": "2025-01-31",
+    "queries": [
+      "中际旭创 2024年三季报 营业收入同比增速",
+      "中际旭创 2023年 营业收入同比增速",
+      "中际旭创 2024年年度报告 营业收入同比增速",
+      "中际旭创 2024年 业绩 预告 营业收入同比增速",
+      "中际旭创 2024年 股权激励 考核 营业收入同比增速",
+      "中际旭创 所属行业 2024年 营业收入同比增速 趋势"
+    ],
+    "query_plan": [
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2024年三季报 营业收入同比增速",
+        "required": true
+      },
+      {
+        "facet": "prior_period",
+        "query": "中际旭创 2023年 营业收入同比增速",
+        "required": true
+      },
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2024年年度报告 营业收入同比增速",
+        "required": true
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2024年 业绩 预告 营业收入同比增速",
+        "required": false
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2024年 股权激励 考核 营业收入同比增速",
+        "required": false
+      },
+      {
+        "facet": "industry",
+        "query": "中际旭创 所属行业 2024年 营业收入同比增速 趋势",
+        "required": false
+      }
+    ],
+    "coverage_gaps": [],
+    "coverage_penalty": 0.0,
+    "search_log": [],
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "2022年年度报告",
+        "date": "2022-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2023-04-24/1216523562.PDF",
+        "text": "2022年年度报告：营业总收入 96.42 亿元。",
+        "facet": "prior_period",
+        "metric": "营业收入",
+        "value": 96.4179476608,
+        "unit": "亿元",
+        "period": "2022FY",
+        "source_id": "E1",
+        "prompt_text": "2022年年度报告：营业总收入 96.42 亿元。"
+      },
+      {
+        "id": "E2",
+        "title": "2023年年度报告",
+        "date": "2023-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "text": "2023年年度报告：营业总收入 107.18 亿元。",
+        "facet": "prior_period",
+        "metric": "营业收入",
+        "value": 107.1798447103,
+        "unit": "亿元",
+        "period": "2023FY",
+        "source_id": "E2",
+        "prompt_text": "2023年年度报告：营业总收入 107.18 亿元。"
+      },
+      {
+        "id": "E3",
+        "title": "2024年三季度报告",
+        "date": "2024-09-30",
+        "url": "",
+        "text": "2024年三季度报告：前三季度营业总收入 173.13 亿元。",
+        "facet": "latest_period",
+        "metric": "营业收入",
+        "value": 173.12601820150002,
+        "unit": "亿元",
+        "period": "2024Q1-Q3",
+        "source_id": "E3",
+        "prompt_text": "2024年三季度报告：前三季度营业总收入 173.13 亿元。"
+      },
+      {
+        "id": "E4",
+        "title": "2023年三季度报告",
+        "date": "2023-09-30",
+        "url": "",
+        "text": "2023年三季度报告：前三季度营业总收入 70.30 亿元。",
+        "facet": "prior_period",
+        "metric": "营业收入",
+        "value": 70.302903716,
+        "unit": "亿元",
+        "period": "2023Q1-Q3",
+        "source_id": "E4",
+        "prompt_text": "2023年三季度报告：前三季度营业总收入 70.30 亿元。"
+      }
+    ],
+    "excluded_evidence": [],
+    "llm": {
+      "prompt_sha256": "8c04a118941f399b",
+      "request_digest": "24a5948eb8facd94afe9b891667685330f6328370c533fa680661665faf4927a",
+      "raw_text": "{\n  \"claim_id\": \"ashare_300308_2024_revenue_growth\",\n  \"anchors\": [\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2023年营业总收入107.18亿元\",\n      \"scope\": \"company\",\n      \"source_id\": \"E2\",\n      \"quote\": \"2023年年度报告：营业总收入 107.18 亿元。\",\n      \"date\": \"2023-12-31\",\n      \"reliability\": 0.95,\n      \"hard\": false,\n      \"implied_label\": \"1.162%至21.16%\",\n      \"numeric_value\": 107.18,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"亿元\",\n      \"numeric_period\": \"2023FY\",\n      \"model_role\": \"prior_actual\",\n      \"rationale\": \"2023 full-year revenue is the base for 2024 growth calculation.\"\n    },\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2024年前三季度营业总收入173.13亿元\",\n      \"scope\": \"company\",\n      \"source_id\": \"E3\",\n      \"quote\": \"2024年三季度报告：前三季度营业总收入 173.13 亿元。\",\n      \"date\": \"2024-09-30\",\n      \"reliability\": 0.95,\n      \"hard\": false,\n      \"implied_label\": \"高于21.16%\",\n      \"numeric_value\": 173.13,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"亿元\",\n      \"numeric_period\": \"2024Q1-Q3\",\n      \"model_role\": \"ytd_actual\",\n      \"rationale\": \"2024 YTD revenue already exceeds 2023 full-year revenue, implying strong growth.\"\n    },\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2023年前三季度营业总收入70.30亿元\",\n      \"scope\": \"company\",\n      \"source_id\": \"E4\",\n      \"quote\": \"2023年三季度报告：前三季度营业总收入 70.30 亿元。\",\n      \"date\": \"2023-09-30\",\n      \"reliability\": 0.95,\n      \"hard\": false,\n      \"implied_label\": \"高于21.16%\",\n      \"numeric_value\": 70.3,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"亿元\",\n      \"numeric_period\": \"2023Q1-Q3\",\n      \"model_role\": null,\n      \"rationale\": \"2023 YTD revenue provides comparison base; 2024 YTD growth is ~146%.\"\n    }\n  ],\n  \"label_scores\": {\n    \"低于1.162%\": 0.01,\n    \"1.162%至21.16%\": 0.04,\n    \"高于21.16%\": 0.95\n  },\n  \"date_estimate\": null,\n  \"numeric_estimate\": {\n    \"point\": 146.3,\n    \"low\": 120.0,\n    \"high\": 170.0,\n    \"unit\": \"%\",\n    \"basis\": \"2024 Q1-Q3 revenue 173.13亿元 vs 2023 Q1-Q3 70.30亿元 implies ~146% YTD growth; full-year growth likely remains well above 21.16% given Q4 seasonality.\",\n    \"source_ids\": [\"E2\", \"E3\", \"E4\"]\n  },\n  \"confidence\": 0.9,\n  \"missing\": \"No explicit Q4 2024 forecast or full-year guidance available; estimate based on YTD actuals and prior-year seasonality.\"\n}",
+      "parsed": {
+        "claim_id": "ashare_300308_2024_revenue_growth",
+        "anchors": [
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2023年营业总收入107.18亿元",
+            "scope": "company",
+            "source_id": "E2",
+            "quote": "2023年年度报告：营业总收入 107.18 亿元。",
+            "date": "2023-12-31",
+            "reliability": 0.95,
+            "hard": false,
+            "implied_label": "1.162%至21.16%",
+            "numeric_value": 107.18,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "亿元",
+            "numeric_period": "2023FY",
+            "model_role": "prior_actual",
+            "rationale": "2023 full-year revenue is the base for 2024 growth calculation."
+          },
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2024年前三季度营业总收入173.13亿元",
+            "scope": "company",
+            "source_id": "E3",
+            "quote": "2024年三季度报告：前三季度营业总收入 173.13 亿元。",
+            "date": "2024-09-30",
+            "reliability": 0.95,
+            "hard": false,
+            "implied_label": "高于21.16%",
+            "numeric_value": 173.13,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "亿元",
+            "numeric_period": "2024Q1-Q3",
+            "model_role": "ytd_actual",
+            "rationale": "2024 YTD revenue already exceeds 2023 full-year revenue, implying strong growth."
+          },
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2023年前三季度营业总收入70.30亿元",
+            "scope": "company",
+            "source_id": "E4",
+            "quote": "2023年三季度报告：前三季度营业总收入 70.30 亿元。",
+            "date": "2023-09-30",
+            "reliability": 0.95,
+            "hard": false,
+            "implied_label": "高于21.16%",
+            "numeric_value": 70.3,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "亿元",
+            "numeric_period": "2023Q1-Q3",
+            "model_role": null,
+            "rationale": "2023 YTD revenue provides comparison base; 2024 YTD growth is ~146%."
+          }
+        ],
+        "label_scores": {
+          "低于1.162%": 0.01,
+          "1.162%至21.16%": 0.04,
+          "高于21.16%": 0.95
+        },
+        "date_estimate": null,
+        "numeric_estimate": {
+          "point": 146.3,
+          "low": 120.0,
+          "high": 170.0,
+          "unit": "%",
+          "basis": "2024 Q1-Q3 revenue 173.13亿元 vs 2023 Q1-Q3 70.30亿元 implies ~146% YTD growth; full-year growth likely remains well above 21.16% given Q4 seasonality.",
+          "source_ids": [
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        "confidence": 0.9,
+        "missing": "No explicit Q4 2024 forecast or full-year guidance available; estimate based on YTD actuals and prior-year seasonality."
+      },
+      "usage": {
+        "input_tokens": 2049,
+        "output_tokens": 834
+      },
+      "error": null
+    },
+    "anchors": [
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2023年营业总收入107.18亿元",
+        "scope": "company",
+        "source_id": "E2",
+        "quote": "2023年年度报告：营业总收入 107.18 亿元。",
+        "date": "2023-12-31",
+        "reliability": 0.95,
+        "hard": false,
+        "implied_label": "1.162%至21.16%",
+        "numeric_value": 107.18,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "亿元",
+        "numeric_period": "2023FY",
+        "model_role": "prior_actual",
+        "rationale": "2023 full-year revenue is the base for 2024 growth calculation.",
+        "implied_label_matched": "1.162%至21.16%",
+        "implied_label_raw": "1.162%至21.16%",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.95,
+        "hard_effective": false,
+        "qualification": "vacuous",
+        "status": "rejected",
+        "reasons": [
+          "anchor describes the prior-year reference value, not the target-period outcome"
+        ],
+        "evidence_title": "2023年年度报告",
+        "evidence_url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "evidence_date": "2023-12-31"
+      },
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2024年前三季度营业总收入173.13亿元",
+        "scope": "company",
+        "source_id": "E3",
+        "quote": "2024年三季度报告：前三季度营业总收入 173.13 亿元。",
+        "date": "2024-09-30",
+        "reliability": 0.95,
+        "hard": false,
+        "implied_label": "高于21.16%",
+        "numeric_value": 173.13,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "亿元",
+        "numeric_period": "2024Q1-Q3",
+        "model_role": "ytd_actual",
+        "rationale": "2024 YTD revenue already exceeds 2023 full-year revenue, implying strong growth.",
+        "implied_label_matched": "高于21.16%",
+        "implied_label_raw": "高于21.16%",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.7839,
+        "hard_effective": false,
+        "qualification": "soft",
+        "status": "accepted",
+        "reasons": [],
+        "evidence_title": "2024年三季度报告",
+        "evidence_url": "",
+        "evidence_date": "2024-09-30",
+        "type_reliability": 0.617886,
+        "type_reliability_n": 121,
+        "calibration_shrink": 0.5
+      },
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2023年前三季度营业总收入70.30亿元",
+        "scope": "company",
+        "source_id": "E4",
+        "quote": "2023年三季度报告：前三季度营业总收入 70.30 亿元。",
+        "date": "2023-09-30",
+        "reliability": 0.95,
+        "hard": false,
+        "implied_label": "高于21.16%",
+        "numeric_value": 70.3,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "亿元",
+        "numeric_period": "2023Q1-Q3",
+        "model_role": null,
+        "rationale": "2023 YTD revenue provides comparison base; 2024 YTD growth is ~146%.",
+        "implied_label_matched": "高于21.16%",
+        "implied_label_raw": "高于21.16%",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.95,
+        "hard_effective": false,
+        "qualification": "vacuous",
+        "status": "rejected",
+        "reasons": [
+          "anchor describes the prior-year reference value, not the target-period outcome"
+        ],
+        "evidence_title": "2023年三季度报告",
+        "evidence_url": "",
+        "evidence_date": "2023-09-30"
+      },
+      {
+        "type": "model_bridge",
+        "relation": "level",
+        "value": "(173.13 / 3 × 4 = 230.84) / 107.18 - 1 = 115.38%",
+        "scope": "company",
+        "source_id": "MODEL",
+        "quote": "(173.13 / 3 × 4 = 230.84) / 107.18 - 1 = 115.38%",
+        "date": "2025-01-31",
+        "reliability": 0.79,
+        "hard": false,
+        "implied_label": "高于21.16%",
+        "implied_label_matched": "高于21.16%",
+        "rationale": "(173.13 / 3 × 4 = 230.84) / 107.18 - 1 = 115.38%",
+        "qualification": "model",
+        "status": "accepted",
+        "quote_verified": true,
+        "synthetic": true,
+        "reliability_effective": 0.79,
+        "model_role": "model_bridge",
+        "numeric_value": 115.37631503753825,
+        "numeric_unit": "%",
+        "numeric_period": "2024年年度报告",
+        "reasons": []
+      }
+    ],
+    "belief": {
+      "prior": {
+        "低于1.162%": 0.558253,
+        "1.162%至21.16%": 0.242718,
+        "高于21.16%": 0.199029
+      },
+      "anchor_only": {
+        "低于1.162%": 0.183074,
+        "1.162%至21.16%": 0.079597,
+        "高于21.16%": 0.737329
+      },
+      "final": {
+        "低于1.162%": 0.188062,
+        "1.162%至21.16%": 0.114043,
+        "高于21.16%": 0.697895
+      },
+      "hard_projection": [],
+      "trace": [
+        {
+          "anchor_index": 1,
+          "implied_label": "高于21.16%",
+          "qualification": "soft",
+          "reliability_effective": 0.7839,
+          "before": {
+            "低于1.162%": 0.558253,
+            "1.162%至21.16%": 0.242718,
+            "高于21.16%": 0.199029
+          },
+          "after": {
+            "低于1.162%": 0.380597,
+            "1.162%至21.16%": 0.165477,
+            "高于21.16%": 0.453927
+          }
+        },
+        {
+          "anchor_index": 3,
+          "implied_label": "高于21.16%",
+          "qualification": "model",
+          "reliability_effective": 0.79,
+          "before": {
+            "低于1.162%": 0.380597,
+            "1.162%至21.16%": 0.165477,
+            "高于21.16%": 0.453927
+          },
+          "after": {
+            "低于1.162%": 0.183074,
+            "1.162%至21.16%": 0.079597,
+            "高于21.16%": 0.737329
+          }
+        }
+      ]
+    },
+    "readout": {
+      "action": "adjudicate",
+      "point": "高于21.16%",
+      "argmax_label": "高于21.16%",
+      "set": [
+        "低于1.162%",
+        "高于21.16%"
+      ],
+      "expected_loss": 2.912344,
+      "credible_set": [
+        "高于21.16%",
+        "低于1.162%",
+        "1.162%至21.16%"
+      ],
+      "credible_set_mass": 1.0,
+      "alpha": 0.1,
+      "action_losses": [
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于1.162%",
+            "高于21.16%"
+          ],
+          "expected_loss": 2.912344
+        },
+        {
+          "action": "answer",
+          "label": "高于21.16%",
+          "expected_loss": 3.397174
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "1.162%至21.16%",
+            "高于21.16%"
+          ],
+          "expected_loss": 3.504496
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于1.162%",
+            "1.162%至21.16%",
+            "高于21.16%"
+          ],
+          "expected_loss": 4.0
+        },
+        {
+          "action": "abstain",
+          "expected_loss": 5.0
+        },
+        {
+          "action": "answer",
+          "label": "低于1.162%",
+          "expected_loss": 6.72359
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于1.162%",
+            "1.162%至21.16%"
+          ],
+          "expected_loss": 7.58316
+        },
+        {
+          "action": "answer",
+          "label": "1.162%至21.16%",
+          "expected_loss": 8.85957
+        }
+      ]
+    },
+    "date_estimate": null,
+    "forecast": {
+      "template": "growth_bridge",
+      "point": 115.37631503753825,
+      "low": 93.83868353378442,
+      "high": 136.91394654129206,
+      "unit": "%",
+      "formula": "(173.13 / 3 × 4 = 230.84) / 107.18 - 1 = 115.38%",
+      "inputs": {
+        "ytd_actual": 173.13,
+        "ytd_quarters": 3.0,
+        "prior_actual": 107.1798447103
+      },
+      "input_sources": {
+        "ytd_actual": "E3",
+        "prior_actual": "claim.reference"
+      },
+      "missing": [],
+      "method": "level_growth",
+      "interval_method": "heuristic",
+      "label": "高于21.16%"
+    },
+    "calibration": {
+      "applied": true,
+      "bundle": "/root/autodl-tmp/finplanrag_2026/paper/results/anchor_cli/calibration/bundle.json",
+      "order": [
+        1,
+        2,
+        0
+      ],
+      "features": {
+        "belief_below": 0.079597,
+        "belief_within": 0.737329,
+        "belief_above": 0.183074,
+        "score_below": 0.04,
+        "score_within": 0.95,
+        "score_above": 0.01,
+        "entropy": 0.736957,
+        "margin": 0.554256,
+        "n_anchors_scaled": 0.083333,
+        "n_hard_scaled": 0.0,
+        "mean_reliability": 0.7839,
+        "max_reliability": 0.7839
+      },
+      "anchor": {
+        "1.162%至21.16%": 0.079597,
+        "高于21.16%": 0.737329,
+        "低于1.162%": 0.183074
+      },
+      "calibrated": {
+        "低于1.162%": 0.232953,
+        "1.162%至21.16%": 0.424058,
+        "高于21.16%": 0.342989
+      },
+      "fused": {
+        "低于1.162%": 0.188062,
+        "1.162%至21.16%": 0.114043,
+        "高于21.16%": 0.697895
+      },
+      "temperature": 3.000000000000002,
+      "fusion_weight": 0.9,
+      "type_shrinkage": 0.5
+    },
+    "numeric_estimate": {
+      "point": 146.3,
+      "low": 120.0,
+      "high": 170.0,
+      "unit": "%",
+      "basis": "2024 Q1-Q3 revenue 173.13亿元 vs 2023 Q1-Q3 70.30亿元 implies ~146% YTD growth; full-year growth likely remains well above 21.16% given Q4 seasonality.",
+      "source_ids": [
+        "E2",
+        "E3",
+        "E4"
+      ]
+    },
+    "seconds": 0.0,
+    "error": null
+  },
+  "outcome": {
+    "label": "高于21.16%",
+    "value": 122.63663287503195,
+    "unit": "%",
+    "date": "2025-04-21",
+    "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+  }
+}

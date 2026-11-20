@@ -1,0 +1,856 @@
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex\ctexbook.cls
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctexbacken
+d.cfg)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-xe
+tex.def))
+Document Class: ctexbook 2026/07/14 v2.6.4 Chinese adapter for class book (CTEX
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex\ctexhook.sty
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex\ctexpatch.sty
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\fix-cm.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1enc.def))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctexopts.c
+fg) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
+Document Class: book 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\bk12.clo))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/engine\ctex-engin
+e-xetex.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/xelatex/xecjk\xeCJK.sty
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xtemplate\x
+template.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
+se.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec-xete
+x.sty (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.cfg)
+)) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/xelatex/xecjk\xeCJK.cfg))
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/zhnumber\zhnumber.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/zhnumber\zhnumber-utf8
+.cfg))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/scheme\ctex-schem
+e-chinese-book.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctex-name-
+utf8.cfg))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/fontset\ctex-font
+set-windows.def))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctex.cfg)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\xetex.def
+)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty))
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tocloft\tocloft.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hxetex.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/seqsplit\seqsplit.sty)
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz
+.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.s
+ty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfuti
+l-common.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfuti
+l-latex.def)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs
+.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex
+)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfcore
+.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgfsys
+.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
+s.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
+slibraryfiltered.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.
+cfg)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys-xetex.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys-dvipdfmx.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys-common-pdf.def))))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+yssoftpath.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ysprotocol.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+re.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.cod
+e.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil
+.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathpars
+er.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.basic.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.trigonometric.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.random.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.comparison.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.base.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.round.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.misc.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.integerarithmetics.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc
+.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloa
+t.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code
+.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repoints.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repathconstruct.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repathusage.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+rescopes.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+regraphicstate.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+retransformations.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+requick.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reobjects.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repathprocessing.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+rearrows.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reshade.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reimage.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reexternal.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+relayers.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+retransparency.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repatterns.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+rerdf.code.tex)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
+eshapes.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
+eplot.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
+omp-version-0-65.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
+omp-version-1-18.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.s
+ty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.
+sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
+s.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.cod
+e.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor
+.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz\tikz.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
+raryplothandlers.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
+ematrix.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibrarytopaths.code.tex)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.s
+ty (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudo
+code.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithm
+icx.sty
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
+raryarrows.meta.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibrarypositioning.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibraryfit.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibrarybackgrounds.code.tex)
+
+Package xeCJK Warning: Redefining CJKfamily `\CJKrmdefault' (SimSun(0)).
+
+
+Package xeCJK Warning: Redefining CJKfamily `\CJKsfdefault' (Microsoft YaHei).
+
+
+Package xeCJK Warning: Redefining CJKfamily `\CJKttdefault' (FangSong).
+
+(main.aux
+! Undefined control sequence.
+l.4 \abx@aux@refcontext
+                       {nyt/global//global/global/global}
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4 \abx@aux@refcontext{n
+                         yt/global//global/global/global}
+! Undefined control sequence.
+l.13 \abx@aux@cite
+                  {0}{lewis2020rag}
+! Undefined control sequence.
+l.14 \abx@aux@segm
+                  {0}{0}{lewis2020rag}
+! Undefined control sequence.
+l.15 \abx@aux@cite
+                  {0}{zhao2024findver}
+! Undefined control sequence.
+l.16 \abx@aux@segm
+                  {0}{0}{zhao2024findver}
+! Undefined control sequence.
+l.17 \abx@aux@cite
+                  {0}{rangapur2025finfact}
+! Undefined control sequence.
+l.18 \abx@aux@segm
+                  {0}{0}{rangapur2025finfact}
+! Undefined control sequence.
+l.19 \abx@aux@cite
+                  {0}{chow1970optimum}
+! Undefined control sequence.
+l.20 \abx@aux@segm
+                  {0}{0}{chow1970optimum}
+! Undefined control sequence.
+l.21 \abx@aux@cite
+                  {0}{geifman2017selective}
+! Undefined control sequence.
+l.22 \abx@aux@segm
+                  {0}{0}{geifman2017selective}
+! Undefined control sequence.
+l.23 \abx@aux@cite
+                  {0}{jiang2023flare}
+! Undefined control sequence.
+l.24 \abx@aux@segm
+                  {0}{0}{jiang2023flare}
+! Undefined control sequence.
+l.25 \abx@aux@cite
+                  {0}{jeong2024adaptiverag}
+! Undefined control sequence.
+l.26 \abx@aux@segm
+                  {0}{0}{jeong2024adaptiverag}
+! Undefined control sequence.
+l.46 \abx@aux@cite
+                  {0}{chen2021finqa}
+! Undefined control sequence.
+l.47 \abx@aux@segm
+                  {0}{0}{chen2021finqa}
+! Undefined control sequence.
+l.48 \abx@aux@cite
+                  {0}{zhu2021tatqa}
+! Undefined control sequence.
+l.49 \abx@aux@segm
+                  {0}{0}{zhu2021tatqa}
+! Undefined control sequence.
+l.50 \abx@aux@cite
+                  {0}{islam2023financebench}
+! Undefined control sequence.
+l.51 \abx@aux@segm
+                  {0}{0}{islam2023financebench}
+! Undefined control sequence.
+l.52 \abx@aux@cite
+                  {0}{liu2024finben}
+! Undefined control sequence.
+l.53 \abx@aux@segm
+                  {0}{0}{liu2024finben}
+! Undefined control sequence.
+l.54 \abx@aux@cite
+                  {0}{reddy2024docfinqa}
+! Undefined control sequence.
+l.55 \abx@aux@segm
+                  {0}{0}{reddy2024docfinqa}
+! Undefined control sequence.
+l.56 \abx@aux@cite
+                  {0}{zhao2024findver}
+! Undefined control sequence.
+l.57 \abx@aux@segm
+                  {0}{0}{zhao2024findver}
+! Undefined control sequence.
+l.58 \abx@aux@cite
+                  {0}{rangapur2025finfact}
+! Undefined control sequence.
+l.59 \abx@aux@segm
+                  {0}{0}{rangapur2025finfact}
+! Undefined control sequence.
+l.60 \abx@aux@cite
+                  {0}{mansouri2026finrank}
+! Undefined control sequence.
+l.61 \abx@aux@segm
+                  {0}{0}{mansouri2026finrank}
+! Undefined control sequence.
+l.62 \abx@aux@cite
+                  {0}{jiang2026finrate}
+! Undefined control sequence.
+l.63 \abx@aux@segm
+                  {0}{0}{jiang2026finrate}
+! Undefined control sequence.
+l.64 \abx@aux@cite
+                  {0}{chen2026hcrag}
+! Undefined control sequence.
+l.65 \abx@aux@segm
+                  {0}{0}{chen2026hcrag}
+! Undefined control sequence.
+l.66 \abx@aux@cite
+                  {0}{chi2026finsagent}
+! Undefined control sequence.
+l.67 \abx@aux@segm
+                  {0}{0}{chi2026finsagent}
+! Undefined control sequence.
+l.68 \abx@aux@cite
+                  {0}{lewis2020rag}
+! Undefined control sequence.
+l.69 \abx@aux@segm
+                  {0}{0}{lewis2020rag}
+! Undefined control sequence.
+l.70 \abx@aux@cite
+                  {0}{jiang2023flare}
+! Undefined control sequence.
+l.71 \abx@aux@segm
+                  {0}{0}{jiang2023flare}
+! Undefined control sequence.
+l.72 \abx@aux@cite
+                  {0}{jeong2024adaptiverag}
+! Undefined control sequence.
+l.73 \abx@aux@segm
+                  {0}{0}{jeong2024adaptiverag}
+! Undefined control sequence.
+l.74 \abx@aux@cite
+                  {0}{yao2023react}
+! Undefined control sequence.
+l.75 \abx@aux@segm
+                  {0}{0}{yao2023react}
+! Undefined control sequence.
+l.76 \abx@aux@cite
+                  {0}{shinn2023reflexion}
+! Undefined control sequence.
+l.77 \abx@aux@segm
+                  {0}{0}{shinn2023reflexion}
+! Undefined control sequence.
+l.78 \abx@aux@cite
+                  {0}{chow1970optimum}
+! Undefined control sequence.
+l.79 \abx@aux@segm
+                  {0}{0}{chow1970optimum}
+! Undefined control sequence.
+l.80 \abx@aux@cite
+                  {0}{geifman2017selective}
+! Undefined control sequence.
+l.81 \abx@aux@segm
+                  {0}{0}{geifman2017selective}
+! Undefined control sequence.
+l.82 \abx@aux@cite
+                  {0}{guo2017calibration}
+! Undefined control sequence.
+l.83 \abx@aux@segm
+                  {0}{0}{guo2017calibration}
+! Undefined control sequence.
+l.84 \abx@aux@cite
+                  {0}{elkan2001cost}
+! Undefined control sequence.
+l.85 \abx@aux@segm
+                  {0}{0}{elkan2001cost}
+! Undefined control sequence.
+l.86 \abx@aux@cite
+                  {0}{vovk2005algorithmic}
+! Undefined control sequence.
+l.87 \abx@aux@segm
+                  {0}{0}{vovk2005algorithmic}
+! Undefined control sequence.
+l.88 \abx@aux@cite
+                  {0}{angelopoulos2021gentle}
+! Undefined control sequence.
+l.89 \abx@aux@segm
+                  {0}{0}{angelopoulos2021gentle}
+! Undefined control sequence.
+l.98 \abx@aux@cite
+                  {0}{manski2003partial}
+! Undefined control sequence.
+l.99 \abx@aux@segm
+                  {0}{0}{manski2003partial}
+! Undefined control sequence.
+l.100 \abx@aux@cite
+                   {0}{lopezdeprado2018advances}
+! Undefined control sequence.
+l.101 \abx@aux@segm
+                   {0}{0}{lopezdeprado2018advances}
+! Undefined control sequence.
+l.176 \abx@aux@cite
+                   {0}{reddy2024docfinqa}
+! Undefined control sequence.
+l.177 \abx@aux@segm
+                   {0}{0}{reddy2024docfinqa}
+! Undefined control sequence.
+l.178 \abx@aux@cite
+                   {0}{zhao2024findver}
+! Undefined control sequence.
+l.179 \abx@aux@segm
+                   {0}{0}{zhao2024findver}
+! Undefined control sequence.
+l.189 \abx@aux@cite
+                   {0}{zhao2024findver}
+! Undefined control sequence.
+l.190 \abx@aux@segm
+                   {0}{0}{zhao2024findver}
+! Undefined control sequence.
+l.191 \abx@aux@cite
+                   {0}{rangapur2025finfact}
+! Undefined control sequence.
+l.192 \abx@aux@segm
+                   {0}{0}{rangapur2025finfact}
+! Undefined control sequence.
+l.193 \abx@aux@cite
+                   {0}{asai2024selfrag}
+! Undefined control sequence.
+l.194 \abx@aux@segm
+                   {0}{0}{asai2024selfrag}
+! Undefined control sequence.
+l.195 \abx@aux@cite
+                   {0}{yan2024crag}
+! Undefined control sequence.
+l.196 \abx@aux@segm
+                   {0}{0}{yan2024crag}
+! Undefined control sequence.
+l.197 \abx@aux@cite
+                   {0}{jiang2023flare}
+! Undefined control sequence.
+l.198 \abx@aux@segm
+                   {0}{0}{jiang2023flare}
+! Undefined control sequence.
+l.199 \abx@aux@cite
+                   {0}{jeong2024adaptiverag}
+! Undefined control sequence.
+l.200 \abx@aux@segm
+                   {0}{0}{jeong2024adaptiverag}
+! Undefined control sequence.
+l.282 \abx@aux@read@bbl@mdfivesum
+                                 {nobblfile}
+! Undefined control sequence.
+l.283 \abx@aux@read@bblrerun
+                            
+)
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+(main.out) (main.out)
+Overfull \hbox (17.17921pt too wide) in paragraph at lines 4--120
+[]\TU/TimesNewRoman(0)/m/n/12 nyt/global//global/global/global         0lewis20
+20rag 00lewis2020rag 0zhao2024findver
+
+Overfull \hbox (0.47609pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00chow1970optimum 0geifman2017selective 00geifman20
+17selective 0jiang2023flare
+
+Overfull \hbox (19.12843pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00jiang2023flare 0jeong2024adaptiverag 00jeong2024a
+daptiverag                    0chen2021finqa
+
+Overfull \hbox (69.1089pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00chen2021finqa 0zhu2021tatqa 00zhu2021tatqa 0islam
+2023financebench 00islam2023financebench
+
+Overfull \hbox (37.15187pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 0liu2024finben 00liu2024finben 0reddy2024docfinqa 0
+0reddy2024docfinqa 0zhao2024findver
+
+Overfull \hbox (7.12062pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00zhao2024findver 0rangapur2025finfact 00rangapur20
+25finfact 0mansouri2026finrank
+
+Overfull \hbox (49.11671pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00mansouri2026finrank 0jiang2026finrate 00jiang2026
+finrate 0chen2026hcrag 00chen2026hcrag
+
+Overfull \hbox (53.08937pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00jiang2023flare 0jeong2024adaptiverag 00jeong2024a
+daptiverag 0yao2023react 00yao2023react
+
+Overfull \hbox (23.7964pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 0geifman2017selective 00geifman2017selective 0guo20
+17calibration 00guo2017calibration
+
+Overfull \hbox (97.16945pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 0elkan2001cost 00elkan2001cost 0vovk2005algorithmic
+ 00vovk2005algorithmic 0angelopoulos2021gentle
+
+Overfull \hbox (71.1382pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00angelopoulos2021gentle         0manski2003partial
+ 00manski2003partial 0lopezdeprado2018advances
+
+Overfull \hbox (68.4175pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 00zhao2024findver 0rangapur2025finfact 00rangapur20
+25finfact 0asai2024selfrag 00asai2024selfrag
+
+Overfull \hbox (5.11281pt too wide) in paragraph at lines 4--120
+\TU/TimesNewRoman(0)/m/n/12 0yan2024crag 00yan2024crag 0jiang2023flare 00jiang2
+023flare 0jeong2024adaptiverag
+[1]
+
+LaTeX Font Warning: Font shape `TU/SimSun(2)/b/n' undefined
+(Font)              using `TU/SimSun(2)/m/n' instead on input line 127.
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+[1] [1] [2] [3] [4] [5] [6] (main.toc [7] [8] [9] [10]) [11] [12] (main.lof)
+[13] (main.lot) [14] (chapters_new.tex
+第一章
+
+Package natbib Warning: Citation `lewis2020rag' on page 1 undefined on input li
+ne 13.
+
+
+Package natbib Warning: Citation `zhao2024findver' on page 1 undefined on input
+ line 13.
+
+
+Package natbib Warning: Citation `rangapur2025finfact' on page 1 undefined on i
+nput line 13.
+
+
+Package natbib Warning: Citation `chow1970optimum' on page 1 undefined on input
+ line 13.
+
+
+Package natbib Warning: Citation `geifman2017selective' on page 1 undefined on 
+input line 13.
+
+
+Package natbib Warning: Citation `jiang2023flare' on page 1 undefined on input 
+line 13.
+
+
+Package natbib Warning: Citation `jeong2024adaptiverag' on page 1 undefined on 
+input line 13.
+
+[1] [2] [3] [4]
+第二章
+
+Package natbib Warning: Citation `chen2021finqa' on page 5 undefined on input l
+ine 61.
+
+
+Package natbib Warning: Citation `zhu2021tatqa' on page 5 undefined on input li
+ne 61.
+
+
+Package natbib Warning: Citation `islam2023financebench' on page 5 undefined on
+ input line 61.
+
+
+Package natbib Warning: Citation `liu2024finben' on page 5 undefined on input l
+ine 61.
+
+
+Package natbib Warning: Citation `reddy2024docfinqa' on page 5 undefined on inp
+ut line 61.
+
+
+Package natbib Warning: Citation `zhao2024findver' on page 5 undefined on input
+ line 64.
+
+
+Package natbib Warning: Citation `rangapur2025finfact' on page 5 undefined on i
+nput line 64.
+
+
+Package natbib Warning: Citation `mansouri2026finrank' on page 5 undefined on i
+nput line 64.
+
+
+Package natbib Warning: Citation `jiang2026finrate' on page 5 undefined on inpu
+t line 64.
+
+
+Package natbib Warning: Citation `chen2026hcrag' on page 5 undefined on input l
+ine 64.
+
+
+Package natbib Warning: Citation `chi2026finsagent' on page 5 undefined on inpu
+t line 64.
+
+
+Package natbib Warning: Citation `lewis2020rag' on page 5 undefined on input li
+ne 68.
+
+
+Package natbib Warning: Citation `jiang2023flare' on page 5 undefined on input 
+line 68.
+
+
+Package natbib Warning: Citation `jeong2024adaptiverag' on page 5 undefined on 
+input line 68.
+
+
+Package natbib Warning: Citation `yao2023react' on page 5 undefined on input li
+ne 68.
+
+
+Package natbib Warning: Citation `shinn2023reflexion' on page 5 undefined on in
+put line 68.
+
+
+Package natbib Warning: Citation `chow1970optimum' on page 5 undefined on input
+ line 72.
+
+
+Package natbib Warning: Citation `geifman2017selective' on page 5 undefined on 
+input line 72.
+
+
+Package natbib Warning: Citation `guo2017calibration' on page 5 undefined on in
+put line 72.
+
+
+Package natbib Warning: Citation `elkan2001cost' on page 5 undefined on input l
+ine 72.
+
+
+Package natbib Warning: Citation `vovk2005algorithmic' on page 5 undefined on i
+nput line 72.
+
+
+Package natbib Warning: Citation `angelopoulos2021gentle' on page 5 undefined o
+n input line 72.
+
+[5]
+
+Package natbib Warning: Citation `manski2003partial' on page 6 undefined on inp
+ut line 76.
+
+
+Package natbib Warning: Citation `lopezdeprado2018advances' on page 6 undefined
+ on input line 76.
+
+[6]
+第三章
+[7] [8]
+Overfull \hbox (114.51988pt too wide) in paragraph at lines 161--162
+ [][] 
+[9]
+第四章
+[10] [11] [12]
+第五章
+[13] [14] [15] [16] [17]) (chapters_6_9.tex [18] [19]
+第六章
+
+Package natbib Warning: Citation `reddy2024docfinqa' on page 20 undefined on in
+put line 8.
+
+
+Package natbib Warning: Citation `zhao2024findver' on page 20 undefined on inpu
+t line 14.
+
+[20]
+
+Package natbib Warning: Citation `zhao2024findver' on page 21 undefined on inpu
+t line 26.
+
+
+Package natbib Warning: Citation `rangapur2025finfact' on page 21 undefined on 
+input line 26.
+
+
+Package natbib Warning: Citation `asai2024selfrag' on page 21 undefined on inpu
+t line 26.
+
+
+Package natbib Warning: Citation `yan2024crag' on page 21 undefined on input li
+ne 26.
+
+
+Package natbib Warning: Citation `jiang2023flare' on page 21 undefined on input
+ line 26.
+
+
+Package natbib Warning: Citation `jeong2024adaptiverag' on page 21 undefined on
+ input line 26.
+
+
+Underfull \hbox (badness 3058) in paragraph at lines 26--27
+[]\TU/SimSun(2)/b/n/12.045 模 糊 分 支 与 六 个 具 名 基 线 比 较：| \TU/TimesNewRoman(0)/m/n
+/12.045 FinDVer(\TU/TimesNewRoman(0)/b/n/12.045 ?\TU/TimesNewRoman(0)/m/n/12.04
+5 )\TU/SimSun(2)/b/n/12.045 、| \TU/TimesNewRoman(0)/m/n/12.045 Fin-Fact(\TU/Tim
+esNewRoman(0)/b/n/12.045 ?\TU/TimesNewRoman(0)/m/n/12.045 )\TU/SimSun(2)/b/n/12
+.045 、| \TU/TimesNewRoman(0)/m/n/12.045 Self-RAG(\TU/TimesNewRoman(0)/b/n/12.04
+5 ?\TU/TimesNewRoman(0)/m/n/12.045 )\TU/SimSun(2)/b/n/12.045 、|
+[21] [22]
+第七章
+[23] (tables_thesis/docfinqa.tex) [24] (tables_thesis/vague_ds.tex)
+(tables_thesis/vague_glm.tex) (tables_thesis/vague_qwen.tex) [25] [26]
+(tables_thesis/router.tex) (tables_thesis/ablation.tex) [27]
+(tables_thesis/findver.tex) [28] [29] [30]
+第八章
+[31] [32]
+第九章
+[33]
+No file main.bbl.
+附录 A
+[34]
+附录 B
+[35]
+附录 C
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+[]\TU/SimSun(1)/m/it/12.045 单 入 口 为 \TU/lmtt/m/n/12.045 experiments/unified/pip
+eline.py\TU/SimSun(1)/m/it/12.045 ，|  类 \TU/lmtt/m/n/12.045 FinPlanRAG
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+\TU/SimSun(1)/m/it/12.045 的 \TU/lmtt/m/n/12.045 run_item \TU/SimSun(1)/m/it/12.
+045 方 法 完 成 路 由 和 分 支 调 用。|  路 由 器 实 现
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+\TU/SimSun(1)/m/it/12.045 在 \TU/lmtt/m/n/12.045 experiments/unified/run_router.
+py\TU/SimSun(1)/m/it/12.045 ，|  模 糊 分 支 实 现 在
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+\TU/lmtt/m/n/12.045 run_vague_llm.py\TU/SimSun(1)/m/it/12.045 ，|  融 合 实 现 在 \TU
+/lmtt/m/n/12.045 run_vague_ensemble.py\TU/SimSun(1)/m/it/12.045 ，|  确 定
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+\TU/SimSun(1)/m/it/12.045 分 支 复 用 \TU/lmtt/m/n/12.045 scripts/run_docfinqa_exte
+rnal.py\TU/SimSun(1)/m/it/12.045 。|  校 准 随 机 森 林
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+\TU/SimSun(1)/m/it/12.045 由 \TU/lmtt/m/n/12.045 scripts/make_calibrated_rf_prob
+s.py \TU/SimSun(1)/m/it/12.045 生 成。|  结 果 汇 总 由
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+\TU/lmtt/m/n/12.045 experiments/unified/aggregate_final.py \TU/SimSun(1)/m/it/1
+2.045 完 成，|  论 文 表 格 由
+)
+
+Package natbib Warning: There were undefined citations.
+
+[36] (main.aux)miktex-dvipdfmx: major issue: So far, you have not checked for MiKTeX updates.
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
+ )
+(\end occurred inside a group at level 1)
+
+### simple group (level 1) entered at line 189 ({)
+### bottom level
+(see the transcript file for additional information)
+Output written on main.pdf (52 pages).
+Transcript written on main.log.
+xelatex: major issue: So far, you have not checked for MiKTeX updates.

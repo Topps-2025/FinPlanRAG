@@ -1,0 +1,75 @@
+You convert a forward-looking financial question into an auditable claim contract.
+Today is $today. The contract will be evaluated only with information available at the cutoff.
+
+Question:
+$question
+
+Additional context supplied by the user:
+company=$company
+ticker=$ticker
+target_period=$target_period
+
+Return JSON only, with this shape:
+{
+  "company": "<listed company name>",
+  "ticker": "<exchange ticker if stated, otherwise empty>",
+  "target_period": "<fiscal period, for example 2026年年度报告>",
+  "claims": [
+    {
+      "claim_id": "<short ascii slug>",
+      "text": "<one-sentence claim in Chinese>",
+      "metric": "<metric or 年度报告披露日期>",
+      "claim_type": "metric|date",
+      "metric_kind": "level|growth|margin|capacity|production|date|disclosure|other",
+      "model_template": "level_bridge|growth_bridge|margin_bridge|capacity_bridge|production_bridge|date_window|disclosure_check",
+      "anchor_types": ["<anchor type 1>", "<anchor type 2>"],
+      "labels": ["<label 1>", "<label 2>", "<label 3>"],
+      "label_defs": {"<label 1>": "<definition>", "<label 2>": "<definition>", "<label 3>": "<definition>"},
+      "thresholds": [
+        {"label": "<label 1>", "low": null, "high": 0.0}
+      ],
+      "reference": "<reference value or basis, for example 2025年实际值；若问题未给阈值则写 最近披露值，由检索证据填充>",
+      "reference_value": null,
+      "reference_unit": "<unit or empty>",
+      "unit": "<unit or empty>",
+      "date_windows": [
+        {"label": "<date label>", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}
+      ],
+      "query_facets": [
+        {"name": "<facet name>", "required": true, "queries": ["<facet query 1>", "<facet query 2>"]}
+      ],
+      "queries": ["<Chinese web search query>", "<another query>"]
+    }
+  ]
+}
+
+Rules:
+- Extract every metric the user asks about. If the user says 各项指标 without naming them, use 营业收入同比增速, 归母净利润同比增速, 毛利率, and 年度报告披露日期.
+- Only create a disclosure-date claim when the user explicitly asks when the result will be disclosed. Do not add a date claim merely because the target period is an annual report.
+- text must be one proposition with an unknown outcome, not a list of the labels. For example, write 中际旭创2026年年度报告营业收入同比增速高于2025年水平, not 将高于、接近或低于最近披露值. A text containing 或/和/、 between outcome labels is invalid.
+- For a metric claim, use three ordered labels. Put the middle label between two explicit numeric thresholds when the user gives them. If the user gives no threshold, use the most recent disclosed value as the reference and labels 高于最近披露值, 与最近披露值接近, 低于最近披露值; set reference to 最近披露值，由检索证据填充. Do not invent a financial value.
+- Choose metric_kind and model_template together:
+  - level -> level_bridge; growth -> growth_bridge; margin -> margin_bridge;
+  - capacity -> capacity_bridge; production -> production_bridge;
+  - date -> date_window; disclosure -> disclosure_check.
+- anchor_types should name the slots that a quantitative model needs, not generic topics. Examples:
+  - revenue: ytd_actual, prior_actual, q4_forecast, seasonal_factor, consensus, target;
+  - capacity: current_capacity, expansion, retirement, utilization, orders;
+  - production: capacity, utilization, yield, orders, seasonality;
+  - margin: current_margin, price_mix_delta, cost_delta, product_structure;
+  - disclosure: guidance, incentive_target, earnings_preview, disclosure_history;
+  - date: disclosure_history, appointment_disclosure, regulation.
+- thresholds should give numeric low/high bounds for each label when the labels contain numbers, for example 低于140% has high=140 and 高于170% has low=170. For qualitative labels, leave thresholds empty.
+- reference_value and reference_unit should be filled only when the question states a numeric reference; otherwise null/empty and let evidence fill it.
+- query_facets should propose 3 to 6 evidence facets specific to this claim, not a copy of queries. Mark a facet required when the claim cannot be modeled without it. Examples:
+  - capacity: current_capacity, expansion_projects, utilization, orders, industry_demand;
+  - production: capacity, utilization, yield, orders, seasonality;
+  - margin: current_margin, price_mix, cost, product_structure;
+  - disclosure: company_announcements, earnings_preview, incentive_plan;
+  - date: annual_report_history, appointment_disclosure, regulation.
+- For a disclosure-date claim, use three calendar windows. If the target period is 2026年年度报告, the windows are 不晚于2027-03-31, 2027-04-01至2027-04-15, 晚于2027-04-15. Put the matching start and end dates in date_windows.
+- For a metric claim, date_windows must be an empty list.
+- label_defs must be mutually exclusive and numerically explicit when thresholds are known.
+- queries must be short Chinese search queries that can find point-in-time evidence: company + period + metric, company + latest quarterly report + metric, company + 年度报告 + 披露日期, and so on. Do not put the claimed answer in a query.
+- Do not use any realized outcome of the target period. The target period has not been disclosed at the cutoff.
+- Return at most four claims.

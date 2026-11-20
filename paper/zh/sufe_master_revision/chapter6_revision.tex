@@ -1,0 +1,220 @@
+% ==================== 第6章（重构版） ====================
+\chapter{实证结果与分析}
+\label{ch:empirical}
+
+\begin{revbox}
+\noindent\textbf{本章修订说明。}本章按修订后的主线重排结果：先报告 router 的接口可行性（6.3），再把确定分支作为第二契约的控制结果报告（6.4），然后把\textbf{全动作损失感知读出}作为核心经验结果，在三个基座上与受限 gate 和公平 gated 基线比较（6.5）；6.6--6.8 报告 DeepSeek 上的文本锚点、时间演化和演化先验结果。原稿表 6.2/6.3 与附录 A 的十一项指标是\textbf{旧受限 gate} 口径；本章表格使用全动作口径，旧表仅作历史对照。
+\end{revbox}
+
+\section{数据与任务}
+
+本文在三个数据集和一个混合负载上评估 FinPlanRAG。三个数据集分别对应长文档确定问答、前瞻性断言裁决和外部迁移，混合负载用于检验路由。这样的设计使框架的不同主张分别接受检验，而不是用一个数据集的平均结果替代全部证据。
+
+DocFinQA 在 FinQA 问题的基础上加入完整 10-K 上下文\citep{reddy2024docfinqa}。本文使用测试集中的 300 题固定样本，答案使用发布的金标准。FinQA 程序常量只作为证据召回率的银标准，不作为阅读器输入。该数据集的挑战在于证据分散在长文档中，表格行与段落需要联合阅读，阅读器必须在大量无关内容中定位分子、分母和期间。
+
+收入指引基准包含 2010 年至 2025 年美国 SEC 8-K 文件中的 1,005 条季度营收指引断言。每条断言包含指引区间、截止时点、当前季度值和证据项。实际季度营收来自 SEC XBRL，XBRL 没有独立季度时使用披露文件回退。标签为低于区间、区间内、高于区间。数据按时间划分为 529 条开发集（2010 年至 2018 年）、203 条验证集（2019 年至 2021 年）和 273 条测试集（2022 年至 2025 年）。测试集包含 126 条高于、110 条区间内和 37 条低于。主结果使用 227 条具有 XBRL 核验或 XBRL 覆盖标签的测试断言；46 条纯文本标签单独用于敏感性检验。该数据集的挑战在于标签来自自动核验而非人工标注，类别不平衡明显，且前瞻性断言的真值在截止时点尚未实现。
+
+FinDVer testmini 包含 700 条带财务报告的断言验证样本\citep{zhao2024findver}，作为外部迁移集。本文不在 FinDVer 上调参，只把在 DocFinQA 上设计的义务检索策略迁移过去，以检验证据策略是否依赖特定数据分布。
+
+混合负载由 300 条 DocFinQA 问题和 273 条收入指引断言组成，共 573 条查询。确定查询的效用为词级 F1；前瞻性查询的效用为 $1-L/10$，其中 $L$ 为决策损失。错误路由记 0 效用。Oracle 路由器把每条查询送到正确分支；Always-RAG 把所有查询送到义务检索分支；Always-Anchor 把所有查询送到 AnchorEvolve。混合效用把两类任务的分数放在同一尺度上，使路由策略可以与固定分支策略比较。
+
+\section{基座模型、具名基线与评价指标}
+
+本文使用三套基座：DeepSeek Flash、GLM 5.3 Flash 和 Qwen3-8B\citep{qwen2025qwen3}。Qwen3-8B 在本地部署。所有方法使用同一基座和相同的提示模板，以比较证据策略和输出契约的差异。
+
+义务检索分支与固定 BM25 预算 1、2、4、8、16 段、Self-RAG-style、CRAG-style、FLARE-style、Adaptive-RAG-style 以及义务检索规划器比较。四个具名 RAG 方法根据原论文描述和公开接口进行同基座适配，保留各自的检索或反思策略，使用与义务检索分支相同的段落块、阅读器和评分，因此差异来自证据策略。
+
+AnchorEvolve 与六个具名方法比较：FinDVer-style\citep{zhao2024findver}、Fin-Fact-style\citep{rangapur2025finfact}、Self-RAG-style\citep{asai2024selfrag}、CRAG-style\citep{yan2024crag}、FLARE-style\citep{jiang2023flare} 和 Adaptive-RAG-style\citep{jeong2024adaptiverag}。每个方法根据原论文描述和公开接口进行同基座适配，通过同一个三分类适配层运行。适配层把原始输出映射为低于、区间内、高于，并提供相同的时点证据块和相同的六条历史断言。学习组件不可用或不兼容时，用使用官方判据的 API 调用替代，并记录替代关系。六个条件保留各自原论文的判据，不是原系统在其原始数据上的未修改端到端运行。
+
+\begin{revbox}
+\noindent\textbf{公平评价协议（修订）。}原稿只给 FinPlanRAG 使用集合/弃权动作，而六个具名基线按点标签计算损失；这会把“是否有 gate”误读为“方法是否更好”。修订版把同一个全动作损失感知读出应用到所有方法：每个方法的 label/confidence/credible\_set 都转换为后验，并在 3 个点标签、7 个非空裁决集和弃权上取最小期望损失。点准确率仍按各自 argmax 报告；损失、覆盖率、集合大小按统一动作报告。
+\end{revbox}
+
+评价指标分为三组。DocFinQA 报告精确匹配、词级 F1、答案覆盖率、平均获取段落数、平均输入 token 和银标准证据召回率。收入指引报告准确率、平衡准确率、宏 F1、MCC、AUROC、AUPRC、ECE、Brier、决策损失、可信集覆盖率和平均集合大小。平衡准确率是各类召回率的平均\citep{brodersen2010balanced,sokolova2009performance}。决策损失使用第\ref{ch:anchor}章参数。损失、ECE 和 Brier 越低越好。置信区间由断言级配对自助法给出，准确率差异使用 McNemar 检验。路由报告路由准确率、混淆矩阵和混合效用。
+
+评价协议在三个层面控制信息泄漏。第一，收入指引按时间划分，测试年份为 2022 年至 2025 年，验证集为 2019 年至 2021 年，开发集为 2010 年至 2018 年。第二，随机森林使用五个折种子；对每个测试年份 $Y$，训练集来自其他公司折，且结果日期早于 $Y$ 年 1 月 1 日；测试公司不出现在训练集中。温度缩放在公司不重叠的内部折上拟合。第三，融合权重 $w$ 只在验证集上选择，候选为配置中的权重网格；测试集不参与拟合、校准、权重选择或组合选择。
+
+所有 LLM 响应按请求负载的哈希缓存。API 密钥只从环境变量读取，不写入结果文件。提示词、运行脚本、逐条预测和表格生成脚本随论文发布。随机森林的折种子、校准方式和融合权重选择在正文中给出。公开结果包含逐条预测、路由决策和汇总指标；LLM 响应缓存不随论文提交，但相同输入可以用相同提示词复现。
+
+\section{路由与混合负载}
+
+\input{tables_thesis/router}
+
+表\ref{tab:router}报告 573 条混合负载。DeepSeek Flash 路由器正确路由 570 条（0.995）：300 条确定问题中 297 条，273 条前瞻性断言全部正确。GLM 5.3 Flash 路由器正确路由 567 条（0.990）：297 条确定问题、270 条前瞻性断言。Qwen3-8B 正确路由 271 条确定问题和 226 条前瞻性断言（0.867），其中 29 条确定问题被送到 AnchorEvolve，47 条前瞻性断言被送到义务检索，显示 8B 基座对契约边界的识别较不稳定。
+
+DeepSeek Flash 的混合效用为 0.403，与 oracle 相同，高于 Always-RAG 的 0.121 和 Always-Anchor 的 0.282。GLM 5.3 Flash 的混合效用为 0.419，接近 oracle 的 0.422，并恢复 99.3\% 的 oracle 效用。Qwen3-8B 的混合效用为 0.263，低于 Always-Anchor 的 0.298。结果表明，较大基座能够把确定问答与前瞻性裁决送入相应接口，小基座则需要更强的路由监督或外部信号。
+
+路由错误主要出现在带有未来时态的确定问题，例如“未来支付金额”和“预期股利”。这些问题的答案已经在截止时点文件中披露，但表面表达接近前瞻性断言。该现象说明契约识别依赖事实是否已经存在，而不能仅依据时态或关键词。固定分支策略只能对全部查询采用同一接口，路由器则把契约选择显式化，使路由错误与分支错误可以分别诊断。
+
+\begin{revbox}
+\noindent\textbf{接口定位与端到端检查。}Router 是契约选择器的简单接口；本节检验的是“契约选择是否可学”，不是 router 结构创新。修订版进一步用新的前瞻分支损失替换旧损失，在 527 条已验证子集（300 条确定 + 227 条前瞻）上保持 router 预测不变：混合效用从 .389 升到 .437，Always-Anchor 从 .258 升到 .306，router 来自正确确定路由的 .131 优势保持不变。该检查排除了 46 条纯文本标签，因此与 573 条表不完全可比。
+\end{revbox}
+
+\section{义务检索控制分支}
+
+\begin{revbox}
+\noindent\textbf{控制分支的定位。}本节把确定分支作为第二契约的控制结果报告，而不是本文的主要算法创新。主实验使用确定性的词项义务覆盖（数字/月份/期间词项 + BM25 + 阅读器闭包 + 置信度回退）；第 4 章的类型化元组与 metadata 过滤是设计目标，完整实现在附录 F 的扩展 planner 中。本节只报告控制分支是否足以让 router 的另一半可信；逐条件、token 成本和 planner-16 对照放在附录与局限。
+\end{revbox}
+
+\input{tables_thesis/docfinqa}
+
+表\ref{tab:docfinqa}报告 DocFinQA 的 300 题固定样本。最终义务检索分支使用 16 段预算，并在阅读器不充分或置信度低于 0.8 时回退到固定 16 段证据集。在 DeepSeek Flash 上，该分支取得 0.457 精确匹配，平均使用 10.69 段；固定 16 段阅读器取得 0.390，平均 16 段；固定 8 段阅读器取得 0.367，平均 8 段。无回退的预算 8 规划器取得 0.417，平均 4.56 段；预算 12 取得 0.427，平均 5.82 段；预算 16 取得 0.460，平均 6.85 段。
+
+在 GLM 5.3 Flash 上，该分支取得 0.497，平均 10.31 段；固定 16 段阅读器取得 0.480，平均 16 段；固定 8 段阅读器取得 0.440，平均 8 段。无回退的预算 8 规划器取得 0.450，平均 4.15 段；预算 12 取得 0.473，平均 5.11 段；预算 16 取得 0.470，平均 5.88 段。回退分支比固定 16 段阅读器高 0.017，平均少用 5.69 段。两个基座上的答案覆盖率分别为 0.770 和 0.810，高于固定预算的 0.640 和 0.757，说明分支更少弃权。
+
+\begin{revbox}
+\noindent\textbf{成本与支配关系。}最终分支相对固定 16 段节省段落数，但 DeepSeek 上的平均总 token 为 1712.83，固定 16 段为 1752.50，实际只省 2.3\%；GLM 上为 2632.11 对 3715.89，省 29\%。同时，planner B=16 在 DeepSeek 上是 .460 / 6.85 段 / 1275.31 token，在准确率和 token 上都支配最终分支；最终分支在 GLM 上更强。因此“回退弥补规划器缺口”只对 B=8 成立，对 B=16 不成立；本节把最终分支写成成本-准确率折中，而不是一致占优。
+\end{revbox}
+
+\input{tables_thesis/findver}
+
+表\ref{tab:findver}报告 FinDVer testmini 默认阅读器结果。DeepSeek Flash 上规划器加回退取得 0.701 准确率，平均 8.76 段；固定 16 段 0.660，固定 8 段 0.623。GLM 5.3 Flash 上该分支取得 0.753，平均 9.19 段；固定 16 段 0.743，固定 8 段 0.680。Qwen3-8B 上该分支取得 0.649，平均 6.13 段；固定 16 段 0.636，固定 8 段 0.629。分支在三个基座上均高于固定 16 段阅读器，平均少用 6.9 至 9.9 段。官方思维链阅读器在 DeepSeek Flash 和 GLM 5.3 Flash 上分别取得 0.817 和 0.819（金证据），十段检索版本均为 0.787；这些使用不同阅读器和证据接口，是上界参考，不是同条件基线。FinDVer 是迁移集，分支未在其上调参。
+
+\begin{revbox}
+\noindent\textbf{迁移的边界。}FinDVer 上 GLM 的宏 F1 为 .789，低于固定 16 段的 .792；Qwen 为 .663，低于 .673。准确率更高但宏 F1 回退，说明迁移收益不是全指标一致；正文只应把准确率作为控制分支的迁移证据，宏 F1 回退放入局限。Qwen3-8B 在 DocFinQA 上所有条件精确匹配低于 .11，主要原因是阅读器返回解释性文字而不是短答案；该基座不用于确定分支的主比较，只作为基座能力边界。
+\end{revbox}
+
+\section{全动作读出与公平基线}
+
+\begin{revbox}
+\noindent\textbf{核心结果。}本节把全动作损失感知读出应用到同一个后验和同一个损失，比较受限 gate 与全动作 gate；然后把同一个 gate 应用到所有具名基线，修正原稿的不公平比较。
+\end{revbox}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{受限 gate 与全动作 gate 的决策损失比较（227 条 XBRL 核验断言；配对 95\% CI 为 10,000 次 claim 级 bootstrap）。}
+\label{tab:fullaction}
+\begin{tabular}{lrrrr}
+\toprule
+基座 & Fusion 受限 & Fusion 全动作 & RF 受限 & RF 全动作 \\
+\midrule
+DeepSeek & 3.604 & \cellcolor{yellow!25}2.863 & 3.454 & \cellcolor{yellow!25}2.881 \\
+GLM 5.3 & 3.648 & \cellcolor{yellow!25}2.956 & 3.460 & \cellcolor{yellow!25}2.885 \\
+Qwen3-8B & 3.577 & \cellcolor{yellow!25}2.837 & 3.454 & \cellcolor{yellow!25}2.881 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent 全动作读出在三个基座上都显著降低 Fusion 的决策损失：DeepSeek 从 3.604 降到 2.863（差 $-0.740$，CI $[-1.031,-0.423]$），GLM 从 3.648 降到 2.956（差 $-0.690$，CI $[-1.000,-0.363]$），Qwen 从 3.577 降到 2.837（差 $-0.740$，CI $[-1.048,-0.423]$）。RF 上也分别从 3.454/3.460/3.454 降到 2.881/2.885/2.881。六个配对区间都排除零。这是本次修订中最稳健、最可复现的经验结果。
+\end{revbox}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{公平 gate 下的基线比较（全动作读出；Fusion 为含 LLM 锚点信号的融合后验，RF 为结构化诊断）。}
+\label{tab:fair}
+\begin{tabular}{llrrr}
+\toprule
+基座 & 方法 & 决策损失 & 相对 Fusion & 95\% CI \\
+\midrule
+DeepSeek & 旧受限 Fusion & 3.604 & +0.741 & — \\
+\rowcolor{yellow!18} & Fusion 全动作 & 2.863 & 0 & — \\
+\rowcolor{yellow!18} & 最好 gated baseline（Self-RAG） & 3.048 & $-0.185$ & $[-0.581,0.211]$ \\
+GLM 5.3 & 旧受限 Fusion & 3.648 & +0.692 & — \\
+\rowcolor{yellow!18} & Fusion 全动作 & 2.956 & 0 & — \\
+\rowcolor{yellow!18} & 最好 gated baseline（FinDVer） & 3.221 & $-0.265$ & $[-0.699,0.177]$ \\
+Qwen3-8B & 旧受限 Fusion & 3.577 & +0.740 & — \\
+\rowcolor{yellow!18} & Fusion 全动作 & 2.837 & 0 & — \\
+\rowcolor{yellow!18} & 最好 gated baseline（Fin-Fact） & 4.846 & $-2.009$ & $[-2.687,-1.330]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent 公平 gate 下，Fusion 的点估计在三个基座上都低于全部具名基线；Qwen 上显著，DeepSeek/GLM 上相对最强基线的差异不显著（CI 包含零）。因此论文应写“点估计更低、Qwen 与弱基线显著；最强基线在 DeepSeek/GLM 上不显著”，不能重复原稿“显著低于所有基线”的表述。旧受限 gate 的 Fusion 在 DeepSeek/GLM 上实际上高于最好 gated baseline；原稿的“最低损失”是“只有 FinPlanRAG 有 gate”造成的。
+\end{revbox}
+
+\section{演化版本：文本锚点与时间演化（DeepSeek）}
+
+\begin{revbox}
+\noindent\textbf{实验设置。}新 prompt 从截止时点 8-K 原文抽取带来源编号的锚点，公司名默认脱敏；时间演化只用揭示日早于 cutoff 的结果；演化先验 RF 在 baseline 特征上加入 peer/sector 历史、公司 surprise、日历和当前季度位置。融合权重只在 2019--2021 validation 上选择；2022--2025 test 只评估一次。
+\end{revbox}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{2.5pt}
+\caption{DeepSeek 演化版系统与消融（227 条；Acc/Bal/Macro/Loss；Loss 为全动作 gate）。}
+\label{tab:evolution}
+\begin{tabular}{lrrrr}
+\toprule
+系统 & Acc & Bal & Macro & Loss \\
+\midrule
+旧论文 Fusion（受限 gate） & .524 & .471 & .468 & 3.604 \\
+\rowcolor{yellow!18} 新锚点 + 演化 + 演化先验 RF（$w=.20$） & \textbf{.551} & \textbf{.489} & \textbf{.503} & \textbf{2.890} \\
+\rowcolor{yellow!18} 演化先验 RF 单独（诊断） & \textbf{.555} & \textbf{.503} & \textbf{.508} & \textbf{2.828} \\
+\rowcolor{yellow!18} 新锚点 + 演化 + baseline RF（$w=.05$） & .542 & .499 & .497 & 2.855 \\
+\rowcolor{yellow!18} 新锚点，静态先验/可靠性（$w=.05$） & .546 & .505 & .503 & 2.908 \\
+\rowcolor{yellow!18} 旧锚点 + 演化（$w=.30$） & .520 & .439 & .438 & 2.793 \\
+\rowcolor{yellow!18} 旧锚点，静态（$w=.20$） & .507 & .450 & .450 & 2.899 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent 最终系统的 Acc/Bal/Macro 从旧系统的 .524/.471/.468 提高到 .551/.489/.503，Loss 从 3.604 降到 2.890。配对损失差为 $-0.714$，CI $[-1.057,-0.352]$，显著；但相对演化先验 RF 诊断的损失差为 $+0.062$，CI $[-0.141,0.273]$，不显著。准确率相对旧系统 +2.7 点，McNemar $p\approx0.69$，只能作为点估计报告。旧锚点 + 演化的 Loss 最低（2.793），但 Bal/Macro 只有 .439/.438；新锚点系统是更好的准确率/损失折中，也是更可辩护的（文本来源、脱敏）配置。
+\end{revbox}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{演化先验特征（无 LLM）的 validation/test 结果。Validation 为 185 条；test 为 227 条；相同 3 seeds/300 trees。}
+\label{tab:prior}
+\begin{tabular}{llrrrr}
+\toprule
+Split & 特征集 & Acc & Bal & Macro & Loss \\
+\midrule
+Validation & baseline & .557 & .556 & .536 & 3.784 \\
+\rowcolor{yellow!18} Validation & all evolved, no artifact & \textbf{.605} & \textbf{.572} & \textbf{.566} & \textbf{3.740} \\
+Test & baseline RF（受限 / 全动作） & .520 & .476 & .473 & 3.463 / 2.908 \\
+\rowcolor{yellow!18} Test & evolved-prior RF（受限 / 全动作） & \textbf{.555} & \textbf{.503} & \textbf{.508} & \textbf{3.278 / 2.828} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent 演化先验把测试准确率从 .520 提到 .555（+3.5 点，McNemar $p\approx0.40$），平衡准确率 .476→.503，宏 F1 .473→.508；这些是点估计，不是显著性主张。Peer-only 特征在 validation 上反而使准确率降到 .524，说明增益来自 peer、公司 surprise、日历和当前季度位置的组合，不能归因于单一 peer 先验。\texttt{current\_eq\_low} 是数据构造痕迹，已从最终特征集中排除。
+\end{revbox}
+
+\section{消融与可信集}
+
+\begin{revbox}
+\noindent\textbf{全动作 vs 受限 gate。}表\ref{tab:fullaction}已经给出：Fusion/RF 在三个基座上都是全动作更好，且 CI 排除零。\textbf{演化 vs 静态。}新锚点 static 2.908→evolved 2.855；旧锚点 static 2.899→evolved 2.793；方向一致，但幅度小，227 条上不显著。\textbf{新 vs 旧锚点。}新锚点的 Acc/Bal/Macro 更好（.551/.489/.503 对 .520/.439/.438），旧锚点的 Loss 更低；两者是不同权衡。\textbf{演化先验 vs baseline RF。}演化先验在 Acc/Bal/Macro 上更好，Loss 在全动作下从 2.908 降到 2.828；相对旧受限系统显著，相对新锚点融合不显著。
+\end{revbox}
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{动作集与可信集（DeepSeek 227 条）。}
+\label{tab:sets}
+\begin{tabular}{lrrr}
+\toprule
+对象 & 平均集合大小 & 覆盖率 & 说明 \\
+\midrule
+$1-\alpha$ 可信集（Fusion） & 2.83 & .991 & 审计/覆盖口径 \\
+\rowcolor{yellow!18} 全动作裁决集（Fusion） & 1.90 & .868 & 损失最优动作 \\
+$1-\alpha$ 可信集（RF） & 2.76 & .987 & 审计/覆盖口径 \\
+\rowcolor{yellow!18} 全动作裁决集（RF） & 1.89 & .863 & 损失最优动作 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent 全动作裁决集的平均大小约 1.9，覆盖率约 .86，低于 $1-\alpha$ 集的 .99；这是给定损失（漏报 8、宽度 2）下的最优权衡，不是覆盖率缺陷。论文应同时报告 $1-\alpha$ 可信集（覆盖/审计）和损失最优裁决集（决策），不要把两者混为一个“可信集”。DeepSeek 上全动作动作全部为 adjudicate，没有 answer/abstain；这是当前损失参数下的动作分布，换损失参数会改变动作组合。
+\end{revbox}
+
+\section{误差分析与讨论}
+
+Router 的错误集中在语义边界。DeepSeek Flash 和 GLM 5.3 Flash 把“未来支付金额”“预期股利”等确定问题判为前瞻性断言；这些问题的答案在文件中已经给出，但文本包含未来时态。Qwen3-8B 的错误更多，说明小模型的语义边界判断不稳定。错路由的置信度在 DeepSeek 上是 .9/.85/.85，属于高置信度错误；原稿“低置信度时人工复核”的补救机制抓不到这些错误。后续需要置信度校准或轻量检索信号，而不是简单的阈值门。
+
+AnchorEvolve 的主要误差来自类别偏置和 LLM 抽取器的主观可靠性。纯 LLM 锚点后验在旧 prompt 下准确率 .445，新 prompt 下 .502，仍低于结构化 RF；锚点层不是点预测的主因。融合后系统的点估计与 RF 接近，损失相对旧系统显著下降，但相对 RF 诊断的增量不显著。文本锚点的价值在于把 8-K 原文中的管理层评论、分部/需求信号变成可审计的 L2 状态，而不是替代结构化先验。
+
+\begin{revbox}
+\noindent\textbf{外部效度与污染。}新文本锚点目前只跑了 DeepSeek；GLM/Qwen 只验证了全动作读出（旧锚点），因为需要对应的 API key/本地模型。收入指引标签来自 XBRL 自动核验，不是人工金标准；227 条测试中 33 条为 below，类别不平衡使平衡准确率/宏 F1 的点估计不稳定。公司名已脱敏，但 LLM 预训练记忆仍可能污染 2022--2025 的结果；需要用 cutoff 早于 2022 的模型或合成公司做对照。46 条纯文本标签的敏感性结果、FinDVer 的宏 F1 回退、DocFinQA 的 300/7,437 样本比例和 planner-16 支配关系都应在局限/附录中报告。
+\end{revbox}

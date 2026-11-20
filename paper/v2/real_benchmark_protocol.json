@@ -1,0 +1,59 @@
+{
+  "schema": "finplan-real-evidence-benchmark-protocol-v1",
+  "date": "2026-10-31",
+  "status": "pre-registered before the final 20-seed confirmatory run; exploratory feature analysis informed the feature set and is disclosed",
+  "data": "C:/Users/Lenovo/Desktop/Paper/AnchorEvolve/real_data_v4/dataset_v4.json",
+  "splits": {
+    "dev": "2010-2018, n=529",
+    "validation": "2019-2021, n=203",
+    "test": "2022-2025, n=273",
+    "company_disjoint_test": "test companies with no dev/validation claims, n=108"
+  },
+  "features": [
+    "guidance width",
+    "current-quarter revenue minus guidance midpoint",
+    "guidance midpoint minus current-quarter revenue",
+    "company history n and bucket distribution (outcomes public before cutoff)",
+    "previous guidance growth and width (public at its own cutoff)",
+    "target quarter",
+    "cutoff year",
+    "sector"
+  ],
+  "model": {
+    "family": "multinomial logistic regression",
+    "preprocessing": "median imputation + standardization; most-frequent imputation + one-hot for sector",
+    "selection": "GroupKFold(5) by company on dev+validation; C in {0.1,1,10}; class_weight in {None,balanced}; selected by grouped-CV macro F1",
+    "final_fit": "dev+validation",
+    "test": "evaluated once after selection"
+  },
+  "seeds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+  "uncertainty": {
+    "case_bootstrap": "20,000 resamples, seed 20261031, paired vs always-above",
+    "training_bootstrap": "20 seeds; resample dev+validation with replacement; fixed hyperparameters; evaluate fixed test/company-disjoint"
+  },
+  "primary_metric": "macro F1 on the test split and on the company-disjoint test subset",
+  "primary_positive_criterion": "95% CI of the difference vs always-above excludes 0 on both test and company-disjoint",
+  "secondary_metrics": [
+    "accuracy",
+    "per-class recall",
+    "selective accuracy at 50% coverage",
+    "AURC",
+    "ECE (10 bins)",
+    "Brier score",
+    "log loss",
+    "McNemar exact test vs always-above"
+  ],
+  "boundaries": [
+    "The primary metric is macro F1 because the v4 test distribution is class-imbalanced.",
+    "Company-disjoint accuracy and selective accuracy may trade off against macro F1; this must be reported, not hidden.",
+    "The features are real and point-in-time; outcomes enter history only when their outcome date is before the cutoff.",
+    "The model is a simple evidence model; it is not a reader or an answer-level QA system.",
+    "The controlled preliminary signal is a separate synthetic mechanism result and is not part of this real benchmark."
+  ],
+  "artifacts": [
+    "scripts/run_real_benchmark.py",
+    "paper/results/real_benchmark/summary.json",
+    "paper/results/real_benchmark/report.md",
+    "paper/v2/real_benchmark_result.md"
+  ]
+}

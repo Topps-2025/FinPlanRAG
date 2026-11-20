@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{2.5pt}
+\caption{AnchorEvolve决策头消融。$w=1$为纯LLM锚点后验，$w=0$为校准随机森林后验，$w=0.1$为融合候选。}
+\label{tab:ablation-heads}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+决策头 & DeepSeek Flash Acc & Bal & Macro & Loss & GLM 5.3 Flash Acc & Bal & Macro & Loss & Qwen Acc & Bal & Macro & Loss \\
+\midrule
+LLM锚点后验（$w=1$） & .445 & .307 & .242 & 4.035 & .454 & .329 & .295 & 3.903 & .427 & .353 & .355 & 3.586 \\
+融合（$w=0.1$） & .524 & .471 & .468 & 3.604 & .537 & .489 & .487 & 3.648 & .537 & .486 & .485 & 3.577 \\
+随机森林（$w=0$） & .533 & .491 & .486 & 3.454 & .533 & .491 & .486 & 3.454 & .533 & .491 & .486 & 3.454 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

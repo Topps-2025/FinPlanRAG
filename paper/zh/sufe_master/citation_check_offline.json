@@ -1,0 +1,294 @@
+{
+  "file": "paper\\zh\\sufe_master\\references.bib",
+  "checked_at": "2026-11-09T12:53:46Z",
+  "mode": "offline",
+  "verdict": "PASS",
+  "verdict_line": "PASS: 0/34 verified, 0 errors, 0 warnings (0 checks skipped)",
+  "skipped_checks": [],
+  "entries": [
+    {
+      "key": "lewis2020rag",
+      "type": "inproceedings",
+      "line": 1,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "jiang2023flare",
+      "type": "inproceedings",
+      "line": 10,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "asai2024selfrag",
+      "type": "inproceedings",
+      "line": 19,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "jeong2024adaptiverag",
+      "type": "inproceedings",
+      "line": 26,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "yan2024crag",
+      "type": "article",
+      "line": 35,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "yao2023react",
+      "type": "inproceedings",
+      "line": 42,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "shinn2023reflexion",
+      "type": "inproceedings",
+      "line": 49,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "chen2021finqa",
+      "type": "inproceedings",
+      "line": 57,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "zhu2021tatqa",
+      "type": "inproceedings",
+      "line": 66,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "islam2023financebench",
+      "type": "misc",
+      "line": 75,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "xie2024finben",
+      "type": "inproceedings",
+      "line": 83,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "zhao2024findver",
+      "type": "inproceedings",
+      "line": 91,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "rangapur2025finfact",
+      "type": "inproceedings",
+      "line": 100,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "mansouri2026finrank",
+      "type": "misc",
+      "line": 109,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "jiang2026finrate",
+      "type": "inproceedings",
+      "line": 118,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "chen2026hcrag",
+      "type": "misc",
+      "line": 127,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "chi2026finsagent",
+      "type": "misc",
+      "line": 136,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "zhou2026fincards",
+      "type": "inproceedings",
+      "line": 145,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "chow1970optimum",
+      "type": "article",
+      "line": 156,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "geifman2017selective",
+      "type": "inproceedings",
+      "line": 167,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "guo2017calibration",
+      "type": "inproceedings",
+      "line": 175,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "elkan2001cost",
+      "type": "inproceedings",
+      "line": 185,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "krishnamurthy2017pomdp",
+      "type": "misc",
+      "line": 193,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "manski2003partial",
+      "type": "book",
+      "line": 201,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "sokolova2009performance",
+      "type": "article",
+      "line": 208,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "brodersen2010balanced",
+      "type": "inproceedings",
+      "line": 219,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "hirst2008management",
+      "type": "article",
+      "line": 228,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "lopezdeprado2018advances",
+      "type": "book",
+      "line": 239,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "vovk2005algorithmic",
+      "type": "book",
+      "line": 246,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "angelopoulos2021gentle",
+      "type": "misc",
+      "line": 253,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "romano2020classification",
+      "type": "inproceedings",
+      "line": 262,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "gibbs2021adaptive",
+      "type": "inproceedings",
+      "line": 271,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "qwen2025qwen3",
+      "type": "misc",
+      "line": 280,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    },
+    {
+      "key": "reddy2024docfinqa",
+      "type": "inproceedings",
+      "line": 290,
+      "status": "PARSED_ONLY",
+      "resolved": null,
+      "flags": []
+    }
+  ],
+  "summary": {
+    "total": 34,
+    "verified": 0,
+    "errors": 0,
+    "warnings_only": 0,
+    "warnings_by_flag": {},
+    "unresolved": 0,
+    "retracted": 0,
+    "canonical_instance": 0,
+    "low_relevance": 0,
+    "checks_skipped": 0
+  }
+}

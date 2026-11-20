@@ -1,0 +1,1107 @@
+FinPlan: A Decision Interface for Point-in-Time Financial Evidence
+
+                                 Anonymous ACL submission
+
+                 Abstract                            1 Introduction
+
+Financial questions about forward-looking            Consider an analyst reading an 8-K filing on July
+guidance do not have a single answer at the          30. Management earnings guidance is a central
+filing date. A system can answer from the guid-      disclosure channel (Hirst et al., 2008), and the com-
+ance midpoint, qualify the answer with a cred-       pany guides third-quarter revenue to $100­110 mil-
+ible set, or wait for a later filing. The choice     lion. The analyst must decide whether revenue will
+depends on later evidence and an asymmet-            land below, within, or above that range. The 10-Q
+ric loss. Existing RAG and claim-verification        will not appear for several weeks. A point forecast
+systems fix the output mode, decision time,          of $106 million is a bet. The statement that the
+and budget before evidence. We formulate             outcome is likely within the range is a qualified
+the output interface as a decision problem over      judgment. Waiting for the 10-Q resolves the ques-
+a credal evidence state, with actions for an-        tion, but consumes time. The best choice depends
+swering, adjudicating, abstaining, acquiring         on the evidence available now, the evidence that
+evidence, and waiting. We show why point             will arrive, and the cost of being wrong.
+answers, relevance-only retrieval, and pre-hoc
+routing cannot represent the full interface. We         Most financial question answering systems do
+build a year-wise company-disjoint benchmark         not represent this choice. Retrieval-augmented gen-
+of 273 revenue-guidance claims, with a 737-          eration (RAG) retrieves passages and returns an
+claim rolling-origin extension. On XBRL-             answer (Lewis et al., 2020; Jiang et al., 2023; Asai
+verified labels, balanced accuracy rises from        et al., 2024; Jeong et al., 2024). Claim verification
+.333 to .564 and macro F1 from .220 to .488.         returns a verdict such as supported or contradicted
+On a non-LLM random-forest backbone, a loss-         (Zhao et al., 2024; Rangapur et al., 2025). Selec-
+aware portfolio over fixed adjudication, ab-         tive prediction returns an answer or an abstention
+stention, and the planner matches the oracle         (Chow, 1970; Geifman and El-Yaniv, 2017). Re-
+best fixed policy in nine of ten loss configu-       cent financial RAG systems add typed evidence,
+rations (regret 0) and beats it under the wide-      period constraints, and provenance, but they keep
+width penalty (4.34 versus 4.71; regret -0.370,      the same output contract: an answer or a verdict is
+95% CI [-0.643, -0.100]). Mean regret is -           produced at a fixed cutoff with a fixed retrieval bud-
+0.037 (95% CI [-0.064, -0.010]) with maximum         get (Mansouri et al., 2026; Jiang et al., 2026; Chen
+0.000; a pre-specified seed replication confirms     et al., 2026; Chi et al., 2026). The interface is fixed
+the wide-width gain and an exact base match.         before the evidence is seen. A system therefore can-
+Six named baselines (FinDVer, Fin-Fact, Self-        not represent the case in which the first evidence
+RAG, CRAG, FLARE, and Adaptive-RAG),                 supports a qualified judgment, a later filing settles
+adapted under the same backbone, have higher         the question, and the correct output mode changes
+selective accuracy and lower AURC than Fin-          in between.
+Plan, but lower balanced accuracy; no point
+model dominates, and the decision portfolio is          We formulate the interface as a decision problem
+selected on regret. A DeepSeek-backed con-           over a credal evidence state. A query or claim
+formal variant is competitive in three regimes       induces a feasible set over outcomes. Evidence
+but is sensitive to masking and pretraining ex-      arrives with an availability time, an acquisition cost,
+posure. No fixed output interface is uniformly       and a constraint on the feasible set. At a chosen
+near-optimal.                                        decision time, the agent has a filtration that contains
+
+                                                  1
+only evidence available at that time. The agent              macro F1 from .220 to .488. On a non-LLM
+chooses among a point answer, a credible set, and            random-forest backbone, a loss-aware portfolio
+an abstention, and may also acquire evidence or              over fixed adjudication, abstention, and the plan-
+wait. The loss is asymmetric: overclaiming costs             ner matches the oracle best fixed policy in nine of
+more than underclaiming, and an uninformative                ten loss configurations (regret 0) and beats it un-
+adjudication is not free. The decision time and the          der the wide-width penalty (4.34 versus 4.71).
+evidence cost are part of the objective; fixed cutoff        Mean regret is -0.037 with maximum 0.000,
+and fixed budget are special cases, not assumptions.         and a pre-specified seed replication confirms the
+The policy must be measurable with respect to the            wide-width gain and an exact base match. A
+filtration at the chosen time, so waiting is a costly        controlled 20-seed diagnostic isolates the mode-
+action rather than free lookahead.                           switching mechanism.
+
+   This formulation exposes a capability gap. Ex-             The scope is a decision-level revenue-guidance
+isting systems fix at least one of three dimensions:       task. We do not evaluate a reader, and we do not
+the output mode, the decision time, or the evidence        claim that the evidence model is a state-of-the-art
+budget. The components exist; the gap is a missing         financial QA system. The claim is about the inter-
+interface that lets a system decide when to decide,        face: a fixed output contract is adequate only inside
+what evidence to acquire, and which output con-            the loss regime for which it was designed. We call
+tract to use. Figure 1 illustrates the object. Evi-        the interface FinPlan.1
+dence arrives over time; the planner stops with an
+answer or a credible set, or waits for a later filing.     2 Related Work
+A router cannot express the trace because the mode
+is chosen after the belief update.                         Retrieval-augmented generation. RAG com-
+                                                           bines a retriever with a generator and assumes that
+   We ask three questions: does a point-in-time            an answer exists in the retrieved context (Lewis
+evidence model generalize to unseen companies;             et al., 2020). Active and adaptive variants decide
+does a planner over its belief reduce decision loss        when to retrieve or how many passages to retrieve
+relative to fixed output actions; and does the plan-       (Jiang et al., 2023; Jeong et al., 2024). Agent
+ner have lower regret across loss regimes than any         frameworks interleave reasoning, retrieval, and self-
+fixed policy? We make four contributions.                  correction (Yao et al., 2023; Shinn et al., 2023).
+                                                           These systems adapt the retrieval process, but the
+· Formulation. We define a decision interface              output contract remains a generated answer. They
+  over a credal evidence state with endogenous             do not choose between an answer, a credible set,
+  decision time and evidence cost, and with point-         and an abstention, and they do not price the deci-
+  in-time measurability. Point answers, verdicts,          sion time.
+  and fixed budgets are special cases.
+                                                           Financial QA and claim verification. Finan-
+· Necessity. We show that point answers are                cial QA benchmarks test numerical reasoning over
+  minimax-insufficient when the feasible set is not        filings and tables (Chen et al., 2021; Zhu et al.,
+  a singleton, that a relevance score is not a suffi-      2021; Islam et al., 2023; Xie et al., 2024). Claim-
+  cient statistic for the Bayes action, and that pre-      verification benchmarks test whether a claim is sup-
+  hoc routing is insufficient when the optimal mode        ported, contradicted, or unverifiable (Zhao et al.,
+  depends on evidence observed after the routing           2024; Rangapur et al., 2025). Recent financial
+  decision.                                                RAG systems add typed evidence, period con-
+                                                           straints, provenance, and corpus-aligned retrieval
+· Benchmark. We build a year-wise, company-                (Mansouri et al., 2026; Jiang et al., 2026; Chen
+  disjoint, point-in-time benchmark of 273 revenue-        et al., 2026; Chi et al., 2026). These systems im-
+  guidance claims from SEC filings, plus a 737-            prove the evidence that reaches a reader. They keep
+  claim rolling-origin extension (2015­2025). The          a fixed output interface: an answer or a verdict is
+  benchmark reports balanced accuracy, macro F1,           produced at a given cutoff. The benchmark in this
+  AUROC/AP, calibration, selective risk, a feature-        paper differs in two ways. The label is the realized
+  less prior control, and an XBRL-verified label           outcome of a forward-looking claim rather than a
+  sensitivity.
+                                                               1The released code and package retain the name FinPlan-
+· Evidence. On verified labels, the evidence model         RAG; FinPlan denotes the decision interface studied here.
+  raises balanced accuracy from .333 to .564 and
+
+                                                        2
+Evidence         Ft  Credal state  Bayes                    Output action                   Loss and cost
+                     bt over Hq                                                             L +  + t
+a(e), (e), S(e)                                             answer / set / abstain
+
+                                                                  Acquire or wait
+                                                           advance t, pay (e) + t
+
+Figure 1: The decision interface. Evidence available at the chosen decision time induces a credal state. The planner
+chooses an output action or an evidence action. Waiting advances the decision time and is charged a delay cost. A
+point answer, a credible set, and an abstention share the same state and loss.
+
+static answer, and the evaluation asks whether the          under distribution shift (Gibbs and Candès, 2021).
+system chooses the right output mode and decision           These methods choose a coverage level, but they do
+time.                                                       not choose among answer, set, and abstain under
+                                                            an asymmetric decision loss. We use conformal
+Selective prediction and abstention. The re-                scores to construct the feasible set, select the thresh-
+ject option trades recognition error against rejec-         old by realized decision loss on calibration data,
+tion rate (Chow, 1970). Selective classification            and let the action rule choose the output mode. The
+learns a confidence threshold and abstains on low-          coverage target is a constraint, not the objective.
+confidence inputs (Geifman and El-Yaniv, 2017).
+Calibration work shows that modern classifiers are          Point-in-time evaluation. Financial machine
+often miscalibrated and that temperature scaling is         learning is vulnerable to lookahead bias when a
+a strong baseline (Guo et al., 2017). Cost-sensitive        model uses information that was not available at
+learning prices different errors differently (Elkan,        the decision time (López de Prado, 2018). Tem-
+2001). These lines provide the loss and calibration         poral splits and filing-date filters are standard safe-
+ingredients. They assume a fixed task and a binary          guards. Our protocol makes the cutoff a decision
+answer/abstain decision. They do not represent a            variable while preserving the validity condition: at
+credible set over outcomes, and they do not choose          the chosen time, only evidence with availability at
+the decision time or acquire evidence.                      or before that time is admissible.
+
+Decision-theoretic evidence acquisition. Par-               Capability boundary. Table 1 summarizes the
+tially observed Markov decision processes and               interface assumed by each family. The table is a
+value-of-information analysis provide the general           capability map, not a claim about every implemen-
+machinery for choosing when to stop and what to             tation. To our knowledge, the gap is the last row:
+observe (Krishnamurthy, 2017). Partial identifica-          no existing family jointly selects the output mode,
+tion represents the set of outcomes consistent with         the decision time, and the evidence budget after
+the available evidence (Manski, 2003). Our formu-           observing evidence, under an asymmetric loss.
+lation instantiates these ideas for financial claims:
+the hypothesis space is the outcome bucket, the ev-         3 Problem Formulation
+idence constraints are filing periods and guidance
+ranges, and the actions include answer, adjudicate,         3.1 Evidence and filtration
+abstain, acquire, and wait. The contribution is not
+new decision theory. It is a financial interface that       Let X be the outcome space. A query or claim q in-
+makes the decision variables explicit and measur-           duces a feasible set S(q)  X . A piece of evidence
+able.                                                       e has an availability time a(e), an acquisition cost
+                                                            (e)  0, a constraint S(e)  X , and a source. At
+Conformal prediction. Split conformal predic-               decision time t, the information set is
+tion converts a score into a set with distribution-free
+coverage under exchangeability (Vovk et al., 2005;          Ft =  {e : a(e)  t} ,                          (1)
+Angelopoulos and Bates, 2021). LAC and APS
+are the standard classification scores; APS adapts          and the admissible evidence is
+set size to the difficulty of the example (Romano
+et al., 2020). Adaptive variants target coverage            Vt = {e : a(e)  t, e not retracted at t}. (2)
+
+                                                         3
+                 Family              Output    Time Cost Mode after PIT Asym.
+
+                 RAG / adaptive      answer    fixed fixed         no   optional no
+
+                 Verification        verdict   fixed given         no   optional no
+
+                 Selective          answer/abstain fixed fixed     no                     no partial
+
+                 Financial RAG answer/verdict fixed fixed          no                     partial no
+
+                 This work       answer/set/abstain endog. endog.  yes                    yes  yes
+
+Table 1: Capability map. "Fixed" means the dimension is part of the task specification rather than a decision.
+"Optional" means some systems enforce the constraint but it is not part of the output contract. "Partial" means
+cost-sensitive variants exist but the interface does not choose the mode. PIT: point-in-time.
+
+The feasible set is                                              3.4 Objective and planner
+
+              St = S(q)  S(e).                 (3)               The planner minimizes the expected decision loss
+                                                                 plus evidence and delay costs:
+                               eVt
+
+A policy is valid at t only if it is Ft-measurable.              J() = E L(output, y)
+This is the point-in-time condition. Waiting ad-
+                                                                   +                           (e) +  (t - t0) , (8)
+vances t; it does not reveal evidence before its
+
+availability time.                                                      eacquired
+
+3.2 Credal state and actions                                     where t0 is the query start time and   0 is the per-
+                                                                 unit delay cost. There is no hard budget constraint.
+Let Hq = {h1, . . . , hK} be a finite partition of               At a belief bt, the stop value is
+the outcome space, and let bt  (Hq) be a
+belief over Hq. In the revenue-guidance task,                    S(bt) = min              Ebt [Lans(a, y)],
+Hq = {below, within, above}. The output actions
+are                                                                            a, RC(bt)                           (9)
+
+                                                                                          Ebt [Lset(R, y)], abs ,
+
+  Aout = {answer(a), adjudicate(R), abstain},                    where C(bt) = {R  Hq : bt(R)  1 - } is
+                                                         (4)     the set of credible sets. In the experiments R is the
+                                                                 deterministic greedy set formed by adding labels in
+where a  Hq is a point answer and R  Hq is a                     decreasing posterior order until the mass reaches
+credible set. The evidence actions are acquire(e)                1 - ; this is a minimal-mass set, not necessarily
+and wait(). Acquiring evidence pays (e) and                      the minimum-cardinality set. We use  = .1 in
+updates bt; waiting advances t and pays a delay                  the main configuration. Waiting for the next filing
+cost.                                                            costs
+
+3.3 Loss
+
+The loss separates point answers, credible sets, and                   W (bt) = a +  d^+ Eo [S(bt | o)] , (10)
+
+abstentions:                                                     where a is the filing cost, d^ is a company-
+                                                                 historical delay estimate, and the expectation is
+                                                                 over the observation o that the filing will reveal.
+                                                                 The planner waits when W (bt) < S(bt) + mstop,
+                 0             a = y,                            where mstop is a conservative margin for calibration
+                               a = above, y = below,             error. The margin is a design choice, not a learned
+                               a = below, y = above,             parameter.
+                               else,
+                                                                    The evidence model supplies bt. The benchmark
+Lans(a,  y)   =  over                                            uses a multinomial logistic regression on point-in-
+                 under                                           time features, calibrated by temperature scaling
+                                                                 on internal company-disjoint folds; the selected
+                                                                 decision layer uses a random forest on the same
+                                                                 features with raw forest probabilities (Section 6).
+                 wrong                                           Section 5 describes the features and the calibration
+                                                                 protocol. In the real benchmark the evidence set is
+                                               (5)               fixed at the cutoff and the planner is the one-step
+
+Lset(R, y) =1[y / R] miss                      (6)
+
+                     + width max(0, |R| - 1),
+
+                 Labs(y) = abstain.            (7)
+
+The default parameters are over = 12, under = 8,
+wrong = 10, miss = 8, width = 2, and abstain = 5.
+Overclaiming costs more than underclaiming. The
+width term prices an uninformative credible set.
+Section 6 reports a grid over these parameters; no
+conclusion rests on one setting.
+
+                                                              4
+Bayes action over answer, adjudicate, and abstain;         are computed on out-of-fold predictions from the
+waiting and evidence acquisition are evaluated only        training companies; the held-out test fold is never
+in the controlled diagnostic (Appendix C.8). The           used for fitting, alpha tuning, or policy selection.
+contribution is the interface and the evaluation, not      The switching margin is a simplicity/conservatism
+a new classifier.                                          choice, and Appendix B.7 reports its sensitivity.
+
+3.5 Fixed interfaces as special cases                         On the reported loss grid the selector chooses
+                                                           fixed adjudication for the base, symmetric, over-
+The formulation contains the standard interfaces.          averse, under-averse, expensive-abstention, narrow-
+A fixed-cutoff RAG system fixes t and restricts the        width, and alpha configurations; abstention under
+output to answer. A claim verifier fixes the output        cheap abstention; and the planner under the wide-
+to a verdict and treats the evidence as given. A           width penalty. The same rule is used in every cell.
+selective classifier restricts the output to answer or     We also tested a conformal alternative (LAC/APS
+abstain and fixes t. A fixed-budget system stops           sets with a realized calibration threshold); it is spec-
+after k actions. A pre-hoc router chooses the mode         ified in Appendix C.10 but is not the selected pol-
+before evidence and does not acquire or wait. Each         icy.
+is a restriction of the action set, the decision time,
+or the output contract. The restrictions are useful        4 When Fixed Interfaces Fail
+when the loss regime is known and stable. They
+are not general.                                           We state three propositions. The proofs are in Ap-
+                                                           pendix A. The propositions are modest: they iden-
+3.6 Why this is not a router                               tify conditions under which a fixed interface cannot
+                                                           be Bayes-optimal. They are not a general theory of
+A router maps a pre-evidence observation to a              financial decision making.
+mode. The planner maps a post-evidence belief
+to an action. The difference is not cosmetic. First,       Proposition 1 (Point-answer insufficiency). If St
+the optimal mode can change after evidence: a              is not a singleton and the loss is asymmetric, then
+claim that looks precise at query time may only            no point answer is minimax-optimal for every pos-
+support a credible set after the guidance range is         terior consistent with St. A credible set can have
+read. Second, the planner can acquire evidence or          strictly lower worst-case risk when the cost of a
+wait; a router cannot. Third, the value of waiting         wrong answer exceeds the width penalty.
+depends on the loss and the delay cost, so the same
+query can require different decisions in different         Proposition 2 (Relevance insufficiency). If a rel-
+regimes. Appendix C.8 reports a controlled diag-           evance score is constant on a fiber that contains
+nostic in which the mode is informative only for           evidence with different constraints, then the score
+half of the cases and is independent of the features       is not a sufficient statistic for the Bayes action. A
+a router can see.                                          policy that uses only the score has a worst-case
+                                                           loss gap.
+3.7 Policy portfolio and selection
+                                                           Proposition 3 (Pre-hoc routing insufficiency). If
+The decision layer has three candidate output poli-        the optimal output mode depends on evidence ob-
+cies at a belief bt: fixed adjudication with the cred-     served after the routing decision, then no pre-hoc
+ible set C(bt), abstention, and the belief-driven          router is optimal for all queries. A state-dependent
+planner. The fixed and planner candidates tune             planner can improve.
+  {.05, .10, .20} on a company-disjoint val-
+idation split. A conservative selector compares               The propositions have direct design implications.
+the validation loss of the fixed candidate with the        The output contract must include a credible set, not
+two alternatives and switches only when a candi-           only a point answer. Evidence must be typed by its
+date improves validation loss by at least a margin         constraint content, not only by a scalar relevance
+mswitch = .15. The selected policy is applied to           score. The mode must be chosen after evidence, not
+the test fold; test outcomes are never used for se-        before it. Appendix A adds a fourth proposition:
+lection. Point answers are not a selector candidate:       when marginal value of information and marginal
+they are dominated on validation in every cell of          cost vary across queries, no fixed budget is optimal
+the reported grid, but they remain in the oracle           for all queries.
+comparator that defines regret. Validation losses
+
+                                                        5
+5 Benchmark and Evidence Model                            claims from the other four folds whose outcome
+                                                          date is before January 1 of Y . The test company
+5.1 Data                                                  is never in the training set, and no outcome from
+                                                          Y or later is used. The fold assignment is repeated
+The benchmark contains 1,005 quarterly revenue-           with five seeds. Each claim is evaluated once per
+guidance claims from U.S. SEC 8-K filings be-             seed. The decision-layer RF evaluation repeats the
+tween 2010 and 2025. Each claim contains a                fold assignment with ten seeds.
+guided revenue range. The realized quarter is taken
+from SEC XBRL, with a reported-filing fallback               This protocol is stricter than a random split and
+when XBRL has no standalone quarter. The out-             closer to the use case. A random split leaks com-
+come label is below, within, or above the guided          pany identity and future outcomes. A simple tem-
+range. The corpus is split temporally into 529 devel-     poral split still trains on the test company's earlier
+opment claims (2010­2018), 203 validation claims          claims. The year-wise company-disjoint protocol
+(2019­2021), and 273 test claims (2022­2025); the         removes both sources of leakage.
+year-wise protocol below re-splits the test claims
+by company fold. The full data has 538 above,             5.3 Evidence model and calibration
+307 within, and 160 below claims. The test split
+contains 273 claims: 84 in 2022, 70 in 2023, 67 in        The evidence model uses point-in-time features:
+2024, and 52 in 2025. Across the full data there are      guidance width, current-quarter value relative to
+289 companies. The test split has 126 above, 110          the guidance midpoint, the ratio of guidance to
+within, and 37 below claims, and its sector mix is        current quarter, the number and outcome distri-
+113 other, 83 semiconductor, 71 software, 5 hard-         bution of prior outcomes public before the cutoff,
+ware, and 1 health. Static financial QA benchmarks        previous-guidance growth and width, target quarter,
+(Chen et al., 2021; Zhu et al., 2021; Islam et al.,       cutoff year, and sector. The model is a multinomial
+2023; Xie et al., 2024) cannot evaluate a decision        logistic regression with C = 1.0 and balanced
+time because their answers do not arrive after the        class weights. We deliberately use a simple model.
+query; the benchmark here uses a later outcome            The experiment is about the decision interface, not
+as the label. Appendix C.6 adds a rolling-origin          about the strength of the reader.
+extension over 737 claims from 2015­2025.
+                                                             Probabilities from the logistic model are cali-
+   Guidance ranges are extracted from 8-K earnings        brated by temperature scaling. The temperature
+releases. Annual and segment rows are rejected; the       is fitted on out-of-fold predictions from internal
+realized quarter is matched to the first XBRL fact        company-disjoint folds of the training data, and ap-
+near the target quarter; actuals outside 0.5­2.0×         plied to the test fold. Calibration does not change
+the guidance midpoint are rejected; and claims are        the argmax prediction or the benchmark's accu-
+deduplicated to the earliest claim per company and        racy and macro F1. It changes the confidence and
+target period. The released JSON retains the SEC          the credible-set width used by the planner. The
+URL, claim text, guidance range, current-quarter          random-forest decision layer uses raw forest proba-
+value, outcome, and verification provenance for           bilities (temperature 1.0); a calibrated forest variant
+every claim.                                              was not selected. Section 6 reports both raw and
+                                                          calibrated logistic decision results.
+   The claims are automatically extracted para-
+phrases of filing text. The outcomes are mostly           5.4 Metrics and controls
+XBRL actuals: 936 of 1,005 labels are XBRL-
+verified, XBRL-overridden, or XBRL-searched.              The primary metrics are balanced accuracy (mean
+The remaining 69 labels are text-only. We report          per-class recall) (Brodersen et al., 2010) and macro
+a verified-only sensitivity that excludes the 46 test     F1 (Sokolova and Lapalme, 2009). The test dis-
+claims with text-only labels. This is a label-noise       tribution is class-imbalanced, and plain accuracy
+check, not a human-annotated gold standard.               is dominated by the above class; a classifier that
+                                                          always predicts above obtains .462 plain accuracy
+5.2 Year-wise company-disjoint protocol                   but .333 balanced accuracy and .211 macro F1. We
+                                                          also report plain accuracy, selective accuracy at
+The protocol evaluates all 273 test claims under a        50% coverage, AURC, ECE, Brier score, and log
+company-disjoint, point-in-time split. Each com-          loss. AUROC and AP are macro one-vs-rest. ECE
+pany is assigned to one of five folds by a seeded         uses ten equal-width bins on the maximum pre-
+hash. For test year Y , the model is trained on           dicted probability. Brier is the sum of squared class
+
+                                                       6
+probabilities, and log loss is the natural logarithm.                          All labels Verified Prior
+Selective accuracy at 50% ranks claims by maxi-                                (n = 273) (n = 227) control
+mum probability and evaluates the top half; AURC
+is the mean risk at coverage levels 0.1, 0.2, . . . , 1.0,     Balanced accuracy .566  .564               .346
+not a trapezoidal integral. Decision losses in Ta-
+bles 3 and 6 are mean per-claim losses. Confidence             gain [95% CI] [.167, .295] [.164, .294]
+intervals are paired bootstrap intervals over claims;
+Appendix B lists the resample counts. For the accu-            Macro F1        .504    .488               .337
+racy difference, we also report a claim-level anal-
+ysis that averages each claim's correctness over               gain [95% CI] [.228, .359] [.194, .338]
+the five fold seeds and bootstraps claims; this is
+the conservative unit because the five seeds are not           Plain accuracy  .517    .498               .410
+independent replications.
+                                                               gain [95% CI] [-.033, .143] [-.088, .097]
+   Two controls address alternative explanations.
+The featureless prior control samples labels from              Selective@50    .584    .535
+the training-fold class distribution and therefore
+matches the class frequencies without using fea-               AURC            .412    .458
+tures. It tests whether the model's gain is only class
+rebalancing. The XBRL-verified sensitivity tests               Table 2: Company-disjoint benchmark. The model is
+whether the gain depends on the 46 text-only test              a five-seed probability ensemble. Intervals are paired
+labels. The verified set has 227 claims.                       bootstrap intervals over claims for the gain over the
+                                                               majority baseline. The prior control samples labels from
+6 Results                                                      the training-fold class distribution. Verified excludes 46
+                                                               text-only test labels.
+6.1 The evidence model generalizes across
+      companies                                                6.2 A tuned fixed adjudicator is a strong base
+                                                                     policy
+Table 2 reports the benchmark results. On all la-
+bels, balanced accuracy is .566 versus .333 for the            On the non-LLM random-forest backbone the fixed
+majority baseline, a gain of .232 with a 95% inter-            adjudicator has base loss 2.932, the planner 3.011,
+val of [.167, .295]. Macro F1 is .504 versus .211,             the point label 4.710, and always-abstain 5.000.
+a gain of .294 [.228, .359]. On the 227 XBRL-                  The planner alone is worse than the fixed adjudi-
+verified claims, balanced accuracy is .564 versus              cator at base; the fixed policy is the one to beat.
+.333, a gain of .230 [.164, .294], and macro F1 is             The portfolio therefore selects fixed adjudication
+.488 versus .220, a gain of .268 [.194, .338]. The             at base and matches the oracle fixed loss exactly
+featureless prior control obtains balanced accuracy            (regret 0.000). The planner here is the one-step
+.346 and macro F1 .337 on all labels, and .340 and             Bayes action over output modes with fixed evi-
+.334 on verified labels. The model is far above                dence; it does not wait or acquire evidence. The
+the control, so the gain is not only a change in               forest uses 200 trees, min_samples_leaf=3,
+predicted-class frequencies.                                   balanced subsampling, raw probabilities (temper-
+                                                               ature 1.0), and the same point-in-time features as
+   Plain accuracy is .517 versus .462 on all labels,           the structured model; it consumes no text.
+but its interval includes zero, and on verified la-
+bels it is .498 versus .493. The selective-accuracy            6.3 The portfolio matches the oracle fixed
+gain is positive and AURC is lower on all labels,                    policy across regimes
+but neither is significant on verified labels. We
+therefore do not claim a uniform plain-accuracy                Table 3 reports the ten loss configurations. The
+or selective-prediction win. The robust result is              selector chooses fixed adjudication in eight config-
+the class-imbalance-robust pair: balanced accuracy             urations, abstention under cheap abstention, and
+and macro F1.                                                  the planner under the wide-width penalty. Its loss
+                                                               equals the oracle best fixed policy in nine configu-
+                                                               rations and is lower under wide width: 4.340 ver-
+                                                               sus 4.710 (regret -0.370, 95% claim-level boot-
+                                                               strap CI [-0.643, -0.100]). Mean regret is -0.037
+                                                               (95% bootstrap CI [-0.064, -0.010]) and maxi-
+                                                               mum regret is 0.000. The selected-policy pattern
+                                                               is produced by validation loss with a .15 switching
+                                                               margin; test outcomes are not used.
+
+                                                                  The result is not a base-loss win: at base the
+                                                               optimal action is the fixed adjudicator, and the port-
+                                                               folio matches it. It is an oracle-level regret result.
+                                                               A single fixed policy is not uniformly near-optimal:
+                                                               the tuned adjudicator has mean regret +0.146 and
+
+                                                            7
+Loss         Selected Portfolio Best Regret                     0.000; this four-cell mean is not comparable to the
+                                                                ten-cell mean above. This is a seed-level replica-
+             policy             fixed                           tion on the same claims, not a new claim sample.
+
+Base         fixed       2.932  2.932  .000                        The backbone matters. The logistic model has
+                         2.932  2.932  .000                     higher point balanced accuracy than RF (.564 ver-
+Symmetric    fixed       2.932  2.932  .000                     sus .485) but a worse planner loss: its planner is
+                         2.932  2.932  .000                     around 3.44 at base versus 3.29 for the tuned adjudi-
+Over-averse  fixed       2.000  2.000  .000                     cator. The DeepSeek-backed conformal alternative
+                         2.932  2.932  .000                     reaches 3.101 at base and 1.947/1.053/4.447 under
+Under-averse fixed       0.963  0.963  .000                     cheap abstention/narrow width/wide width, but a
+                         4.340  4.710  -.370                    masked-company run attenuates the base advan-
+Cheap abstain abstain    2.932  2.932  .000                     tage (3.119 versus 3.108) and the model may have
+                         2.932  2.932  .000                     seen 2022­2025 outcomes. We therefore treat the
+Expensive abstain fixed                                         non-LLM RF portfolio as the primary evidence and
+                                                                DeepSeek as a sensitivity (Appendix C.10).
+Narrow width fixed
+                                                                6.4 Calibration and label verification
+Wide width   planner
+                                                                On the logistic evidence model, raw probabilities
+Alpha .05    fixed                                              give the planner mean regret .287 and maximum
+                                                                .601 on verified labels, and the planner-versus-
+Alpha .20    fixed                                              answer interval includes zero. Temperature scaling
+                                                                reduces the mean over the ten loss configurations
+Table 3: Loss-aware portfolio on 227 XBRL-verified              to .052 and makes the planner-versus-answer com-
+claims with a non-LLM random-forest backbone over               parison significant in four of five seeds. The plan-
+ten seeds on company-disjoint folds. The policy is se-          ner still has slightly higher base loss than always-
+lected by validation loss with a .15 switching margin;          adjudicate (3.997 versus 3.919); the fixed adjudi-
+the test fold is evaluated once. "Best fixed" is the oracle     cator is the strong base policy. This is a calibra-
+minimum of point, tuned fixed adjudicator, and always-          tion check for the structured backbone, not for the
+abstain at the configuration's cost. Regret is portfolio        DeepSeek conformal layer, which selects its own
+minus best fixed. Under wide width the oracle best fixed        threshold on calibration data. On all labels, cal-
+is the point answer (4.710); the tuned fixed adjudicator        ibrated logistic probabilities give planner mean
+is 5.235. The portfolio matches the oracle in nine con-         regret .036 and maximum .352; the fixed-policy
+figurations and improves under wide width.                      ordering is unchanged. The evidence-model result
+                                                                does not depend on the 46 text-only labels.
+maximum +0.932 over the same grid, and point
+answers have mean +1.982 and maximum +3.747.                    6.5 Negative results
+The portfolio is at or below the best fixed policy in
+every configuration and strictly better in the wide-            Several negative results belong to the claim. Plain
+width regime.                                                   accuracy and selective prediction are not robust
+                                                                to label verification. The planner alone is worse
+Confirmatory seed replication. The wide-width                   than the fixed adjudicator at the base loss (3.011
+regime was identified on seeds 1­10 and the op-                 versus 2.932), and we do not claim a base-loss win;
+erational protocol was written before seeds 11­                 the portfolio matches the optimal fixed policy at
+20 (Appendix B). The confirmatory run covers                    base. Under cheap abstention the best fixed policy
+four cells (base, cheap abstention, narrow width,               is always-abstain at 2.000, and the portfolio selects
+wide width). On the ten new fold assignments                    it; the planner alone is 2.035. The current-quarter
+the portfolio again selects fixed adjudication at               anchor is not worth its cost in a separate pilot. In
+base and narrow width, abstention under cheap                   a separate temporal protocol, an oracle-mode pre-
+abstention, and the planner under wide width. The               hoc router has base loss 3.516 versus 3.927 for
+base loss is 2.886, exactly the oracle fixed value.             the raw planner. Across the ten configurations the
+The planner alone is 2.984 versus 2.885 for the                 two policies each win five: the router wins at base,
+fixed adjudicator, a difference of +0.099 (95% CI               symmetric, over-averse, expensive abstention, and
+[0.001, 0.211]); the pre-specified .2 non-inferiority            = .05, and the planner wins under under-averse,
+margin is therefore not met, and the portfolio's
+base match comes from selecting the fixed pol-
+icy, not from the planner. For the wide-width
+cell, the pre-specified primary comparison is the
+planner minus the width-tuned fixed adjudicator:
+4.335 versus 5.200 (difference -0.865, 95% CI
+[-1.226, -0.490]). Against the oracle best fixed
+policy, which is the point answer at 4.687, the re-
+gret is -0.352 (95% CI [-0.644, -0.065]). Over
+the four confirmatory cells, mean regret is -0.088
+(95% CI [-0.161, -0.016]) and the maximum is
+
+                                                             8
+cheap abstention, narrow width, wide width, and            end QA accuracy. The loss weights are a modeling
+ = .20 (Appendix C.7). The DeepSeek confor-                choice; the ten-configuration grid is the defense,
+mal result is sensitive to masking, and the logistic       not a universal weight vector. The controlled mode-
+backbone does not reproduce the RF result. The             switching signal is synthetic. The system is an
+controlled diagnostic (Appendix C.8) shows mode            evidence-adjudication prototype, not investment
+switching is possible, but real data lacks the signal.     advice, and should not be deployed without human
+                                                           oversight.
+7 Discussion and Limitations
+                                                           8 Conclusion
+The results support a specific view of financial ev-
+idence systems. The output contract is a decision          Forward-looking financial claims do not have a
+variable. A system that fixes the contract can be          fixed output contract. A system must decide when
+optimal in one loss regime and poor in another. The        to decide, what evidence to acquire, and how to an-
+portfolio is a decision rule over candidate contracts;     swer. We formalized the interface, showed why
+its value comes from reading the loss and the vali-        fixed output modes fail, and built a year-wise
+dation evidence, not from a stronger point reader.         company-disjoint benchmark of 273 claims. On
+The non-LLM random-forest backbone makes the               verified labels, the evidence model raises balanced
+primary result clean; the DeepSeek conformal al-           accuracy from .333 to .564 and macro F1 from .220
+ternative is a sensitivity, not the main evidence.         to .488. On a non-LLM random-forest backbone, a
+                                                           loss-aware portfolio over fixed adjudication, absten-
+   A tuned fixed adjudicator is a strong base policy.      tion, and the planner matches the oracle best fixed
+It wins when the width penalty is small relative to        policy in nine of ten loss configurations and beats
+the cost of a wrong answer, and it is the policy to        it under wide width (4.340 versus 4.710). Mean
+beat at the base loss. The portfolio selects it there      regret is -0.037 and maximum regret is 0.000; a pre-
+and matches the oracle fixed loss; it selects absten-      specified seed replication confirms the wide-width
+tion under cheap abstention and the planner under          gain and an exact base match. No fixed output
+wide width. The gain is not a uniform method               interface is uniformly optimal, and a loss-aware
+win; it is an oracle-level regret result. The loss         selector attains oracle-level regret.
+grid is a sensitivity analysis, not a tuning set: the
+same rule is used in every cell, and a different grid      References
+would change absolute losses but not the ordering
+of fixed-policy regret.                                    Anastasios N. Angelopoulos and Stephen Bates. 2021.
+                                                              A gentle introduction to conformal prediction and
+   The benchmark has limits. The claims are auto-             distribution-free uncertainty quantification. Preprint,
+matically extracted paraphrases, and 69 of 1,005              arXiv:2107.07511.
+labels are text-only; the verified-only check pre-
+serves the balanced-accuracy and macro-F1 gains            Akari Asai, Zeqiu Wu, Yizhong Wang, Avirup Sil, and
+but is not a human-annotated gold standard. The               Hannaneh Hajishirzi. 2024. Self-RAG: Learning to
+RF backbone has lower point balanced accuracy                 retrieve, generate, and critique through self-reflection.
+than the logistic model; its set-valued decisions are         In International Conference on Learning Representa-
+better, so point accuracy and decision quality di-            tions.
+verge. The six named baselines are prompt-level
+adaptations under one backbone, not official im-           Kay Henning Brodersen, Cheng Soon Ong, Klaas Enno
+plementations; they return a label confidence and             Stephan, and Joachim M. Buhmann. 2010. The bal-
+a credible set rather than a normalized three-class           anced accuracy and its posterior distribution. In Pro-
+distribution, so we do not compare NLL or Brier               ceedings of the 20th International Conference on
+across rows. The portfolio switching margin is a              Pattern Recognition, pages 3121­3124.
+design choice; Appendix B.7 reports its sensitiv-
+ity and Appendix B reports the confirmatory seeds.         Siyuan Chen, Huaye Tan, Li You, and Jiajun
+The DeepSeek conformal result may inherit pre-                Liang. 2026. HC-RAG: Evidence-centric retrieval-
+training exposure, and masking attenuates its base            augmented generation over heterogeneous financial
+advantage; we do not treat it as clean evidence. The          filings. Preprint, arXiv:2608.12335.
+task covers revenue guidance only, with no reader
+or answer-level gold, so it does not measure end-to-       Zhiyu Chen, Wenhu Chen, Charese Smiley, Sameena
+                                                              Shah, Iana Borova, Dylan Langdon, Reema Moussa,
+                                                              Matt Beane, Ting-Hao Huang, Bryan Routledge, and
+                                                              William Yang Wang. 2021. FinQA: A dataset of
+
+                                                        9
+   numerical reasoning over financial data. In Proceed-         Zhengbao Jiang, Fangkai Xu, Luyu Gao, Zhiqing Sun,
+   ings of the 2021 Conference on Empirical Methods                Qian Liu, Jane Dwivedi-Yu, Yiming Yang, Jamie
+   in Natural Language Processing, pages 3697­3711.                Callan, and Graham Neubig. 2023. Active retrieval
+                                                                   augmented generation. In Proceedings of the 2023
+Jijun Chi, Zhenghan Tai, Hanwei Wu, Tung                           Conference on Empirical Methods in Natural Lan-
+   Sum Thomas Kwok, Hailin He, Zixing Liao, Bohuai                 guage Processing, pages 7969­7992.
+   Xiao, Chaolong Jiang, Jianliang Lei, Jerry Huang,
+   Peng Lu, Muzhi Li, Liheng Ma, Yihong Wu, Sicheng             Vikram Krishnamurthy. 2017. POMDP struc-
+   Lyu, Jingrui Tian, Yihan Li, Yanzhang Ma, Ding-                 tural results for controlled sensing. Preprint,
+   tao Hu, and Yufei Cui. 2026. FinSAgent: Corpus-                 arXiv:1701.00179.
+   aligned multi-agent RAG framework for evidence-
+   grounded SEC filing question answering. Preprint,            Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio
+   arXiv:2607.18102.                                               Petroni, Vladimir Karpukhin, Naman Goyal, Hein-
+                                                                   rich Kuttler, Mike Lewis, Wen-tau Yih, Tim Rock-
+C. K. Chow. 1970. On optimum recognition error and                 taschel, Sebastian Riedel, and Douwe Kiela. 2020.
+   reject tradeoff. IEEE Transactions on Information               Retrieval-augmented generation for knowledge-
+   Theory, 16(1):41­46.                                            intensive NLP tasks. In Advances in Neural Infor-
+                                                                   mation Processing Systems, volume 33, pages 9459­
+Charles Elkan. 2001. The foundations of cost-sensitive             9474.
+   learning. In Proceedings of the 17th International
+   Joint Conference on Artificial Intelligence, pages 973­      Marcos López de Prado. 2018. Advances in Financial
+   978.                                                            Machine Learning. Wiley.
+
+Yonatan Geifman and Ran El-Yaniv. 2017. Selec-                  Charles F. Manski. 2003. Partial Identification of Prob-
+   tive classification for deep neural networks. In Ad-            ability Distributions. Springer.
+   vances in Neural Information Processing Systems,
+   volume 30.                                                   Sasan Mansouri, Daniel Saad, Mark Wahrenburg,
+                                                                   Manu Weissel, and Fabian Woebbeking. 2026. Fin-
+Isaac Gibbs and Emmanuel J. Candès. 2021. Adaptive                 Rank: An evidence-grounded benchmark for finan-
+   conformal inference under distribution shift. In Ad-            cial question answering and retrieval over SEC filings.
+   vances in Neural Information Processing Systems,                Preprint, arXiv:2608.07400.
+   volume 34, pages 1660­1672.
+                                                                Aman Rangapur, Haoran Wang, Ling Jian, and Kai Shu.
+Chuan Guo, Geoff Pleiss, Yu Sun, and Kilian Q. Wein-               2025. Fin-Fact: A benchmark dataset for multimodal
+   berger. 2017. On calibration of modern neural net-              financial fact-checking and explanation generation.
+   works. In Proceedings of the 34th International Con-            In Companion Proceedings of the ACM Web Confer-
+   ference on Machine Learning, volume 70 of Pro-                  ence 2025, pages 785­788.
+   ceedings of Machine Learning Research, pages 1321­
+   1330.                                                        Yaniv Romano, Matteo Sesia, and Emmanuel J. Candès.
+                                                                   2020. Classification with valid and adaptive cover-
+D. Eric Hirst, Lisa Koonce, and Shankar Venkataraman.              age. In Advances in Neural Information Processing
+   2008. Management earnings forecasts: A review and               Systems, volume 33, pages 3581­3591.
+   framework. Accounting Horizons, 22(3):315­338.
+                                                                Noah Shinn, Federico Cassano, Ashwin Berman, Ashay
+Pranab Islam, Anand Kannappan, Douwe Kiela, Re-                    Gopinath, Karthik Narasimhan, and Shunyu Yao.
+   becca Qian, Nino Scherrer, and Bertie Vidgen. 2023.             2023. Reflexion: Language agents with verbal rein-
+   FinanceBench: A new benchmark for financial ques-               forcement learning. In Advances in Neural Informa-
+   tion answering. Preprint, arXiv:2311.11944.                     tion Processing Systems, volume 36.
+
+Seongyun Jeong, Jinheon Baek, Soyeong Cho, Sung Ju              Marina Sokolova and Guy Lapalme. 2009. A system-
+   Hwang, and Jangwon Park. 2024. Adaptive-RAG:                    atic analysis of performance measures for classifica-
+   Learning to adapt retrieval-augmented large language            tion tasks. Information Processing and Management,
+   models through question complexity. In Proceedings              45(4):427­437.
+   of the 2024 Conference of the North American Chap-
+   ter of the Association for Computational Linguistics,        Vladimir Vovk, Alex Gammerman, and Glenn Shafer.
+   pages 7039­7053.                                                2005. Algorithmic Learning in a Random World.
+                                                                   Springer.
+Yidong Jiang, Junrong Chen, Eftychia Makri, Jialin
+   Chen, Peiwen Li, Ali Maatouk, Leandros Tassiu-               Qianqian Xie, Weiguang Han, Zhengyu Chen, Ruoyu
+   las, Eliot Brenner, Bing Xiang, and Rex Ying. 2026.             Xiang, Xiao Zhang, Yueru He, Mengxi Xiao, Dong
+   Fin-RATE: A real-world financial analytics and track-           Li, Yongfu Dai, Duanyu Feng, Yijing Xu, Haoqiang
+   ing evaluation benchmark for LLMs on SEC filings.               Kang, Ziyan Kuang, Chenhan Yuan, Kailai Yang,
+   Preprint, arXiv:2602.07294.                                     Zheheng Luo, Tianlin Zhang, Zhiwei Liu, Guojun
+                                                                   Xiong, and 15 others. 2024. FinBen: A holistic
+                                                                   financial benchmark for large language models. In
+                                                                   Advances in Neural Information Processing Systems,
+                                                                   volume 37.
+
+                                                            10
+Shi-Qi Yan, Jia-Chen Gu, Yun Zhu, and Zhen-Hua Ling.          mode of q1 is a point answer and the optimal mode
+   2024. Corrective retrieval augmented generation.           of q2 is adjudication. A pre-hoc router maps the
+   arXiv preprint arXiv:2401.15884.                           common pre-evidence observation to one mode,
+                                                              so it is wrong on at least one query. A planner
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak              that observes e can choose the mode separately for
+   Shafran, Karthik Narasimhan, and Yuan Cao. 2023.           each query. The loss gap is positive whenever the
+   React: Synergizing reasoning and acting in language        loss difference between the modes is positive. This
+   models. In International Conference on Learning            proves the claim.
+   Representations.
+                                                              A.4 Fixed-budget suboptimality
+Yilun Zhao, Yitao Long, Tintin Jiang, Chengye Wang,
+   Weiyuan Chen, Hongjun Liu, Xiangru Tang, Yiming            When marginal value of information and marginal
+   Zhang, Chen Zhao, and Arman Cohan. 2024. FinD-             cost vary across queries, no fixed budget is optimal
+   Ver: Explainable claim verification over long and          for all queries. Construct two queries. In the first,
+   hybrid-content financial documents. In Proceedings         the first evidence item resolves the decision, so
+   of the 2024 Conference on Empirical Methods in             stopping after one item is optimal. In the second,
+   Natural Language Processing, pages 14739­14752.            the first item is uninformative and a second item
+                                                              is needed. A fixed budget of one is suboptimal for
+Fengbin Zhu, Wenqiang Lei, Youcheng Huang, Chao               the second query; a fixed budget of two is wasteful
+   Wang, Shuo Zhang, Jiancheng Lv, Fuli Feng, and Tat-        for the first. An endogenous stopping rule can
+   Seng Chua. 2021. TAT-QA: A question answering              stop at different times. This is the fixed-budget
+   benchmark on a hybrid of tabular and textual content       suboptimality proposition.
+   in finance. In Proceedings of the 59th Annual Meet-
+   ing of the Association for Computational Linguistics,      B Protocol Details
+   pages 3277­3287.
+                                                              B.1 Label provenance
+A Proofs
+                                                              The full dataset has 1,005 claims. The label source
+A.1 Proof of Proposition 1                                    distribution is 810 XBRL-searched, 120 XBRL-
+                                                              verified, 6 XBRL-overridden, 57 text-only, and
+Let St be non-singleton and choose x1 = x2 in St.             12 text-only-mismatch. "XBRL-verified" means
+A point answer a = x1 incurs Lans(x1, x2) > 0; a              the XBRL fact agrees with the filing text, "XBRL-
+point answer a = x2 incurs Lans(x2, x1) > 0. The              overridden" means the XBRL value replaces a text
+credible set R = {x1, x2} incurs Lset(R, xi) =                value, and "XBRL-searched" means the fact was
+width for i  {1, 2} and no miss cost. If                      found by searching XBRL tags. "Text-only" has
+width < min{Lans(x1, x2), Lans(x2, x1)}, the set-             no standalone XBRL quarter; "text-only-mismatch"
+valued action has strictly lower worst-case risk.             has a later XBRL value that disagrees with the first
+The same construction applies to any non-singleton            report. The verified-only sensitivity keeps the first
+St by selecting two outcomes. This proves the                 three categories, for 227 of the 273 test claims.
+claim.                                                        The paraphrase claim text is not human-annotated.
+                                                              The outcome bucket is computed from the realized
+A.2 Proof of Proposition 2                                    revenue and the guided range.
+
+Let r be a relevance score and let Fr be a fiber              B.2 Features
+on which r is constant. Suppose e, e  Fr have
+S(e) = S(e). Construct two worlds that are iden-              The numeric features are guidance width, current-
+tical before the evidence and differ in which con-            quarter value divided by guidance midpoint minus
+straint is true. In world 1, the feasible set after e is      one, guidance midpoint divided by current-quarter
+S(e); in world 2, it is S(e). The Bayes action is a           value minus one, the number of prior outcomes,
+function of the posterior over the feasible set and           the prior outcome distribution for below, within,
+therefore can differ across the worlds. A policy that         and above, previous-guidance growth, previous-
+uses only r observes the same value in both worlds            guidance width, target quarter, and cutoff year. Sec-
+and must choose the same action. The worst-case               tor is a categorical feature. History uses only out-
+loss is at least the difference between the two Bayes         comes with an outcome date before the cutoff.
+risks. This proves the claim.
+
+A.3 Proof of Proposition 3
+
+Construct two queries q1, q2 with the same pre-
+evidence observation. After evidence e, the optimal
+
+                                                          11
+B.3 Hyperparameters and calibration                            Config.        wrong over under miss width abstain alpha
+
+The model is multinomial logistic regression                   Base           10 12 8 8 2     5 .10
+with C = 1.0 and balanced class weights. The                                                  5 .10
+temperature is selected from a grid from 0.5 to 3.0            Symmetric      10 10 10 8 2    5 .10
+by log loss on out-of-fold predictions from internal                                          5 .10
+company-disjoint folds of the training data. The               Over-averse    10 20 5 8 2     2 .10
+selected temperatures range from 1.3 to 2.9. The                                              10 .10
+fold seeds are 1 through 5. The main benchmark                 Under-averse   10 5 20 8 2     5 .10
+uses raw logistic probabilities in a five-seed en-                                            5 .10
+semble; the logistic decision table uses calibrated            Cheap abstain  10 12 8 8 2     5 .05
+probabilities; the random-forest portfolio uses                                               5 .20
+raw forest probabilities (temperature 1.0). The                Expensive abstain 10 12 8 8 2
+forest uses 200 trees, min_samples_leaf=3,
+class_weight=balanced_subsample,                               Narrow width   10 12 8 8 .5
+the default max_features=sqrt, and the fold
+seed as its random state.                                      Wide width     10 12 8 8 4
+
+B.4 Bootstrap and claim-level analysis                         Alpha .05      10 12 8 8 2
+
+Paired bootstrap intervals use 20,000 resamples                Alpha .20      10 12 8 8 2
+for the benchmark accuracy and macro-F1 gains,
+10,000 claim-level resamples for the portfolio re-         Table 4: The ten loss configurations. "Wrong" is a
+gret intervals, and 5,000 resamples for the per-seed       within-neighbor error, "over" an above prediction when
+decision-loss comparisons. The named-baseline              the truth is below, and "under" a below prediction when
+accuracy and AUROC comparisons use 2,000 and               the truth is above.
+500 resamples. The claim-level accuracy analy-
+sis averages each claim's correctness over the five        Margin Under-averse choice Mean regret Max regret
+fold seeds and bootstraps the 273 claims; this re-
+moves fold-assignment noise without treating the               0.00           planner  -.032  +.048
+five seeds as independent samples. The sign-flip                                       -.032  +.048
+permutation test uses 20,000 sign flips.                       0.05           planner  -.032  +.048
+                                                                                       -.037   .000
+B.5 Confirmatory wide-width protocol                           0.10           planner  -.037   .000
+                                                                                       -.037   .000
+The wide-width regime was identified in the                    0.15           fixed
+exploratory seeds 1­10. Before running seeds
+11­20 we fixed the operational-wide protocol:                  0.20           fixed
+the primary loss is width=4 with the other
+base weights, the primary comparison is the                    0.30           fixed
+planner minus the width-tuned fixed adju-
+dicator, and the inference is a paired claim               Table 5: Switching-margin sensitivity on the exploratory
+bootstrap. The protocol file paper/v2/                     ten-seed portfolio. The selected policy is shown only
+confirmatory_wide_protocol.json                            where it changes; all other cells keep the pattern in
+was written on 2026-11-03 at 04:23, before the first       Table 3.
+confirmatory run at 04:28; it records the design and
+the disclosure that this is a seed-level replication,      B.6 Loss configurations
+not a new claim sample. The confirmatory seeds
+use the same 227 XBRL-verified claims and the              Table 4 lists the ten loss configurations used in
+same point-in-time construction but new fold               Tables 3 and 6. The grid varies one or two weights
+assignments. The confirmatory result is reported           at a time around the base configuration; all other
+in Section 6.3. The confirmatory run covers four           weights are held at their base values.
+cells, not the full ten-cell grid; its mean regret is
+therefore not comparable to the ten-cell mean.             B.7 Switching-margin sensitivity
+
+                                                           Table 5 varies the portfolio switching margin on
+                                                           the exploratory ten-seed artifacts. At margins be-
+                                                           low .15 the selector chooses the planner under the
+                                                           under-averse loss and incurs a small positive re-
+                                                           gret (+0.048); the .15 margin avoids that switch.
+                                                           The wide-width selection and the base match are
+                                                           unchanged across the range.
+
+                                                           B.8 Data and code availability
+
+                                                           The 1,005-claim benchmark is released
+
+                                                           as             paper/data/dataset_v4.json
+
+                                                           (SHA-256 c f 2 4 c 3 1 1 8 0 6 c c 1 5 d 2 0 4 b 1
+
+                                                           9b8a52c8f3bae6e91bbee563f448
+
+                                                           cf6643d40923f24), with the manifest
+
+                                                           paper/data/manifest_v4.json (SHA-
+
+                                                           256 54d8db4226c25ffd8cb51d23fa24a7
+
+                                                           8ff9a77f98639abb6afdac64aec97290b
+
+                                                           5). The JSON retains the SEC URL, claim text,
+
+                                                           guidance range, current-quarter value, outcome,
+
+                                                           and verification provenance for every claim. The
+
+                                                       12
+construction rules are summarized in Appendix 5                                    Balanced accuracy               Macro F1
+
+and reproduced in paper/data/README.md.                     XBRL-verified (n=227)
+
+The code is in scripts/ and
+
+src/finplan_rag/;     exact com-
+
+mands are in paper/reproduce.md.
+
+The named-baseline prompts are in                           All labels (n=273)
+
+scripts/run_named_baselines.py.                                                    0.2                0.4          0.2       0.4
+
+Per-claim outputs, parsed labels, credi-                                           Gain over majority baseline
+
+ble sets, and raw response text are in                      Figure 2: Balanced-accuracy and macro-F1 gains over
+                                                            the majority baseline on all labels and on XBRL-verified
+paper/results/named_baselines/.                             labels. Intervals are paired bootstrap intervals over
+                                                            claims.
+The DeepSeek rows use the Anthropic-
+
+compatible endpoint with model identifier
+
+deepseek-flash[1m], temperature 0, think-
+
+ing disabled, and JSON-only prompts; responses              Policy                      Mean loss  loss Seeds
+
+are cached by prompt hash. The provider alias               Always answer               4.712              +.715 0/5
+                                                            Always adjudicate           3.919
+is not a frozen snapshot, so exact regeneration             Always abstain              5.000              -.078 5/5
+                                                            Planner                     3.997
+requires either the same snapshot or the released                                                          +1.003 0/5
+
+per-claim outputs. The protocol files, loss                                                                     ­       ­
+
+configurations, fold seeds, and bootstrap seeds are         Table 6: Base decision loss on 227 XBRL-verified labels
+                                                            with the calibrated logistic backbone. Lower is better.
+in paper/v2/ and paper/results/.                             loss is the policy loss minus the planner loss. "Seeds"
+                                                            counts point estimates in which the policy has lower
+B.9 Prior control                                           loss than the planner across five fold seeds.
+
+The prior control samples a label for each test claim       C.3 Logistic decision table
+from the training-fold class distribution. It uses no
+features and no test outcomes. On all labels it             Table 6 reports the calibrated logistic backbone at
+obtains accuracy .410, balanced accuracy .346, and          the base loss. The planner is slightly worse than
+macro F1 .337. On verified labels it obtains .415,          always-adjudicate (3.997 versus 3.919; the fixed
+.340, and .334. The model's balanced accuracy and           policy wins in 5/5 seeds). This is the strong-base-
+macro F1 are far above these values.                        policy result discussed in Section 6.3.
+
+C Additional Results                                           The logistic conformal sensitivity uses raw out-
+                                                            of-fold probabilities and the expected threshold
+C.1 All-label decision results                              objective. Averaged over five fold seeds, its base
+                                                            loss is 3.343, versus 3.293 for the width-tuned fixed
+Figure 2 summarizes the balanced-accuracy and               adjudicator and 3.443 for the tuned planner. It wins
+macro-F1 gains from Section 6.1. On all 273 la-             under the under-averse loss (3.185 vs. 3.293) and
+bels with calibrated probabilities, the planner has         the wide width penalty (4.736 vs. 5.508), but not
+mean regret .036 and maximum .352. Always-                  at base. The realized objective is less stable on this
+adjudicate has .492 and 3.054, always-answer has            small calibration set and is reported as an ablation
+1.309 and 3.513, and always-abstain has 1.764 and           in the algorithm document.
+6.136. The base planner loss is 3.919, always-
+answer 4.563, always-adjudicate 3.864, and always-          C.4 Reproducibility
+abstain 5.000. The ordering matches the verified
+set.                                                        The benchmark, planner, and figures are generated
+                                                            by scripts in the released repository; Appendix B.8
+C.2 Raw versus calibrated probabilities                     lists the data, code, prompts, and per-claim outputs.
+                                                            The benchmark uses fixed fold seeds and determin-
+On verified labels with raw probabilities, the plan-        istic model fits. The dataset is derived from public
+ner has mean regret .287 and maximum .601.                  SEC filings and XBRL, and the released JSON re-
+Always-adjudicate has .403 and 2.379, always-               tains the SEC source URL for every claim. The
+answer 1.601 and 3.647, and always-abstain 1.882            code records the protocol constants, the feature
+and 6.352. The planner-versus-answer interval in-           list, the ten loss configurations, the bootstrap seeds,
+cludes zero. Calibration is necessary for the signifi-
+cant decision-layer result.
+
+                                                        13
+Planner                Mean regret Max regret                  cation (Zhao et al., 2024), Fin-Fact-style evidence-
+                                                               grounded checking (Rangapur et al., 2025), Self-
+Matched, known loss    .052        .383                        RAG-style self-reflection (Asai et al., 2024),
+                                   6.030                       CRAG-style correction (Yan et al., 2024), FLARE-
+Matched, unknown loss  .821        2.130                       style active retrieval (Jiang et al., 2023), and
+                                                               Adaptive-RAG-style complexity routing (Jeong
+Minimax regret, unknown loss .296                              et al., 2024). Each receives the same point-in-
+                                                               time evidence block: claim text, guidance range,
+Table 7: Loss misspecification on XBRL-verified labels.        current-quarter value, cutoff date, sector, and the
+"Matched, known loss" is the diagonal: optimize and            company's prior outcomes public before the cut-
+evaluate under the same configuration; its maximum is          off. Retrieval-based variants receive the same
+over the ten configurations. "Matched, unknown loss"           six earlier claims from other companies, selected
+averages, for each nominal loss, the regret over all ten       by TF-IDF cosine similarity over claim text plus
+evaluation cells (including the matched cell); the strict      guidance-width, current-quarter-ratio, and sector
+off-diagonal mean is .906. The minimax maximum is              features. FinDVer, Fin-Fact, Self-RAG, and CRAG
+the worst observed per-seed maximum.                           make one call. FLARE first answers without
+                                                               retrieval and revises when confidence is below
+and the per-claim losses; it also contains the RF              .70. Adaptive-RAG routes to a simple, moder-
+decision-layer run, portfolio validation selection,            ate, or complex path with a classifier prompt. All
+metric suite, named baselines, rolling benchmark,              calls use temperature 0, thinking disabled, JSON-
+and conformal alternative. The controlled diagnos-             only output, and one repair retry; responses are
+tic is synthetic and is generated from fixed seeds.            cached by prompt hash. The exact prompts are in
+No online exploration is performed.                            scripts/run_named_baselines.py; per-
+                                                               claim outputs and raw response text are in paper/
+C.5 Loss misspecification                                      results/named_baselines/.
+
+The main grid optimizes and evaluates under the                   FinDVer-style reaches accuracy .551, selec-
+same loss. We also optimize the planner under                  tive@50 .675, and AURC .337; Self-RAG-style
+one configuration and score it under another. The              reaches .546, .684, and .333, the best selective
+matched-loss mean regret is .052, and the maxi-                accuracy and AURC in the table. FinPlan has
+mum over the ten configurations is .383. When the              the best balanced accuracy .561, macro F1
+loss is unknown, the matched planner has mean                  .485, MCC .273, AUROC .716, and AP .524;
+regret .821 and maximum 6.03; the .821 is the                  FinDVer-style has the best accuracy .551. Paired
+average, over the ten nominal losses, of each nom-             McNemar tests against FinPlan do not reject equal
+inal loss's mean regret across all ten evaluation              accuracy for any named baseline (p = .17­1.00).
+cells, including the matched cell. The strict off-             Fin-Fact-style, CRAG-style, FLARE-style, and
+diagonal mean is .906. A minimax-regret variant                Adaptive-RAG-style have lower AUROC than
+that chooses each action to minimize the worst-                FinPlan with 95% intervals excluding zero; the
+case expected regret over the ten configurations has           FinDVer-style and Self-RAG-style differences
+mean .296 and maximum 2.13 across five seeds, at               include zero. No point model is uniformly best,
+a cost of .296 versus .052 under the matched loss.             which is why the decision layer is selected on
+                                                               regret rather than on a single classification metric.
+   Per-nominal mean regret ranges from .196 (al-               Intervals are claim-level bootstrap intervals
+pha=.20) to 1.863 (wide width). The full matrix is             in paper/results/named_baselines/
+in the released artifact.                                      model_comparison_logistic.json; the
+                                                               per-claim artifacts and the metric suite are in
+C.6 Named baselines and rolling benchmark                      paper/results/named_baselines/.
+
+Table 8 reports six named baselines adapted to                    The rolling benchmark is a stress test, not a re-
+the claim-outcome task under the same DeepSeek                 placement for the main 2022­2025 holdout. It
+backbone. All receive the same point-in-time evi-              contains 737 claims from 2015­2025 (the 273 test
+dence; retrieval-based methods receive six earlier             claims plus 464 earlier claims) and covers earlier
+claims from other companies. These are adapta-                 regimes (2015­2021). The yearly accuracy is het-
+tions of the named methods, not official code re-              erogeneous (for example, logistic accuracy is .32 in
+leases. Generic backbones are not presented as
+baselines. The rolling-origin benchmark follows in
+Table 10.
+
+   The six rows are adaptations to this task under
+the same DeepSeek backbone: FinDVer-style verifi-
+
+                                                           14
+                          Model                   Acc. Bal. Macro F1 MCC AUROC AP Sel@50 AURC
+
+                          FinPlan (logistic) .493 .561 .485 .273 .716 .524 .526 .468
+
+                          FinDVer-style           .551 .461 .464 .233 .674 .494 .675 .337
+
+                          Fin-Fact-style          .537 .446 .450 .201 .650 .475 .675 .338
+
+                          Self-RAG-style          .546 .451 .456 .216 .670 .491 .684 .333
+
+                          CRAG-style              .529 .423 .418 .177 .643 .473 .658 .349
+
+                          FLARE-style             .511 .417 .411 .164 .634 .467 .596 .362
+
+                          Adaptive-RAG-style .493 .406 .400 .143 .584 .425 .579 .415
+
+Table 8: Named baselines on 227 XBRL-verified claims. Acc.: accuracy; Bal.: balanced accuracy; MCC:
+Matthews correlation; AP: macro average precision; Sel@50: selective accuracy at 50% coverage; AURC: mean
+risk at coverage levels .1­1.0. The six rows are prompt-level adaptations under the same DeepSeek backbone
+(deepseek-flash[1m], temperature 0, thinking disabled), not official code releases; retrieval-based methods
+receive six earlier claims from other companies. The FinPlan row is the calibrated logistic evidence model; the
+decision portfolio uses the RF backbone. The LLM rows return a label, a confidence, and a credible set, not a
+normalized three-class distribution; we therefore report classification and ranking metrics only. NLL, Brier, and
+ECE are not comparable across these rows and are not shown. No method dominates: FinDVer has the best accuracy,
+Self-RAG the best selective accuracy and AURC, and FinPlan the best balanced accuracy, macro F1, MCC, AUROC,
+and AP. Named baselines inherit the LLM pretraining-contamination caveat. The FinPlan row pools calibrated
+per-claim probabilities across seeds; Table 2 reports a five-seed ensemble of raw probabilities, so the two balanced
+accuracies differ (.561 vs .564).
+
+                     FinPlan                                   Model               Below P/R/F1 Within P/R/F1 Above P/R/F1
+                     FinDVer
+Selective risk  0.7  Fin-Fact                                  FinPlan (logistic)  .29/.82/.43  .63/.39/.48  .63/.47/.54
+                0.6  Self-RAG                                  FinDVer-style       .56/.15/.24  .46/.60/.52  .63/.63/.63
+                0.5  CRAG                                      Fin-Fact-style      .50/.15/.23  .46/.52/.49  .60/.66/.63
+                     FLARE                                     Self-RAG-style      .50/.15/.23  .46/.52/.49  .61/.68/.64
+                     Adaptive-RAG                              CRAG-style          .43/.09/.15  .45/.50/.47  .59/.68/.63
+                                                               FLARE-style         .43/.09/.15  .41/.56/.48  .61/.60/.61
+                                                               Adaptive-RAG-style  .43/.09/.15  .39/.57/.47  .62/.55/.58
+
+                0.4
+
+                                                                                  Table 9: Per-class precision/recall/F1 on the 227 verified
+
+                0.3                                            claims. FinPlan has high below recall but low below
+
+                                                               precision; the named baselines miss below (recall .09­
+
+                     0.2           0.4    0.6     0.8  1.0 .15) and trade minority-class recall for within/above
+
+                                        Coverage               performance.
+
+Figure 3: Selective risk-coverage curves on the 227 veri-      rows are adaptations, not exact reproductions of the
+fied claims. Self-RAG attains the lowest AURC and the          financial systems or of the original method code,
+highest selective accuracy among the named baselines;          and they are not a claim about the published sys-
+FinPlan has higher AURC but stronger balanced accu-            tems' relative quality.
+racy. The curves use the same per-claim probabilities as
+Table 8.                                                       C.7 Real pre-hoc router
+
+2021 and .63 in 2024), so the aggregate is reported            The router is trained on validation (2019­2021)
+with the year slices in the metric artifact rather than        with the ex-post better mode (answer vs adjudicate)
+as a single stable number.                                     as the label and features available at the cutoff. It
+                                                               sees only features at test time; the content of the
+External financial RAG systems. FinRank                        chosen mode comes from the same logistic model.
+(Mansouri et al., 2026), Fin-RATE (Jiang et al.,               The planner in this protocol uses raw probabilities
+2026), HC-RAG (Chen et al., 2026), and Fin-                    (not the calibrated probabilities of the main table).
+SAgent (Chi et al., 2026) are retrieval or agent               The oracle-mode router is a strong supervised base-
+frameworks evaluated on open financial QA. We                  line, not a strawman. At the base loss it has lower
+did not run them on this decision benchmark: no                loss than the planner (3.516 vs 3.927). Across
+compatible released code or shared claim labels                the ten configurations the oracle-mode router and
+were available, and their published numbers are on             the planner each win five: the router wins base,
+different data. Table 8 instead adapts six general             symmetric, over-averse, expensive abstention, and
+named methods under the same base model. Those                  = .05; the planner wins under-averse, cheap ab-
+
+                                                           15
+Model  n Acc. Bal. F1 ECE Sel@50                               per-claim artifacts retain the parsed output and
+                                                               raw response text. The model may have seen
+FinPlan (RF) 737 .537 .503 .498 .032 .593                      2022­2025 outcomes during pretraining, so the
+FinPlan (logistic) 737 .487 .535 .480 .092 .501                named baselines are not clean point-in-time evi-
+                                                               dence. The FinDVer-style and Fin-Fact-style rows
+Table 10: Rolling-origin backbone check: for each cut-         replace the earlier point/verification diagnostics;
+off year 2015­2025, train on other company folds with          the RF-logistic comparison is a backbone check,
+outcomes before January 1 and test every claim in that         not a named baseline.
+year. The rolling set has 737 claims and five fold seeds.
+The two FinPlan backbones keep the same trade-off as              Replacing the planner's heuristic credible set
+on the 2022­2025 test: RF has higher accuracy and              with the loss-aware conformal set on the same
+lower calibration error, logistic higher balanced accu-        DeepSeek belief gives the result in Table 14. At
+racy.                                                          base the loss is 3.101, versus 3.119 for the tuned
+                                                               planner; under cheap abstention it is 1.947 versus
+stention, narrow width, wide width, and  = .20.                2.511; under the wide width penalty 4.447 versus
+The width-threshold router wins five, the planner              4.542. Base coverage is .916 with no fallback folds.
+four, and narrow width is a tie.                               The conformal layer is not a separate reader: it
+                                                               consumes the same label, confidence, and credible
+C.8 Controlled mode-switching diagnostic                       set as the planner.
+
+The real benchmark does not contain a strong evi-              C.10 Conformal alternative
+dence item that arrives between the cutoff and the
+outcome, so the planner's mode-switching behavior              The conformal layer replaces the credible set by
+is tested in a controlled diagnostic. The diagnostic           a split-conformal set Rq(x) = {y : s(x, y) 
+adds a preliminary signal available 30 days after              q}. LAC uses s(x, y) = 1 - p(y | x); APS uses
+the cutoff, at cost 0.5. Half of the cases receive a           the cumulative probability mass through y. The
+precise signal (precision .9) and half receive a weak          threshold is selected on calibration data by realized
+signal (precision .5). The assignment is indepen-              decision loss subject to empirical coverage  1-;
+dent of the features a pre-hoc router can see. On              the score family and  are selected on company-
+the 133 cases with the precise signal, the planner             disjoint validation; the threshold is recalibrated on
+acquires the signal and stops if it is informative;            the full calibration set. Test outcomes are never
+otherwise it waits for the final filing. A pre-hoc             used. The action rule is unchanged.
+cost-aware router chooses wait or stop before see-
+ing the signal.                                                   On the named DeepSeek run the conformal layer
+                                                               is at or below the best fixed policy in every one
+   The planner reaches top-1 accuracy .899 [.886,              of the ten loss configurations, with mean regret
+.912], while the pre-hoc router reaches .470 [.458,            -0.097 and maximum -0.011. The masked run
+.482]. The paired difference is +.429 [.411, .447],            attenuates the base advantage and the cheap ab-
+and all 20 seeds are positive. The diagnostic iso-             stention advantage (2.026 versus always-abstain
+lates the mechanism in Proposition 3: the mode                 2.000), so we do not treat the LLM result as
+depends on evidence observed after the routing de-             clean point-in-time evidence. On the RF back-
+cision. It is not a real-data result, and we label it as       bone the conformal layer is worse than the plan-
+controlled throughout.                                         ner (mean regret +0.047, maximum +0.148). The
+                                                               conformal layer is therefore an alternative set con-
+C.9 Base model and conformal alternative                       structor, not the selected primary method. Code:
+                                                               conformal.py; runner: run_deepseek_
+DeepSeek is the shared backbone for the named                  conformal_set_eval.py.
+baselines in Table 8. The provider reports the
+model identifier deepseek-flash[1m]; calls
+go through the Anthropic-compatible endpoint with
+reasoning disabled, temperature 0, and JSON-only
+prompts. The prompt contains the claim, the guided
+range, the current-quarter value, cutoff date, sec-
+tor, and the company's prior outcomes and mean
+surprise before the cutoff. Responses are cached
+by a SHA-256 digest of the request payload; the
+
+                                                           16
+          Config             Width router Oracle-mode router Always answer Always adjudicate Planner
+
+          base               3.6630         3.5165              4.5128  3.6044  3.9267
+          symmetric          3.6996         3.5092              4.7619  3.6044  3.6557
+          over-averse        3.6081         3.5678              4.2857  3.6044  3.8974
+          under-averse       3.8828         3.5275              6.1538  3.6044  3.3114
+          cheap abstain      3.6630         3.5165              4.5128  3.6044  2.0513
+          expensive abstain  3.6630         3.5165              4.5128  3.6044  3.9267
+          narrow width       1.2308         1.5659              4.5128  1.2308  1.2308
+          wide width         5.0549         6.2344              4.5128  6.7692  4.6190
+          alpha=.05          3.8535         3.7289              4.5128  3.8535  4.2637
+          alpha=.20          3.3993         3.4799              4.5128  3.3993  3.4432
+
+Table 11: Real pre-hoc router on 273 test claims. Against the oracle-mode router the two policies each win five of
+ten configurations; against the width-threshold router the router wins five, the planner four, and one is a tie. The
+planner is better when the loss makes waiting or abstention valuable; the router is better at the base loss.
+
+Method                       Top-1 accuracy 95% CI
+
+Pre-hoc cost-aware router    .470    [.458, .482]
+Planner with preliminary     .899    [.886, .912]
+Paired difference            +.429   [.411, .447]
+
+Table 12: Controlled mode-switching diagnostic over
+20 seeds, 133 cases per seed. The preliminary signal
+is synthetic and its assignment is independent of pre-
+evidence features.
+
+Backbone / policy            Base Max Wins
+
+DeepSeek + conformal 3.101 4.447 ­
+
+DeepSeek + planner 3.101 4.542 8/10
+
+Logistic + planner 3.982 5.110 2/10
+
+DeepSeek static set 3.154 5.639 ­
+
+Logistic static set          3.877 7.718 ­
+
+Table 13: Backbone comparison on 227 verified claims.
+"Max" is the maximum decision loss across the ten con-
+figurations. DeepSeek supplies a label, confidence, and
+credible set; it is a backbone, not a separate method.
+The conformal row is the five-split mean; the planner
+rows use the seed-1 protocol in Appendix C.9.
+
+Backbone                     Base Cheap Narrow Wide
+
+DeepSeek, named              3.101 1.947 1.053 4.447
+
+DeepSeek, masked company 3.119 2.026 1.128 4.260
+
+Table 14: Conformal alternative on 227 XBRL-verified
+claims, five split seeds. The masked run keeps the
+same prompt and credible-set request but replaces com-
+pany/ticker with "Company A". At base the named run
+is 3.101 versus 3.122 for the tuned fixed adjudicator; the
+masked run is 3.119 versus 3.108. The named result's
+base advantage is not robust to masking.
+
+                                                            17
+

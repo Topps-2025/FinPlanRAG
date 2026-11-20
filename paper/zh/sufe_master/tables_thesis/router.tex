@@ -1,0 +1,18 @@
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{混合负载路由结果。效用定义见第\ref{ch:experiments}章。}
+\label{tab:router}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+基座 & 路由准确率 & 路由器 & 始终RAG & 始终Anchor & Oracle \\
+\midrule
+DeepSeek & .995 & .403 & .121 & .282 & .403 \\
+GLM 5.3 & .990 & .419 & .130 & .292 & .422 \\
+Qwen3-8B & .867 & .263 & .018 & .298 & .316 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

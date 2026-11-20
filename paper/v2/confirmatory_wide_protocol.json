@@ -1,0 +1,35 @@
+{
+  "schema": "finplan-confirmatory-wide-v1",
+  "created": "2026-11-03",
+  "written_before_seeds": "11-20",
+  "purpose": "Prospective seed-level confirmation of the selected non-LLM RF planner in the operational loss regime where a two-label qualified set is expensive.",
+  "data": "real_data_v4/dataset_v4.json",
+  "test": "XBRL-verified test claims, n=227",
+  "backbone": {
+    "model": "random_forest",
+    "trees": 200,
+    "min_samples_leaf": 3,
+    "class_weight": "balanced_subsample",
+    "features": "point-in-time structured features; no text or LLM"
+  },
+  "primary_loss": {
+    "name": "wide_penalty",
+    "wrong": 10.0,
+    "over": 12.0,
+    "under": 8.0,
+    "miss": 8.0,
+    "width": 4.0,
+    "abstain": 5.0,
+    "alpha": 0.1
+  },
+  "primary_comparison": "planner minus width-tuned fixed adjudicator; paired claim bootstrap 95% interval; negative favors planner",
+  "primary_hypothesis": "The planner has lower decision loss than the tuned fixed adjudicator under the wide-width operational loss.",
+  "secondary": [
+    "base loss non-inferiority with a .2 loss-point margin",
+    "mean and maximum regret against the oracle fixed policy over the ten loss grid",
+    "cheap-abstention and narrow-width decision losses"
+  ],
+  "seeds": [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+  "selection": "Planner alpha and fixed alpha are tuned on company-disjoint validation; no test outcome is used for fitting, alpha, or policy selection.",
+  "disclosure": "The wide-width regime was identified in the exploratory seeds 1-10. Seeds 11-20 are a prospective seed-level replication on the same claims, not an independent sample of new claims."
+}

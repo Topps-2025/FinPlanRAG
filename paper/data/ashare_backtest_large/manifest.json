@@ -1,0 +1,28 @@
+{
+  "schema": "finplan-ashare-annual-backtest-v1",
+  "n_claims": 470,
+  "n_companies": 40,
+  "years": [
+    2023,
+    2024,
+    2025
+  ],
+  "by_metric": {
+    "growth": 232,
+    "margin": 120,
+    "date": 118
+  },
+  "missing": [
+    "601899.SH 2024: annual report disclosure date",
+    "601012.SH 2024: net profit growth inputs",
+    "601012.SH 2025: net profit growth inputs",
+    "601857.SH 2025: annual report disclosure date",
+    "600588.SH 2023: net profit growth inputs",
+    "600588.SH 2024: net profit growth inputs",
+    "600588.SH 2025: net profit growth inputs",
+    "002714.SZ 2023: net profit growth inputs",
+    "002714.SZ 2024: net profit growth inputs",
+    "002714.SZ 2025: net profit growth inputs"
+  ],
+  "output": "/root/autodl-tmp/finplanrag_2026/paper/data/ashare_backtest_large/claims.json"
+}

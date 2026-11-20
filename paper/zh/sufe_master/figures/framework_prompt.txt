@@ -1,0 +1,17 @@
+Create a clean, camera-ready framework diagram for a top-tier NLP/ML conference paper, 16:9 landscape, white background, flat 2D vector style, generous whitespace, calm and premium, not crowded.
+
+Composition, left to right:
+
+LEFT INPUT: one rounded white card labeled "Query + Cutoff" with a small document icon and a small clock icon. A thin dashed vertical line runs behind it; put the label "Point-in-time" horizontally at the top of the line in small text. No rotated text. One arrow goes from the card to the center.
+
+CENTER: a compact rounded pill labeled "LLM Router". Two smooth arrows leave the router: one curves up to the top branch, one curves down to the bottom branch.
+
+TOP BRANCH, slate-blue panel titled "Obligation Retrieval": exactly four compact rounded blocks in one horizontal row, connected by thin arrows: "Typed Obligation" -> "Point-in-Time Retrieval" -> "Coverage Loop" (with a small circular-arrow icon) -> "LLM Reader". The LLM Reader connects directly to the right Outputs panel. Do not draw any output chip inside this branch.
+
+BOTTOM BRANCH, warm sand and sage panel titled "AnchorEvolve": a clear serpentine path. Top row, left to right: "L0/L1/L2 Anchors" -> "Evidence Qualification" -> "Belief Update". Under "Evidence Qualification", place three small pill tags: "Hard", "Soft", "Filter". A short vertical arrow goes from "Belief Update" down to the bottom row. Bottom row, left to right: "Calibrated Posterior" -> "Loss-Aware Gate". The gate connects directly to the right Outputs panel. Do not draw any output chips inside this branch.
+
+RIGHT OUTPUT ZONE: one light-gray rounded container titled "Outputs", holding four aligned chips: "Closed Answer" at the top, then "Point", "Credible Set", "Abstain". The top branch connects to "Closed Answer"; a small fork from the gate connects to the last three chips. Each label appears only once in the whole figure.
+
+VISUAL STYLE: flat vector, thin 1.5 pt charcoal-gray connectors, rounded corners 8-10 px, subtle pastel fills (slate blue #DCE6F2, sage #DDE8DC, sand #F3E6D0, light gray #F2F4F7), dark charcoal text #1F2933. No gradients, no drop shadows, no 3D, no photorealism, no glossy effects. Use large, crisp sans-serif labels (Inter or Helvetica), all horizontal, highly readable. Keep only the exact labels listed above; do not invent extra words, numbers, or dense sub-labels. Balance the two branch panels to the same size; align everything to a clean grid; leave 15-20% white space; make the arrows unambiguous and non-overlapping. The result should look like a best-paper architecture figure in ACL/ICLR/NeurIPS: restrained, precise, elegant, and easy to read at a glance.
+
+NEGATIVE: no tiny text, no crowded boxes, no overlapping arrows, no long sentences, no duplicate labels, no stray dots, no more than three colors per branch, no decorative background, no photographic elements, no clip-art clutter.

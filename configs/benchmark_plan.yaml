@@ -1,0 +1,394 @@
+# Benchmark plan for the FinPlanRAG/AnchorEvolve paper.
+#
+# This file is a specification, not a results table.  It records which
+# benchmarks can be connected without changing the task, which named baselines
+# are reproducible under the same interface, which metrics test which claim,
+# and which benchmarks must not be pooled into the main outcome claim.
+version: 1
+updated: "2026-11-20"
+
+claims:
+  H1:
+    text: "Source-grounded anchors add semantic signal to the standalone LLM branch."
+    benchmark: revenue_guidance_main
+    comparison: ["anchor_llm", "no_anchors", "old_prompt"]
+    metrics: ["accuracy", "balanced_accuracy", "macro_f1"]
+  H2:
+    text: "Five-type qualification and reveal-date evolution improve calibration and decision loss."
+    benchmark: ["revenue_guidance_main", "revenue_guidance_temporal", "ashare_annual_backtest_2023_2025"]
+    comparison: ["full_qualification", "no_qualification", "no_source_check", "static_reliability", "evolved_reliability"]
+    metrics: ["decision_loss", "nll", "ece", "macro_f1", "quote_verification_rate", "qualification_acceptance_rate"]
+  H3:
+    text: "Full-action loss-aware readout improves decision loss over the restricted credible-set gate."
+    benchmark: ["revenue_guidance_main", "revenue_guidance_temporal"]
+    comparison: ["full_action_readout", "restricted_gate"]
+    metrics: ["decision_loss", "decision_coverage", "mean_set_size", "abstain_rate"]
+  H4:
+    text: "The final system is competitive with a strong structured RF; the anchor layer's primary value is an auditable semantic state."
+    benchmark: revenue_guidance_main
+    comparison: ["full_system", "rf", "evolved_rf"]
+    metrics: ["decision_loss", "accuracy", "balanced_accuracy"]
+  BRIDGE:
+    text: "Numeric anchors can be combined by deterministic bridges instead of an LLM point guess."
+    benchmark: ["ashare_annual_backtest_2023_2025", "ashare_prospective_2026"]
+    comparison: ["ashare_full_system", "ashare_no_bridge", "run_rate", "last_year_actual", "full_system", "no_bridge"]
+    metrics: ["bridge_mae", "bridge_rmse", "mape", "interval_coverage", "pinball_loss", "missing_input_rate", "date_mae_days"]
+  AUDIT:
+    text: "The evidence-to-anchor-to-belief trail is complete enough for a reader to audit a decision."
+    benchmark: ashare_prospective_2026
+    comparison: ["full_system", "llm_only"]
+    metrics: ["quote_verification_rate", "coverage_gap_rate", "source_date_compliance", "audit_completeness"]
+
+baseline_registry:
+  full_qualification:
+    description: "Five-type qualification with date, source and scope checks."
+    runner: scripts/run_qualification_ablation.py
+    artifact: paper/results/qualification_ablation/summary.json
+    reproducible: true
+  no_qualification:
+    description: "Accept every parsed anchor with an implied label; skip date, source and scope checks."
+    runner: scripts/run_qualification_ablation.py
+    artifact: paper/results/qualification_ablation/summary.json
+    reproducible: true
+  no_source_check:
+    description: "Keep date and scope checks but skip paragraph/evidence-id source checks."
+    runner: scripts/run_qualification_ablation.py
+    artifact: paper/results/qualification_ablation/summary.json
+    reproducible: true
+  no_date_check:
+    description: "Keep source and scope checks but skip future-date rejection."
+    runner: scripts/run_qualification_ablation.py
+    artifact: paper/results/qualification_ablation/summary.json
+    reproducible: true
+  no_scope_check:
+    description: "Keep date checks but skip source and scope checks."
+    runner: scripts/run_qualification_ablation.py
+    artifact: paper/results/qualification_ablation/summary.json
+    reproducible: true
+  hard_only:
+    description: "Keep only hard-qualified anchors."
+    runner: scripts/run_qualification_ablation.py
+    artifact: paper/results/qualification_ablation/summary.json
+    reproducible: true
+  soft_only:
+    description: "Keep only soft-qualified anchors."
+    runner: scripts/run_qualification_ablation.py
+    artifact: paper/results/qualification_ablation/summary.json
+    reproducible: true
+  last_year_actual:
+    description: "Carry forward the prior-year growth, margin or disclosure date."
+    runner: scripts/run_ashare_backtest.py
+    artifact: paper/results/ashare_backtest/last_year
+    reproducible: true
+  run_rate:
+    description: "Annualize Q3 year-to-date revenue/profit; persist the Q3 margin; median historical disclosure date."
+    runner: scripts/run_ashare_backtest.py
+    artifact: paper/results/ashare_backtest_large/run_rate
+    reproducible: true
+  ashare_full_system:
+    description: "Full AnchorEvolve on the A-share historical backtest: qualification, evolution, calibration, bridge and full-action readout."
+    runner: scripts/run_ashare_backtest.py
+    artifact: paper/results/ashare_backtest_large/deepseek/full
+    reproducible: true
+  ashare_no_bridge:
+    description: "The same A-share system with the numeric bridge disabled."
+    runner: scripts/run_ashare_backtest.py
+    artifact: paper/results/ashare_backtest_large/deepseek/no_bridge
+    reproducible: true
+  llm_only:
+    description: "Same backbone and claim contract; one label distribution, no anchor state."
+    runner: scripts/run_deepseek_baselines.py
+    artifact: paper/results/deepseek
+    reproducible: true
+  anchor_llm:
+    description: "Anchor posterior plus label scores; no structured RF."
+    runner: experiments/evolution/run_anchors.py
+    artifact: paper/results/evolution_v1/temporal_beliefs_new.jsonl
+    reproducible: true
+  anchor_fusion:
+    description: "Anchor posterior fused with a company-disjoint, year-wise calibrated RF."
+    runner: experiments/evolution/temporal_fusion.py
+    artifact: paper/results/evolution_v1/temporal_fusion_new.json
+    reproducible: true
+  full_system:
+    description: "Anchor posterior + RF + deterministic bridge + historical calibration + full-action readout."
+    runner: experiments/evolution/temporal_fusion.py
+    artifact: paper/results/evolution_v1/meta_readout.json
+    reproducible: true
+  no_anchors:
+    description: "Remove all anchors; keep the same LLM and readout."
+    runner: scripts/analyze_anchor_ablation.py
+    artifact: paper/results/evolution_v1/temporal_beliefs_new.jsonl
+    reproducible: true
+  old_prompt:
+    description: "Old structured-evidence prompt without paragraph ids or verbatim citations."
+    runner: experiments/unified/run_vague_llm.py
+    artifact: paper/results/evolution_v1
+    reproducible: true
+  static_reliability:
+    description: "Use LLM reliability without reveal-date Beta evolution."
+    runner: experiments/evolution/temporal_fusion.py
+    artifact: paper/results/evolution_v1/temporal_beliefs_new_static.jsonl
+    reproducible: true
+  evolved_reliability:
+    description: "Beta reliability updated only from outcomes revealed before the cutoff."
+    runner: experiments/evolution/temporal_fusion.py
+    artifact: paper/results/evolution_v1/temporal_beliefs_new.jsonl
+    reproducible: true
+  restricted_gate:
+    description: "Point answer or highest-density 1-alpha credible set only."
+    runner: experiments/evolution/temporal_fusion.py
+    artifact: paper/results/evolution_v1
+    reproducible: true
+  full_action_readout:
+    description: "Point answer, non-singleton adjudication set, or abstention under the same loss."
+    runner: experiments/evolution/temporal_fusion.py
+    artifact: paper/results/evolution_v1/meta_readout.json
+    reproducible: true
+  rf:
+    description: "Structured random forest with temperature scaling; no text anchors."
+    runner: scripts/run_company_disjoint_benchmark.py
+    artifact: paper/results/company_disjoint_benchmark_verified/summary.json
+    reproducible: true
+  evolved_rf:
+    description: "RF with point-in-time peer, company-surprise and calendar features."
+    runner: experiments/evolution/structured_evolve.py
+    artifact: paper/results/evolution_v1/rf_test_ext.jsonl
+    reproducible: true
+  no_bridge:
+    description: "Remove the deterministic numeric bridge; labels only."
+    runner: scripts/anchor_cli.py
+    artifact: paper/results/anchor_cli
+    reproducible: true
+  findver_style:
+    description: "FinDVer-style claim verification adapted to the same reader and label space."
+    runner: scripts/run_official_baselines.py
+    component_runner: scripts/run_findver_external.py
+    artifact: paper/results/official/deepseek/metrics_findver.json
+    reproducible: true
+  fixed_k_verifier:
+    description: "Fixed evidence-budget verifier with the same reader and backbone."
+    runner: scripts/run_findver_external.py
+    artifact: paper/results/external_tier1/findver/testmini/deepseek
+    reproducible: true
+  finfact_style:
+    description: "Fin-Fact-style evidence-driven fact checking adapted to the same reader."
+    runner: scripts/run_official_baselines.py
+    artifact: paper/results/official/deepseek/metrics_finfact.json
+    reproducible: true
+  selfrag_style:
+    description: "Self-RAG-style retrieve/critique loop under the same evidence budget."
+    runner: scripts/run_named_baselines.py
+    artifact: paper/results/named_baselines/metrics_selfrag.json
+    reproducible: true
+  crag_style:
+    description: "CRAG-style corrective retrieval under the same evidence budget."
+    runner: scripts/run_named_baselines.py
+    artifact: paper/results/named_baselines/metrics_crag.json
+    reproducible: true
+  flare_style:
+    description: "FLARE-style confidence-triggered retrieval under the same evidence budget."
+    runner: scripts/run_named_baselines.py
+    artifact: paper/results/named_baselines/metrics_flare.json
+    reproducible: true
+  adaptiverag_style:
+    description: "Adaptive-RAG-style complexity routing under the same evidence budget."
+    runner: scripts/run_named_baselines.py
+    artifact: paper/results/named_baselines/metrics_adaptive.json
+    reproducible: true
+  fixed_k_reader:
+    description: "Fixed-k passage reader with the same backbone; the determinate-QA control."
+    runner: scripts/run_docfinqa_external.py
+    artifact: paper/results/external_tier1/docfinqa/test300/deepseek
+    reproducible: true
+
+metric_registry:
+  accuracy: "Point-answer or highest-posterior label accuracy."
+  balanced_accuracy: "Mean recall over outcome classes."
+  macro_f1: "Macro-averaged F1 over outcome classes."
+  mcc: "Multi-class Matthews correlation coefficient."
+  auroc: "Macro one-vs-rest AUROC."
+  auprc: "Macro one-vs-rest AUPRC."
+  ece: "Expected calibration error over point answers."
+  brier: "Brier score over the three outcome labels."
+  nll: "Negative log-likelihood of the realized label."
+  decision_loss: "Expected loss of the chosen action under the configured asymmetric loss."
+  credible_coverage: "Share of outcomes inside the 1-alpha credible set."
+  decision_coverage: "Share of outcomes inside the loss-optimal action set."
+  mean_set_size: "Mean number of labels in the chosen set."
+  abstain_rate: "Share of claims where the readout abstains."
+  aurc: "Area under the risk-coverage curve."
+  bridge_mae: "Mean absolute error of the deterministic bridge point estimate."
+  bridge_rmse: "Root mean squared error of the deterministic bridge point estimate."
+  mape: "Mean absolute percentage error of the bridge point estimate."
+  pinball_loss: "Pinball loss of the bridge interval at the configured quantiles."
+  interval_coverage: "Share of realized values inside the bridge interval."
+  missing_input_rate: "Share of claims where the bridge cannot fill its required slots."
+  date_mae_days: "Mean absolute error in calendar days for disclosure-date predictions."
+  qualification_acceptance_rate: "Share of parsed anchors accepted by the qualification policy."
+  quote_verification_rate: "Share of accepted anchors whose quote appears verbatim in the source."
+  coverage_gap_rate: "Share of claims with at least one missing required evidence facet."
+  source_date_compliance: "Share of used evidence with a verified date no later than the cutoff."
+  audit_completeness: "Share of anchors with source id, quote, date, qualification and belief trace."
+  verification_accuracy: "Claim-verification accuracy on support/refute/insufficient."
+  evidence_recall: "Recall of gold evidence paragraphs or sentences."
+  qualification_consistency: "Agreement between anchor qualification and expert evidence status."
+  em: "Exact match on determinate QA."
+  f1: "Token-level F1 on determinate QA."
+  evidence_passages: "Mean number of passages read."
+  reader_tokens: "Mean reader input tokens."
+
+benchmarks:
+  - id: revenue_guidance_main
+    role: main_outcome
+    task: "Quarterly revenue guidance outcome: below, within, or above the guidance range."
+    data: paper/data/dataset_v4.json
+    earnings_events: paper/data/earnings_events.json
+    n_claims: 1005
+    n_train: 529
+    n_validation: 203
+    n_test: 273
+    n_verified_validation: 185
+    n_verified_test: 227
+    n_company_disjoint_test_only: 108
+    labels: ["below", "within", "above"]
+    split:
+      company_disjoint: true
+      year_wise: true
+      folds: 5
+      validation_years: [2019, 2020, 2021]
+      test_years: [2022, 2023, 2024, 2025]
+      seeds: [1, 2, 3, 4, 5]
+      temperature_scaling: "company-disjoint internal folds"
+      fusion_weight_selection: "validation only"
+    baselines: [llm_only, anchor_llm, anchor_fusion, full_system, no_anchors, old_prompt, static_reliability, evolved_reliability, restricted_gate, full_action_readout, rf, evolved_rf, findver_style, finfact_style, selfrag_style, crag_style, flare_style, adaptiverag_style]
+    metrics: [accuracy, balanced_accuracy, macro_f1, mcc, auroc, auprc, ece, brier, nll, decision_loss, credible_coverage, decision_coverage, mean_set_size, abstain_rate, aurc, quote_verification_rate, coverage_gap_rate]
+    claims: [H1, H2, H3, H4]
+    leakage_controls:
+      - "Only evidence with availability date <= cutoff."
+      - "Only outcomes with reveal date < cutoff enter reliability/prior updates."
+      - "Test companies never appear in training folds."
+      - "All weights, temperatures and thresholds selected on validation."
+      - "No oracle fallback for parse failures."
+  - id: revenue_guidance_temporal
+    role: robustness
+    task: "Same claims, rolling year-wise evaluation across 2022-2025."
+    data: paper/data/dataset_v4.json
+    earnings_events: paper/data/earnings_events.json
+    labels: ["below", "within", "above"]
+    split:
+      company_disjoint: true
+      year_wise: true
+      folds: 5
+      evaluation: "per-year 2022, 2023, 2024, 2025"
+      seeds: [1, 2, 3, 4, 5]
+    baselines: [anchor_llm, anchor_fusion, full_system, rf, evolved_rf, restricted_gate, full_action_readout]
+    metrics: [accuracy, balanced_accuracy, macro_f1, decision_loss, ece, brier, decision_coverage, mean_set_size, abstain_rate]
+    claims: [H2, H3]
+    leakage_controls:
+      - "Each test year uses only outcomes revealed before that year."
+      - "Company-disjoint folds within each year."
+  - id: findver_component
+    role: external_component
+    task: "Claim verification: entailed, refuted, or insufficient, over long financial documents."
+    data: vendor/official_baselines/findver/data/testmini.json
+    requires_download: true
+    adapter: scripts/run_findver_external.py
+    status: adapter_ready_data_missing
+    source: "FinDVer public release (EMNLP 2024)"
+    labels: ["entailed", "refuted", "insufficient"]
+    mapping: "Evidence qualification only; labels are not mapped to below/within/above."
+    not_for_main_claims: true
+    baselines: [findver_style, fixed_k_verifier]
+    metrics: [verification_accuracy, macro_f1, evidence_recall, quote_verification_rate, qualification_consistency, ece]
+    claims: [AUDIT]
+    pool_with_main: false
+    leakage_controls:
+      - "Use only the document paragraphs available at the claim cutoff."
+      - "No tuning on testmini."
+  - id: finfact_component
+    role: external_component
+    task: "Multimodal financial fact checking with evidence and explanation."
+    data: vendor/official_baselines/finfact
+    requires_download: true
+    adapter: ""
+    status: adapter_required
+    adapter_note: "No Fin-Fact dataset runner is present; finfact_style is currently evaluated only as a named baseline on the main benchmark."
+    source: "Fin-Fact public release (WWW 2025 Companion)"
+    labels: ["support", "refute", "insufficient"]
+    mapping: "Evidence qualification only; not an outcome-prediction benchmark."
+    not_for_main_claims: true
+    baselines: [finfact_style, findver_style, selfrag_style, crag_style, flare_style, adaptiverag_style, anchor_llm, full_system]
+    metrics: [verification_accuracy, macro_f1, evidence_recall, quote_verification_rate, qualification_consistency]
+    claims: [AUDIT]
+    pool_with_main: false
+    leakage_controls:
+      - "Use only the claim's posted evidence and context available at its date."
+      - "Do not tune on the official test split."
+      - "Report the official label mapping separately from the main outcome labels."
+  - id: docfinqa_control
+    role: determinate_control
+    task: "Long-context determinate financial QA; the answer exists in the document."
+    data: "DocFinQA fixed 300-question sample"
+    requires_download: true
+    adapter: scripts/run_docfinqa_external.py
+    status: adapter_ready_data_missing
+    source: "DocFinQA public release (ACL 2024)"
+    labels: ["exact_match", "token_f1"]
+    mapping: "Reader and evidence-retrieval control; not an outcome-prediction benchmark."
+    not_for_main_claims: true
+    baselines: [selfrag_style, crag_style, flare_style, adaptiverag_style, fixed_k_reader]
+    metrics: [em, f1, evidence_recall, evidence_passages, reader_tokens]
+    claims: []
+    pool_with_main: false
+    leakage_controls:
+      - "Use a fixed 300-question sample frozen before prompt tuning."
+      - "Gold evidence and answers never enter the reader input."
+      - "All baselines use the same reader and token budget."
+  - id: ashare_annual_backtest_2023_2025
+    role: historical_backtest
+    task: "Historical A-share annual-report backtest: revenue growth, net-profit growth, gross margin and disclosure date."
+    data: paper/data/ashare_backtest_large/claims.json
+    data_builder: scripts/build_ashare_backtest.py
+    builder_config: configs/ashare_backtest_large.yaml
+    n_claims: 470
+    target_n_claims: 470
+    years: [2023, 2024, 2025]
+    labels: "Case-specific bands around the prior-year value; fixed before the outcome is read."
+    baselines: [last_year_actual, run_rate, ashare_full_system, ashare_no_bridge]
+    metrics: [accuracy, balanced_accuracy, macro_f1, decision_loss, bridge_mae, bridge_rmse, mape, pinball_loss, interval_coverage, missing_input_rate, date_mae_days, quote_verification_rate, coverage_gap_rate]
+    claims: [H2, BRIDGE, AUDIT]
+    leakage_controls:
+      - "Cutoff is January 31 of the year after the target fiscal year; only Q3 and earlier reports are used."
+      - "The realized annual report value is never shown to the model."
+      - "Labels and bands are fixed before the outcome is read."
+    status: results_ready
+  - id: ashare_prospective_2026
+    role: prospective
+    task: "Pre-registered FY2026 claims for A-share companies, resolved by the 2027 annual reports."
+    cases:
+      - configs/anchor_cases/zhongji_2026.yaml
+      - configs/anchor_cases/xinyisheng_2026.yaml
+    cutoff: "2026-11-19"
+    resolution: "2027 annual reports (company disclosure dates)"
+    pre_registration: true
+    registered_at: "2026-11-20"
+    labels: "Case-specific numeric or date windows."
+    baselines: [llm_only, anchor_llm, no_bridge, full_system]
+    metrics: [accuracy, decision_loss, brier, ece, decision_coverage, mean_set_size, abstain_rate, bridge_mae, bridge_rmse, interval_coverage, missing_input_rate, quote_verification_rate, coverage_gap_rate, source_date_compliance, audit_completeness]
+    claims: [BRIDGE, AUDIT]
+    pool_with_main: false
+    leakage_controls:
+      - "Claims, thresholds and outcome spaces are frozen before the outcomes are disclosed."
+      - "All evidence must be available at the cutoff."
+      - "No change to thresholds after registration."
+
+fairness_rules:
+  - "All methods use the same backbone, prompt template, evidence budget and label space within a benchmark."
+  - "Validation-only tuning; test labels never select weights, temperatures, thresholds or prompts."
+  - "Company-disjoint and year-wise splits for the main outcome benchmark."
+  - "Named baselines reuse pinned official prompts and decision rules; every substitution is recorded in provenance."
+  - "Parse failures, empty searches and missing evidence are counted, not replaced by oracle output."
+  - "External component benchmarks are never pooled with the main outcome benchmark."
+  - "Report every named baseline, paired bootstrap confidence intervals, and McNemar tests; do not select the best baseline after seeing test results."
+  - "The prospective A-share benchmark is pre-registered; thresholds cannot move after outcomes are known."

@@ -1,0 +1,23 @@
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.6pt}
+\caption{Revenue-guidance adjudication on 227 XBRL-verified test claims. Acc: accuracy; Bal: balanced accuracy; Macro: macro F1; Loss: asymmetric decision loss (lower is better). FinPlanRAG is the full system. Named methods are same-backbone adaptations (suffix -style).}
+\label{tab:vague}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+Method & DeepSeek Acc & Bal & Macro & Loss & GLM 5.3 Acc & Bal & Macro & Loss & Qwen3-8B Acc & Bal & Macro & Loss \\
+\midrule
+FinDVer-style & \textbf{.551} & .461 & .464 & 4.678 & .498 & .439 & .442 & 5.233 & .445 & .422 & .406 & 5.524 \\
+Fin-Fact-style & .537 & .446 & .450 & 4.705 & .454 & .398 & .402 & 5.339 & .511 & .477 & .464 & 4.846 \\
+Self-RAG-style & .546 & .451 & .456 & 4.564 & .454 & .406 & .404 & 5.163 & .489 & .447 & .437 & 5.093 \\
+CRAG-style & .529 & .423 & .418 & 4.802 & .515 & .431 & .435 & 4.846 & .454 & .418 & .399 & 5.366 \\
+FLARE-style & .511 & .417 & .411 & 4.881 & .471 & .388 & .387 & 5.286 & .326 & .298 & .212 & 6.740 \\
+Adaptive-RAG-style & .493 & .406 & .400 & 5.093 & .427 & .372 & .376 & 5.630 & .344 & .324 & .290 & 6.485 \\
+\midrule
+FinPlanRAG & .533 & \textbf{.491} & \textbf{.486} & \textbf{3.454} & \textbf{.533} & \textbf{.491} & \textbf{.486} & \textbf{3.454} & \textbf{.533} & \textbf{.491} & \textbf{.486} & \textbf{3.454} \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}

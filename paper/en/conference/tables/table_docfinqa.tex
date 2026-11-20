@@ -1,0 +1,30 @@
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\caption{DocFinQA long-document question answering. All conditions use the same reader and backbone; only the evidence policy changes. Named RAG methods are same-backbone adaptations (suffix -style). ``Paras'' is the mean number of acquired paragraphs and ``Cov.'' the answer coverage.}
+\label{tab:docfinqa}
+\begin{tabular}{lrrrrr}
+\toprule
+Condition & Acc. & F1 & Paras & Tokens & Cov. \\
+\midrule
+\multicolumn{6}{l}{\textit{DeepSeek}} \\
+Fixed-4 & .333 & .192 & 4.00 & 459 & .557 \\
+Fixed-16 & .390 & .234 & 16.00 & 1663 & .640 \\
+\textit{Obligation + fallback} & .457 & .276 & 10.69 & 1604 & .770 \\
+Self-RAG-style & .373 & .223 & 8.03 & 196 & .613 \\
+CRAG-style & .373 & .222 & 8.05 & 193 & .613 \\
+FLARE-style & .330 & .197 & 4.00 & 195 & .557 \\
+Adaptive-RAG-style & .363 & .211 & 7.22 & 192 & .570 \\
+\midrule
+\multicolumn{6}{l}{\textit{GLM 5.3}} \\
+Fixed-4 & .400 & .199 & 4.00 & 1010 & .653 \\
+Fixed-16 & .480 & .249 & 16.00 & 3595 & .757 \\
+\textit{Obligation + fallback} & .497 & .252 & 10.31 & 2476 & .810 \\
+Self-RAG-style & .447 & .231 & 8.16 & 1909 & .717 \\
+CRAG-style & .447 & .235 & 8.32 & 1937 & .727 \\
+FLARE-style & .393 & .193 & 4.19 & 1048 & .643 \\
+Adaptive-RAG-style & .393 & .198 & 6.51 & 1526 & .657 \\
+\bottomrule
+\end{tabular}
+\end{table*}

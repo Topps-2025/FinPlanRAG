@@ -1,0 +1,100 @@
+case_id: xinyisheng_2026
+question: 新易盛2026年年度报告的营业收入同比增速、光互联产品产能变化和年报披露日期将落在什么区间？
+company: 新易盛
+ticker: 300502.SZ
+target_period: 2026年年度报告
+
+# Pre-registered prospective case.  The cutoff is the date on which the claims
+# are frozen; evidence published after it must not enter the anchor state.
+cutoff: "2026-11-19"
+
+claims:
+  - claim_id: revenue_growth
+    text: 新易盛2026年年度报告营业收入同比增速
+    metric: 营业收入同比增速
+    claim_type: metric
+    metric_kind: growth
+    model_template: growth_bridge
+    anchor_types: [ytd_actual, prior_actual, q4_forecast, q3_revenue, seasonal_factor, consensus, fy_target]
+    thresholds:
+      - {label: "低于70%", low: null, high: 70}
+      - {label: "70%至100%", low: 70, high: 100}
+      - {label: "高于100%", low: 100, high: null}
+    reference_value: 248.42
+    reference_unit: 亿元
+    unit: "%"
+    labels:
+      - 低于70%
+      - 70%至100%
+      - 高于100%
+    label_defs:
+      低于70%: 2026年营业收入低于422.31亿元（2025年248.42亿元×1.70）
+      70%至100%: 2026年营业收入在422.31亿元至496.84亿元之间（不含上限）
+      高于100%: 2026年营业收入不低于496.84亿元（2025年248.42亿元×2.00）
+    reference: 2025年营业收入248.42亿元；2026年前三季度营业收入318.50亿元；公司2026年营业收入目标不低于500亿元
+    queries:
+      - 新易盛 2026年三季报 营业收入 同比
+      - 新易盛 2025年年度报告 营业收入
+      - 新易盛 2026年 营业收入 目标 股权激励
+      - 新易盛 2026年 营业收入 预测 研报
+
+  - claim_id: capacity_change
+    text: 新易盛2026年年度报告披露的光互联产品产能相对2026年半年报披露值的变化
+    metric: 光互联产品产能
+    claim_type: metric
+    metric_kind: capacity
+    model_template: capacity_bridge
+    anchor_types: [current_capacity, expansion, retirement]
+    thresholds:
+      - {label: "低于2026年半年报披露值", low: null, high: 2836}
+      - {label: "与2026年半年报披露值接近", low: 2836, high: 3120}
+      - {label: "高于2026年半年报披露值10%以上", low: 3120, high: null}
+    reference_value: 2836
+    reference_unit: 万只
+    unit: 万只
+    labels:
+      - 低于2026年半年报披露值
+      - 与2026年半年报披露值接近
+      - 高于2026年半年报披露值10%以上
+    label_defs:
+      低于2026年半年报披露值: 2026年年报披露的光互联产品产能低于2,836万只
+      与2026年半年报披露值接近: 2026年年报披露的产能在2,836万只至3,120万只之间（含下限，不含上限）
+      高于2026年半年报披露值10%以上: 2026年年报披露的产能不低于3,120万只（2,836万只×1.10）
+    reference: 2025年年度报告披露光互联产品产能1,747万只；2026年半年报披露2,836万只；2026年三季报披露扩建产能设备及待安装设备增加
+    queries:
+      - 新易盛 2026年半年报 光互联产品 产能
+      - 新易盛 2025年年度报告 产能
+      - 新易盛 2026年 扩建产能 设备 安装
+      - 新易盛 2026年 产能 扩产 项目
+
+  - claim_id: disclosure_date
+    text: 新易盛2026年年度报告的披露日期
+    metric: 年度报告披露日期
+    claim_type: date
+    metric_kind: date
+    model_template: date_window
+    anchor_types: [disclosure_history, appointment_disclosure, regulation]
+    unit: date
+    labels:
+      - 不晚于2027-03-31
+      - 2027-04-01至2027-04-15
+      - 晚于2027-04-15
+    label_defs:
+      不晚于2027-03-31: 2026年年度报告在2027年3月31日或之前披露
+      2027-04-01至2027-04-15: 2026年年度报告在2027年4月1日至2027年4月15日之间披露
+      晚于2027-04-15: 2026年年度报告在2027年4月15日之后披露，但不晚于法定截止日2027年4月30日
+    reference: 2024年年度报告于2025-04-23披露；2025年年度报告于2026-04-24披露；创业板年报法定截止日为次年4月30日
+    date_windows:
+      - label: 不晚于2027-03-31
+        start: "2027-01-01"
+        end: "2027-03-31"
+      - label: 2027-04-01至2027-04-15
+        start: "2027-04-01"
+        end: "2027-04-15"
+      - label: 晚于2027-04-15
+        start: "2027-04-16"
+        end: "2027-04-30"
+    queries:
+      - 新易盛 年度报告 披露日期 2025 2024
+      - 新易盛 2026年年度报告 预约披露
+      - 创业板 年度报告 披露 截止 4月30日

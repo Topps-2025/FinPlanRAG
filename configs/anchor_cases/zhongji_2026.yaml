@@ -1,0 +1,127 @@
+case_id: zhongji_2026
+question: 中际旭创2026年年度报告的营业收入、归母净利润、毛利率将落在什么区间，年报预计何时披露？
+company: 中际旭创
+ticker: 300308.SZ
+target_period: 2026年年度报告
+
+# The cutoff is the date on which the question is asked.  The engine also
+# accepts --cutoff to override it.  Evidence published after the cutoff is
+# discarded before anchor extraction.
+cutoff: "2026-11-19"
+
+claims:
+  - claim_id: revenue_growth
+    text: 中际旭创2026年年度报告营业收入同比增速
+    metric: 营业收入同比增速
+    claim_type: metric
+    metric_kind: growth
+    model_template: growth_bridge
+    anchor_types: [ytd_actual, prior_actual, q4_forecast, q3_revenue, seasonal_factor, consensus, fy_target]
+    thresholds:
+      - {label: "低于140%", low: null, high: 140}
+      - {label: "140%至170%", low: 140, high: 170}
+      - {label: "高于170%", low: 170, high: null}
+    reference_value: 382.40
+    reference_unit: 亿元
+    unit: "%"
+    labels:
+      - 低于140%
+      - 140%至170%
+      - 高于170%
+    label_defs:
+      低于140%: 2026年营业收入低于917.76亿元（2025年382.40亿元×2.40）
+      140%至170%: 2026年营业收入在917.76亿元至1032.48亿元之间（不含上限）
+      高于170%: 2026年营业收入不低于1032.48亿元（2025年382.40亿元×2.70）
+    reference: 2025年营业收入382.40亿元，同比+60.25%；2026年前三季度营业收入695.47亿元，同比+178.13%
+    queries:
+      - 中际旭创 2026年三季报 营业收入 同比
+      - 中际旭创 2026年 营业收入 预测 研报
+      - 中际旭创 2026年 产能 800G 1.6T 出货
+
+  - claim_id: profit_growth
+    text: 中际旭创2026年年度报告归母净利润同比增速
+    metric: 归母净利润同比增速
+    claim_type: metric
+    metric_kind: growth
+    model_template: growth_bridge
+    anchor_types: [ytd_actual, prior_actual, q4_forecast, q3_revenue, seasonal_factor, consensus, fy_target]
+    thresholds:
+      - {label: "低于190%", low: null, high: 190}
+      - {label: "190%至220%", low: 190, high: 220}
+      - {label: "高于220%", low: 220, high: null}
+    reference_value: 107.97
+    reference_unit: 亿元
+    unit: "%"
+    labels:
+      - 低于190%
+      - 190%至220%
+      - 高于220%
+    label_defs:
+      低于190%: 2026年归母净利润低于313.11亿元（2025年107.97亿元×2.90）
+      190%至220%: 2026年归母净利润在313.11亿元至345.50亿元之间（不含上限）
+      高于220%: 2026年归母净利润不低于345.50亿元（2025年107.97亿元×3.20）
+    reference: 2025年归母净利润107.97亿元，同比+108.78%；2026年前三季度222.38亿元，同比+211.81%；机构预测2026年净利润约336.94亿元
+    queries:
+      - 中际旭创 2026年三季报 归母净利润 同比
+      - 中际旭创 2026年 净利润 预测 机构
+      - 中际旭创 2026年 毛利率 净利率
+
+  - claim_id: gross_margin
+    text: 中际旭创2026年年度报告综合毛利率
+    metric: 综合毛利率
+    claim_type: metric
+    metric_kind: margin
+    model_template: margin_bridge
+    anchor_types: [current_margin, price_mix_delta, cost_delta, product_structure]
+    thresholds:
+      - {label: "低于45%", low: null, high: 45}
+      - {label: "45%至47%", low: 45, high: 47}
+      - {label: "高于47%", low: 47, high: null}
+    reference_value: 42.61
+    reference_unit: "%"
+    unit: "%"
+    labels:
+      - 低于45%
+      - 45%至47%
+      - 高于47%
+    label_defs:
+      低于45%: 2026年综合毛利率低于45%
+      45%至47%: 2026年综合毛利率在45%至47%之间（不含上限）
+      高于47%: 2026年综合毛利率不低于47%
+    reference: 2025年光模块毛利率42.61%；2026年前三季度综合毛利率46.39%，第三季度单季46.63%
+    queries:
+      - 中际旭创 2026年三季报 毛利率
+      - 中际旭创 2026年 光模块 毛利率 趋势
+      - 中际旭创 2026年 产品结构 硅光 1.6T 价格
+
+  - claim_id: disclosure_date
+    text: 中际旭创2026年年度报告的披露日期
+    metric: 年度报告披露日期
+    claim_type: date
+    metric_kind: date
+    model_template: date_window
+    anchor_types: [disclosure_history, appointment_disclosure, regulation]
+    unit: date
+    labels:
+      - 不晚于2027-03-31
+      - 2027-04-01至2027-04-15
+      - 晚于2027-04-15
+    label_defs:
+      不晚于2027-03-31: 2026年年度报告在2027年3月31日或之前披露
+      2027-04-01至2027-04-15: 2026年年度报告在2027年4月1日至2027年4月15日之间披露
+      晚于2027-04-15: 2026年年度报告在2027年4月15日之后披露，但不晚于法定截止日2027年4月30日
+    reference: 2024年年报于2025-04-21披露；2025年年报于2026-03-30披露；创业板年报法定截止日为次年4月30日
+    date_windows:
+      - label: 不晚于2027-03-31
+        start: "2027-01-01"
+        end: "2027-03-31"
+      - label: 2027-04-01至2027-04-15
+        start: "2027-04-01"
+        end: "2027-04-15"
+      - label: 晚于2027-04-15
+        start: "2027-04-16"
+        end: "2027-04-30"
+    queries:
+      - 中际旭创 年度报告 披露日期 2025 2024
+      - 中际旭创 2026年年度报告 预约披露
+      - 创业板 年度报告 披露 截止 4月30日

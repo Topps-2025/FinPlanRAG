@@ -1,0 +1,376 @@
+{
+  "claim": {
+    "claim_id": "ashare_300308_2023_disclosure_date",
+    "company": "中际旭创",
+    "ticker": "300308.SZ",
+    "year": 2023,
+    "cutoff": "2024-01-31",
+    "target_period": "2023年年度报告",
+    "metric": "年度报告披露日期",
+    "metric_kind": "date",
+    "model_template": "date_window",
+    "labels": [
+      "不晚于2024-03-31",
+      "2024-04-01至2024-04-15",
+      "晚于2024-04-15"
+    ],
+    "date_windows": [
+      {
+        "label": "不晚于2024-03-31",
+        "start": "2024-01-01",
+        "end": "2024-03-31"
+      },
+      {
+        "label": "2024-04-01至2024-04-15",
+        "start": "2024-04-01",
+        "end": "2024-04-15"
+      },
+      {
+        "label": "晚于2024-04-15",
+        "start": "2024-04-16",
+        "end": "2024-04-30"
+      }
+    ],
+    "label_defs": {
+      "不晚于2024-03-31": "2023年年度报告在2024年3月31日或之前披露",
+      "2024-04-01至2024-04-15": "2023年年度报告在2024年4月1日至4月15日之间披露",
+      "晚于2024-04-15": "2023年年度报告在2024年4月15日之后披露，但不晚于法定截止日4月30日"
+    },
+    "reference": "历史披露：2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露；法定截止日2024-04-30",
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "历史年度报告披露记录",
+        "date": "2023-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "text": "2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露。",
+        "facet": "date_disclosure",
+        "metric": "年度报告披露日期",
+        "value": null,
+        "unit": "date",
+        "period": "history"
+      }
+    ],
+    "outcome": {
+      "label": "晚于2024-04-15",
+      "value": "2024-04-22",
+      "unit": "date",
+      "date": "2024-04-22",
+      "source": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF"
+    }
+  },
+  "result": {
+    "contract": {
+      "claim_id": "ashare_300308_2023_disclosure_date",
+      "text": "",
+      "metric": "年度报告披露日期",
+      "claim_type": "metric",
+      "labels": [
+        "不晚于2024-03-31",
+        "2024-04-01至2024-04-15",
+        "晚于2024-04-15"
+      ],
+      "label_defs": {
+        "不晚于2024-03-31": "2023年年度报告在2024年3月31日或之前披露",
+        "2024-04-01至2024-04-15": "2023年年度报告在2024年4月1日至4月15日之间披露",
+        "晚于2024-04-15": "2023年年度报告在2024年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "target_period": "2023年年度报告",
+      "unit": "",
+      "reference": "历史披露：2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露；法定截止日2024-04-30",
+      "queries": [],
+      "date_windows": [
+        {
+          "label": "不晚于2024-03-31",
+          "start": "2024-01-01",
+          "end": "2024-03-31"
+        },
+        {
+          "label": "2024-04-01至2024-04-15",
+          "start": "2024-04-01",
+          "end": "2024-04-15"
+        },
+        {
+          "label": "晚于2024-04-15",
+          "start": "2024-04-16",
+          "end": "2024-04-30"
+        }
+      ],
+      "prior": {},
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "anchor_types": [],
+      "query_facets": [],
+      "thresholds": [],
+      "reference_value": null,
+      "reference_unit": ""
+    },
+    "cutoff": "2024-01-31",
+    "queries": [
+      "中际旭创 2023年三季报 报告披露日期",
+      "中际旭创 2022年 报告披露日期",
+      "中际旭创 2023年年度报告 报告披露日期",
+      "中际旭创 2023年 业绩 预告 报告披露日期",
+      "中际旭创 2023年 股权激励 考核 报告披露日期",
+      "中际旭创 所属行业 2023年 报告披露日期 趋势"
+    ],
+    "query_plan": [
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2023年三季报 报告披露日期",
+        "required": true
+      },
+      {
+        "facet": "prior_period",
+        "query": "中际旭创 2022年 报告披露日期",
+        "required": true
+      },
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2023年年度报告 报告披露日期",
+        "required": true
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2023年 业绩 预告 报告披露日期",
+        "required": false
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2023年 股权激励 考核 报告披露日期",
+        "required": false
+      },
+      {
+        "facet": "industry",
+        "query": "中际旭创 所属行业 2023年 报告披露日期 趋势",
+        "required": false
+      }
+    ],
+    "coverage_gaps": [
+      "latest_period",
+      "prior_period"
+    ],
+    "coverage_penalty": 0.3,
+    "search_log": [],
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "历史年度报告披露记录",
+        "date": "2023-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "text": "2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露。",
+        "facet": "date_disclosure",
+        "metric": "年度报告披露日期",
+        "value": null,
+        "unit": "date",
+        "period": "history",
+        "source_id": "E1",
+        "prompt_text": "2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露。"
+      }
+    ],
+    "excluded_evidence": [],
+    "llm": {
+      "prompt_sha256": "24eebbd223b226f5",
+      "request_digest": "1f7052c15cbbb35b02ef3fc584204219d27d249d257410aa4dedc862b0c9b9d1",
+      "raw_text": "{\n  \"claim_id\": \"ashare_300308_2023_disclosure_date\",\n  \"anchors\": [\n    {\n      \"type\": \"disclosure_history\",\n      \"relation\": \"lead_time\",\n      \"value\": \"2019-2022年年报均在4月24-27日披露\",\n      \"scope\": \"company\",\n      \"source_id\": \"E1\",\n      \"quote\": \"2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露。\",\n      \"date\": \"2023-12-31\",\n      \"reliability\": 0.7,\n      \"hard\": false,\n      \"implied_label\": \"晚于2024-04-15\",\n      \"numeric_value\": null,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"\",\n      \"numeric_period\": \"\",\n      \"model_role\": null,\n      \"rationale\": \"连续四年年报均在4月24-27日披露，形成稳定的晚披露惯例，指向晚于4月15日。\"\n    }\n  ],\n  \"label_scores\": {\n    \"不晚于2024-03-31\": 0.05,\n    \"2024-04-01至2024-04-15\": 0.15,\n    \"晚于2024-04-15\": 0.8\n  },\n  \"date_estimate\": {\n    \"point\": \"2024-04-24\",\n    \"low\": \"2024-04-18\",\n    \"high\": \"2024-04-30\",\n    \"basis\": \"历史披露日期集中在4月24-27日，结合法定截止日4月30日，预计2023年年报在4月下旬披露。\"\n  },\n  \"numeric_estimate\": null,\n  \"confidence\": 0.7,\n  \"missing\": \"无2023年年报预约披露日期的直接证据；仅依赖历史披露惯例。\"\n}",
+      "parsed": {
+        "claim_id": "ashare_300308_2023_disclosure_date",
+        "anchors": [
+          {
+            "type": "disclosure_history",
+            "relation": "lead_time",
+            "value": "2019-2022年年报均在4月24-27日披露",
+            "scope": "company",
+            "source_id": "E1",
+            "quote": "2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露。",
+            "date": "2023-12-31",
+            "reliability": 0.7,
+            "hard": false,
+            "implied_label": "晚于2024-04-15",
+            "numeric_value": null,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "",
+            "numeric_period": "",
+            "model_role": null,
+            "rationale": "连续四年年报均在4月24-27日披露，形成稳定的晚披露惯例，指向晚于4月15日。"
+          }
+        ],
+        "label_scores": {
+          "不晚于2024-03-31": 0.05,
+          "2024-04-01至2024-04-15": 0.15,
+          "晚于2024-04-15": 0.8
+        },
+        "date_estimate": {
+          "point": "2024-04-24",
+          "low": "2024-04-18",
+          "high": "2024-04-30",
+          "basis": "历史披露日期集中在4月24-27日，结合法定截止日4月30日，预计2023年年报在4月下旬披露。"
+        },
+        "numeric_estimate": null,
+        "confidence": 0.7,
+        "missing": "无2023年年报预约披露日期的直接证据；仅依赖历史披露惯例。"
+      },
+      "usage": {
+        "input_tokens": 2009,
+        "output_tokens": 450
+      },
+      "error": null
+    },
+    "anchors": [
+      {
+        "type": "disclosure_history",
+        "relation": "lead_time",
+        "value": "2019-2022年年报均在4月24-27日披露",
+        "scope": "company",
+        "source_id": "E1",
+        "quote": "2019年年报于2020-04-24披露；2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露。",
+        "date": "2023-12-31",
+        "reliability": 0.7,
+        "hard": false,
+        "implied_label": "晚于2024-04-15",
+        "numeric_value": null,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "",
+        "numeric_period": "",
+        "model_role": null,
+        "rationale": "连续四年年报均在4月24-27日披露，形成稳定的晚披露惯例，指向晚于4月15日。",
+        "implied_label_matched": "晚于2024-04-15",
+        "implied_label_raw": "晚于2024-04-15",
+        "quote_verified": true,
+        "numeric_verified": false,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.7,
+        "hard_effective": false,
+        "qualification": "soft",
+        "status": "accepted",
+        "reasons": [],
+        "evidence_title": "历史年度报告披露记录",
+        "evidence_url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+        "evidence_date": "2023-12-31"
+      }
+    ],
+    "belief": {
+      "prior": {
+        "不晚于2024-03-31": 0.333333,
+        "2024-04-01至2024-04-15": 0.333333,
+        "晚于2024-04-15": 0.333333
+      },
+      "anchor_only": {
+        "不晚于2024-03-31": 0.202441,
+        "2024-04-01至2024-04-15": 0.202441,
+        "晚于2024-04-15": 0.595118
+      },
+      "final": {
+        "不晚于2024-03-31": 0.188354,
+        "2024-04-01至2024-04-15": 0.223354,
+        "晚于2024-04-15": 0.588291
+      },
+      "hard_projection": [],
+      "trace": [
+        {
+          "anchor_index": 0,
+          "implied_label": "晚于2024-04-15",
+          "qualification": "soft",
+          "reliability_effective": 0.7,
+          "before": {
+            "不晚于2024-03-31": 0.333333,
+            "2024-04-01至2024-04-15": 0.333333,
+            "晚于2024-04-15": 0.333333
+          },
+          "after": {
+            "不晚于2024-03-31": 0.202441,
+            "2024-04-01至2024-04-15": 0.202441,
+            "晚于2024-04-15": 0.595118
+          }
+        }
+      ]
+    },
+    "readout": {
+      "action": "adjudicate",
+      "point": "晚于2024-04-15",
+      "argmax_label": "晚于2024-04-15",
+      "set": [
+        "2024-04-01至2024-04-15",
+        "晚于2024-04-15"
+      ],
+      "expected_loss": 3.506835,
+      "credible_set": [
+        "晚于2024-04-15",
+        "2024-04-01至2024-04-15",
+        "不晚于2024-03-31"
+      ],
+      "credible_set_mass": 1.0,
+      "alpha": 0.1,
+      "action_losses": [
+        {
+          "action": "adjudicate",
+          "set": [
+            "2024-04-01至2024-04-15",
+            "晚于2024-04-15"
+          ],
+          "expected_loss": 3.506835
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "不晚于2024-03-31",
+            "晚于2024-04-15"
+          ],
+          "expected_loss": 3.786835
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "不晚于2024-03-31",
+            "2024-04-01至2024-04-15",
+            "晚于2024-04-15"
+          ],
+          "expected_loss": 4.0
+        },
+        {
+          "action": "answer",
+          "label": "晚于2024-04-15",
+          "expected_loss": 4.493795
+        },
+        {
+          "action": "abstain",
+          "expected_loss": 5.0
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "不晚于2024-03-31",
+            "2024-04-01至2024-04-15"
+          ],
+          "expected_loss": 6.706331
+        },
+        {
+          "action": "answer",
+          "label": "不晚于2024-03-31",
+          "expected_loss": 6.939874
+        },
+        {
+          "action": "answer",
+          "label": "2024-04-01至2024-04-15",
+          "expected_loss": 7.766457
+        }
+      ]
+    },
+    "date_estimate": null,
+    "forecast": null,
+    "calibration": null,
+    "numeric_estimate": null,
+    "seconds": 0.0,
+    "error": null
+  },
+  "outcome": {
+    "label": "晚于2024-04-15",
+    "value": "2024-04-22",
+    "unit": "date",
+    "date": "2024-04-22",
+    "source": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF"
+  }
+}

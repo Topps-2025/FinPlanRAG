@@ -1,0 +1,116 @@
+\relax 
+\bibstyle{acl_natbib}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{lewis2020rag}
+\citation{zhao2024findver,rangapur2025finfact}
+\citation{chow1970optimum,geifman2017selective}
+\citation{jiang2023flare,jeong2024adaptiverag}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\citation{reddy2024docfinqa}
+\citation{zhao2024findver}
+\citation{chen2021finqa,zhu2021tatqa,islam2023financebench,liu2024finben}
+\citation{reddy2024docfinqa}
+\citation{zhao2024findver,rangapur2025finfact}
+\citation{mansouri2026finrank,jiang2026finrate,chen2026hcrag,chi2026finsagent}
+\citation{lewis2020rag}
+\citation{jiang2023flare,jeong2024adaptiverag}
+\citation{yao2023react,shinn2023reflexion}
+\citation{chow1970optimum}
+\citation{geifman2017selective}
+\citation{guo2017calibration}
+\citation{elkan2001cost}
+\citation{vovk2005algorithmic,angelopoulos2021gentle}
+\citation{manski2003partial}
+\citation{lopezdeprado2018advances}
+\@writefile{toc}{\contentsline {paragraph}{Contributions.}{2}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{2}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Financial question answering and verification.}{2}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Retrieval-augmented generation.}{2}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Selective prediction, calibration, and conformal sets.}{2}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Anchors and point-in-time evidence.}{2}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}FinPlanRAG Overview}{2}{section.3}\protected@file@percent }
+\newlabel{sec:architecture}{{3}{2}{FinPlanRAG Overview}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Workload and router}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Determinate branch: obligation retrieval}{3}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Vague branch: anchored adjudication}{3}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}The \textsc  {AnchorEvolve}{} Branch}{3}{section.4}\protected@file@percent }
+\newlabel{sec:anchor}{{4}{3}{The \anchor {} Branch}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Anchor layers}{3}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}LLM anchor extraction}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces FinPlanRAG{} routes a query to an obligation-retrieval branch or a forward-looking AnchorEvolve branch. The router, the reader, and the anchor extractor are LLM calls. The two branches return different answer forms from the same workload.}}{4}{figure.caption.6}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:architecture}{{1}{4}{\method {} routes a query to an obligation-retrieval branch or a forward-looking AnchorEvolve branch. The router, the reader, and the anchor extractor are LLM calls. The two branches return different answer forms from the same workload}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Qualification and belief update}{4}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Anchor-conditioned ensemble}{4}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Loss-aware gate}{4}{subsection.4.5}\protected@file@percent }
+\citation{reddy2024docfinqa}
+\citation{zhao2024findver}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Point-in-time self-evolution}{5}{subsection.4.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Experimental Design}{5}{section.5}\protected@file@percent }
+\newlabel{sec:experiments}{{5}{5}{Experimental Design}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Data}{5}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Backbones}{5}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Baselines}{5}{subsection.5.3}\protected@file@percent }
+\citation{zhao2024findver}
+\citation{rangapur2025finfact}
+\citation{asai2024selfrag}
+\citation{yan2024crag}
+\citation{jiang2023flare}
+\citation{jeong2024adaptiverag}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Metrics}{6}{subsection.5.4}\protected@file@percent }
+\newlabel{sec:metrics}{{5.4}{6}{Metrics}{subsection.5.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results}{6}{section.6}\protected@file@percent }
+\newlabel{sec:results}{{6}{6}{Results}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Determinate retrieval}{6}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Forward-looking adjudication}{6}{subsection.6.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces DocFinQA long-document question answering. All conditions use the same reader and backbone; only the evidence policy changes. Named RAG methods are same-backbone adaptations (suffix -style). ``Paras'' is the mean number of acquired paragraphs and ``Cov.'' the answer coverage.}}{7}{table.caption.7}\protected@file@percent }
+\newlabel{tab:docfinqa}{{1}{7}{DocFinQA long-document question answering. All conditions use the same reader and backbone; only the evidence policy changes. Named RAG methods are same-backbone adaptations (suffix -style). ``Paras'' is the mean number of acquired paragraphs and ``Cov.'' the answer coverage}{table.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Routing and mixed workload}{7}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}External transfer}{7}{subsection.6.4}\protected@file@percent }
+\bibdata{references}
+\bibcite{angelopoulos2021gentle}{{1}{2021}{{Angelopoulos and Bates}}{{}}}
+\bibcite{asai2024selfrag}{{2}{2024}{{Asai et~al.}}{{Asai, Wu, Wang, Sil, and Hajishirzi}}}
+\bibcite{chen2026hcrag}{{3}{2026}{{Chen et~al.}}{{Chen, Tan, You, and Liang}}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Revenue-guidance adjudication on 227 XBRL-verified test claims. Acc: accuracy; Bal: balanced accuracy; Macro: macro F1; Loss: asymmetric decision loss (lower is better). FinPlanRAG is the full system. Named methods are same-backbone adaptations (suffix -style).}}{8}{table.caption.8}\protected@file@percent }
+\newlabel{tab:vague}{{2}{8}{Revenue-guidance adjudication on 227 XBRL-verified test claims. Acc: accuracy; Bal: balanced accuracy; Macro: macro F1; Loss: asymmetric decision loss (lower is better). FinPlanRAG is the full system. Named methods are same-backbone adaptations (suffix -style)}{table.caption.8}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Mixed-workload routing over 300 DocFinQA questions and 273 forward-looking claims. Utility is the task-specific score defined in Section~\ref {sec:metrics}.}}{8}{table.caption.9}\protected@file@percent }
+\newlabel{tab:router}{{3}{8}{Mixed-workload routing over 300 DocFinQA questions and 273 forward-looking claims. Utility is the task-specific score defined in Section~\ref {sec:metrics}}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Discussion}{8}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{8}{section.8}\protected@file@percent }
+\bibcite{chen2021finqa}{{4}{2021}{{Chen et~al.}}{{Chen, Chen, Smiley, Shah, Borova, Langdon, Moussa, Beane, Huang, Routledge, and Wang}}}
+\bibcite{chi2026finsagent}{{5}{2026}{{Chi et~al.}}{{Chi, Tai, Wu, Kwok, He, Liao, Xiao, Jiang, Lei, Huang, Lu, Li, Ma, Wu, Lyu, Tian, Li, Ma, Hu, and Cui}}}
+\bibcite{chow1970optimum}{{6}{1970}{{Chow}}{{}}}
+\bibcite{elkan2001cost}{{7}{2001}{{Elkan}}{{}}}
+\bibcite{geifman2017selective}{{8}{2017}{{Geifman and El-Yaniv}}{{}}}
+\bibcite{guo2017calibration}{{9}{2017}{{Guo et~al.}}{{Guo, Pleiss, Sun, and Weinberger}}}
+\bibcite{islam2023financebench}{{10}{2023}{{Islam et~al.}}{{Islam, Kannappan, Kiela, Qian, Scherrer, and Vidgen}}}
+\bibcite{jeong2024adaptiverag}{{11}{2024}{{Jeong et~al.}}{{Jeong, Baek, Cho, Hwang, and Park}}}
+\bibcite{jiang2026finrate}{{12}{2026}{{Jiang et~al.}}{{Jiang, Chen, Makri, Chen, Li, Maatouk, Tassiulas, Brenner, Xiang, and Ying}}}
+\bibcite{jiang2023flare}{{13}{2023}{{Jiang et~al.}}{{Jiang, Xu, Gao, Sun, Liu, Dwivedi-Yu, Yang, Callan, and Neubig}}}
+\bibcite{lewis2020rag}{{14}{2020}{{Lewis et~al.}}{{Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal, Kuttler, Lewis, Yih, Rocktaschel, Riedel, and Kiela}}}
+\bibcite{lopezdeprado2018advances}{{15}{2018}{{L{\'o}pez~de Prado}}{{}}}
+\bibcite{manski2003partial}{{16}{2003}{{Manski}}{{}}}
+\bibcite{mansouri2026finrank}{{17}{2026}{{Mansouri et~al.}}{{Mansouri, Saad, Wahrenburg, Weissel, and Woebbeking}}}
+\bibcite{rangapur2025finfact}{{18}{2025}{{Rangapur et~al.}}{{Rangapur, Wang, Jian, and Shu}}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces FinDVer testmini transfer with the default reader.}}{9}{table.caption.10}\protected@file@percent }
+\newlabel{tab:findver}{{4}{9}{FinDVer testmini transfer with the default reader}{table.caption.10}{}}
+\bibcite{reddy2024docfinqa}{{19}{2024}{{Reddy et~al.}}{{Reddy, Koncel-Kedziorski, Lai, Krumdick, Lovering, and Tanner}}}
+\bibcite{shinn2023reflexion}{{20}{2023}{{Shinn et~al.}}{{Shinn, Cassano, Berman, Gopinath, Narasimhan, and Yao}}}
+\bibcite{vovk2005algorithmic}{{21}{2005}{{Vovk et~al.}}{{Vovk, Gammerman, and Shafer}}}
+\bibcite{liu2024finben}{{22}{2024}{{Xie et~al.}}{{Xie, Han, Chen, Xiang, Zhang, He, Xiao, Li, Dai, Feng, Xu, Kang, Kuang, Yuan, Yang, Luo, Zhang, Liu, Xiong, Deng, Jiang, Yao, Li, Yu, Hu, Huang, Liu, Lopez-Lira, Wang, Lai, Wang, Peng, Ananiadou, and Huang}}}
+\bibcite{yan2024crag}{{23}{2024}{{Yan et~al.}}{{Yan, Gu, Zhu, and Ling}}}
+\bibcite{yao2023react}{{24}{2023}{{Yao et~al.}}{{Yao, Zhao, Yu, Du, Shafran, Narasimhan, and Cao}}}
+\bibcite{zhao2024findver}{{25}{2024}{{Zhao et~al.}}{{Zhao, Long, Jiang, Wang, Chen, Liu, Tang, Zhang, Zhao, and Cohan}}}
+\bibcite{zhu2021tatqa}{{26}{2021}{{Zhu et~al.}}{{Zhu, Lei, Huang, Wang, Zhang, Lv, Feng, and Chua}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Prompts and Implementation Details}{10}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Additional Metrics}{10}{appendix.B}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {C}Reproducibility}{10}{appendix.C}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {D}Qwen3-8B on DocFinQA}{10}{appendix.D}\protected@file@percent }
+\newlabel{app:qwen}{{D}{10}{Qwen3-8B on DocFinQA}{appendix.D}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Full metric suite on the 227 verified revenue-guidance claims, DeepSeek backbone. Lower is better for ECE, Brier, decision loss, and AURC; Sel@50 is selective accuracy at 50\% coverage.}}{11}{table.caption.12}\protected@file@percent }
+\newlabel{tab:fullmetrics}{{5}{11}{Full metric suite on the 227 verified revenue-guidance claims, DeepSeek backbone. Lower is better for ECE, Brier, decision loss, and AURC; Sel@50 is selective accuracy at 50\% coverage}{table.caption.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Qwen3-8B DocFinQA results on the 300-question sample.}}{11}{table.caption.13}\protected@file@percent }
+\newlabel{tab:qwendoc}{{6}{11}{Qwen3-8B DocFinQA results on the 300-question sample}{table.caption.13}{}}
+\gdef \@abspage@last{11}

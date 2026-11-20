@@ -1,0 +1,246 @@
+\documentclass[12pt,openany]{ctexbook}
+
+% 上海财经大学硕士学位论文版式
+% 版式目标：A4，黑白色正文，左侧装订，三线表，表题在上，图题在下
+\usepackage[a4paper,top=3.8cm,bottom=3.8cm,left=3.2cm,right=3.2cm,headheight=13pt,headsep=0.35cm,footskip=0.8cm]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage{tocloft}
+\renewcommand{\cftchapfont}{\mdseries\songti\zihao{4}}
+\renewcommand{\cftchappagefont}{\mdseries\songti\zihao{4}}
+\renewcommand{\cftsecfont}{\mdseries\songti\zihao{-4}}
+\renewcommand{\cftsecpagefont}{\mdseries\songti\zihao{-4}}
+\renewcommand{\cftsubsecfont}{\mdseries\songti\zihao{5}}
+\renewcommand{\cftsubsecpagefont}{\mdseries\songti\zihao{5}}
+\setlength{\cftchapindent}{2em}
+\setlength{\cftsecindent}{4em}
+\setlength{\cftsecnumwidth}{4.2em}
+\renewcommand{\cftsecaftersnum}{\hspace{1em}}
+\setlength{\cftsubsecindent}{7em}
+\setlength{\cftsubsecnumwidth}{2.5em}
+\renewcommand{\cftsubsecaftersnum}{\hspace{0.5em}}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage[round,authoryear]{natbib}
+\bibpunct{(}{)}{;}{a}{,}{,}
+\renewcommand{\bibname}{参考文献}
+\usepackage{fontspec}
+\usepackage{seqsplit}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  showstringspaces=false,
+  keepspaces=true,
+  tabsize=2
+}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+
+\newfontfamily\arial{Arial}
+\setmainfont{Times New Roman}
+\setCJKmainfont[AutoFakeBold=2,BoldFont=SimHei,ItalicFont=SimSun]{SimSun}
+\setCJKsansfont[AutoFakeBold=2,BoldFont=SimHei]{SimHei}
+\setCJKmonofont{SimSun}
+\setCJKfamilyfont{song}[AutoFakeBold=2,BoldFont=SimHei]{SimSun}
+\setCJKfamilyfont{hei}[AutoFakeBold=2,BoldFont=SimHei]{SimHei}
+\setCJKfamilyfont{zhsong}[AutoFakeBold=2,BoldFont=SimHei]{SimSun}
+\setCJKfamilyfont{zhhei}[AutoFakeBold=2,BoldFont=SimHei]{SimHei}
+\setCJKfamilyfont{zhfs}[AutoFakeBold=2,BoldFont=SimHei]{FangSong}
+\setCJKfamilyfont{callig}{STXingkai}
+\newcommand{\calligfont}{\CJKfamily{callig}}
+\newcommand{\finplanrepo}{https://github.com/Topps-2025/FinPlanRAG}
+\XeTeXgenerateactualtext=1
+
+\hypersetup{colorlinks=false,hidelinks,linkcolor=black,citecolor=black,urlcolor=black,
+  pdftitle={FinPlanRAG：面向前瞻性金融断言的锚点演化框架}}
+
+\DeclareCaptionFont{sufeten}{\fontsize{10.5pt}{12.6pt}\selectfont}
+\DeclareCaptionLabelSeparator{sufetwo}{\hspace{2em}}
+\captionsetup[table]{position=top,font=sufeten,labelfont=bf,labelsep=sufetwo,skip=6pt,justification=centering}
+\captionsetup[figure]{position=bottom,font=sufeten,labelfont=bf,labelsep=sufetwo,skip=6pt,justification=centering}
+\renewcommand{\listfigurename}{图\quad 目\quad 录}
+\renewcommand{\listtablename}{表\quad 目\quad 录}
+\setlength{\heavyrulewidth}{1.0pt}
+\setlength{\lightrulewidth}{0.5pt}
+\renewcommand{\arraystretch}{1.15}
+
+\ctexset{
+  chapter/format={\centering\heiti\zihao{3}},
+  chapter/beforeskip={24pt},
+  chapter/afterskip={18pt},
+  chapter/aftername={\qquad},
+  chapter/afterindent=true,
+  section/format={\centering\heiti\zihao{4}},
+  section/name={第,节},
+  section/number={\chinese{section}},
+  section/afterindent=true,
+  section/beforeskip={24pt},
+  section/afterskip={6pt},
+  section/aftername={\qquad},
+  subsection/format={\heiti\fontsize{13pt}{15.6pt}\selectfont},
+  subsection/name={,、},
+  subsection/number={\chinese{subsection}},
+  subsection/beforeskip={12pt},
+  subsection/afterskip={6pt},
+  subsection/aftername={},
+  chapter/name={第,章},
+  chapter/number={\chinese{chapter}},
+  contentsname={目\quad 录},
+  figurename={图},
+  tablename={表}
+}
+\renewcommand{\thetable}{\thechapter.\arabic{table}}
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+
+\let\cleardoublepage\clearpage
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\makeatletter
+\@afterindenttrue
+\let\@afterindentfalse\@afterindenttrue
+\makeatother
+\linespread{1.37931}
+\raggedbottom
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\zihao{5}\songti \nouppercase{\leftmark}}
+\fancyfoot[C]{\zihao{5}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\renewcommand{\sectionmark}[1]{}
+
+\newtheorem{proposition}{命题}[chapter]
+\newtheorem{theorem}{定理}[chapter]
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\indic}{\mathbf{1}}
+\newcommand{\method}{FinPlanRAG}
+\newcommand{\anchorevolve}{AnchorEvolve}
+\newcommand{\sufehead}[1]{\chapter*{#1}\markboth{#1}{#1}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\sufesec}[1]{\par\vspace{12pt}\noindent{\heiti\zihao{4}#1}\par\vspace{6pt}\phantomsection\addcontentsline{toc}{section}{#1}}
+
+\title{\method：面向前瞻性金融断言的锚点演化框架}
+\author{}
+\date{2026年11月}
+
+\begin{document}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+% ==================== 封面 ====================
+\begin{titlepage}
+\thispagestyle{empty}
+\noindent
+\begin{minipage}[t]{0.5\linewidth}
+\vspace{0pt}
+\includegraphics[width=2.6cm]{figures/sufe_logo.png}
+\end{minipage}%
+\begin{minipage}[t]{0.5\linewidth}
+\raggedleft
+{\zihao{5}\songti 学校代码：10272\par}
+\end{minipage}
+
+\vspace{1.1cm}
+\begin{center}
+{\calligfont\fontsize{40pt}{48pt}\selectfont 上海财经大学\par}
+\vspace{0.45cm}
+{\zihao{3}\bfseries SHANGHAI UNIVERSITY OF FINANCE AND\par}
+{\zihao{3}\bfseries ECONOMICS\par}
+\vspace{0.55cm}
+{\zihao{2}\heiti 硕士学位论文\par}
+\vspace{0.25cm}
+{\zihao{3}\bfseries MASTER\quad DISSERTATION\par}
+\end{center}
+
+\vspace{2.6cm}
+\begin{center}
+{\zihao{4}\songti
+\renewcommand{\arraystretch}{1.75}
+\begin{tabular}{r@{\quad}l}
+论文题目 & \underline{\makebox[9.6cm][c]{\textbf{FinPlanRAG：面向前瞻性金融断言的}}} \tabularnewline
+ & \underline{\makebox[9.6cm][c]{\textbf{锚点演化框架}}} \tabularnewline
+专\qquad 业 & \underline{\makebox[9.6cm][c]{金融工程与量化投资}} \tabularnewline
+\end{tabular}\par}
+\end{center}
+\end{titlepage}
+
+\frontmatter
+\pagestyle{fancy}
+
+% ==================== 中文摘要 ====================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{摘\texorpdfstring{\quad}{ }要}
+\begin{center}
+{\zihao{-2}\heiti \method：面向前瞻性金融断言的\\[0.2cm]
+锚点演化框架\par}
+\vspace{0.2cm}
+{\zihao{-2}\heiti 摘\quad 要\par}
+\end{center}
+\vspace{0.2cm}
+\markboth{摘\quad 要}{摘\quad 要}
+{\zihao{-4}\songti\sloppy
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\hspace*{2em}金融分析中的许多问题并不要求复述已经披露的事实，而是要求判断尚未实现的结果。年报营业收入增速、下一年度毛利率、业绩指引能否兑现，以及结果何时披露，都属于这类前瞻性断言。现有金融问答与断言验证研究通常假设答案已经存在于文档中，或把断言压缩为支持、反驳和证据不足三类标签；检索增强生成则多以单一答案作为输出。面对截止时点尚未实现的结果，这些接口无法同时表达证据不足、结果不确定和错误成本不对称。\par
+\hspace*{2em}本文提出FinPlanRAG，其核心是AnchorEvolve锚点演化模块。FinPlanRAG把前瞻性金融断言表示为截止时点上的契约，并在有限结果空间上维护可演化的锚点状态。契约明确公司、目标期间、指标、结果空间和截止时点；锚点状态由稳定关系、行业模式和实例三层构成；每个锚点在进入信念更新前经过空泛、过期、对抗、硬、软五类资格判定；已揭示结果按公开揭示日更新锚点类型的Beta可靠性，避免把未来信息泄漏到时点判断；校准后验在点答案、非单元素裁决集和弃权三个动作上最小化期望损失。\par
+\hspace*{2em}本文在227条XBRL核验收入指引断言、470条A股年报断言和150条FinDVer断言上，以DeepSeek Flash、GLM 5.3 Flash和Qwen3-8B为基座评估框架。全动作损失感知读出相对受限可信集门在三个基座上分别降低0.749、0.581和0.696的决策损失，配对区间均排除零；去掉三层锚点结构、只保留时点证据、LLM标签分数和全动作读出后，三个基座的损失分别上升0.379、0.317和0.899。融合系统在三个基座的准确率、平衡准确率、宏F1和决策损失上均为最高；相对最强基线，DeepSeek和GLM的配对区间包含零，Qwen的区间排除零。在真实结果落在指引区间内的82条断言上，三个基座的融合损失均显著低于随机森林，DeepSeek和Qwen的五个种子全部排除零，GLM有四个种子排除零。受验证集约束的类型库扩展在DeepSeek上把测试损失从2.934降到2.907，并把准确率从0.555提高到0.577。A股回测中，DeepSeek完整系统取得0.783的准确率和2.179的决策损失，高于季度年化的0.777和2.270，去桥变体为0.638和2.421。\par
+\hspace*{2em}本文的原创性体现在三个方面。第一，把前瞻性断言表示为带截止时点和有限结果空间的契约，并把输出扩展为点答案、非单元素裁决集和弃权，使“证据不足时应当输出什么”成为契约的一部分。第二，把三层锚点、五类资格判定和按揭示日更新的Beta可靠性组织成可审计的证据状态，每个判断都可以回溯到来源、引文、日期和资格。第三，把类型库扩展纳入验证集门控的训练流程，使框架能够在不使用测试标签的条件下扩展锚点类型。与已有金融问答和断言验证工作相比，本文改变的不是阅读器，而是证据、判断和动作之间的接口。本文不把全面优于所有基线作为贡献前提；它主张的是一种证据资格判定协议和类型可靠性演化机制，在损失不显著劣化的条件下提供现有选择性预测接口不以同等成本复制的审计粒度。\par
+\noindent{\zihao{-4}\heiti 关键词：}{\zihao{-4}\songti 前瞻性断言\hspace{0.6em}锚点演化\hspace{0.6em}时点证据\hspace{0.6em}证据裁决\hspace{0.6em}可审计人工智能}
+}
+
+% ==================== 英文摘要 ====================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Abstract}
+\begin{center}{\arial\bfseries\zihao{-2} Abstract\par}\end{center}
+\vspace{0.6cm}
+\markboth{Abstract}{Abstract}
+{\arial\zihao{-4}\selectfont\sloppy
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\hspace*{2em}Many questions in financial analysis do not ask for a disclosed fact. They ask for an outcome that has not yet been realized: next year's revenue growth, the gross margin of an annual report, whether guidance will be met, or when the result will be disclosed. Existing financial QA and claim-verification systems assume that the answer is already in the document or compress the claim into support, refute, or insufficient evidence. RAG systems usually return a single answer. These interfaces cannot jointly express partial evidence, outcome uncertainty, and asymmetric error costs at a cutoff.\par
+\hspace*{2em}We present FinPlanRAG, whose core is the AnchorEvolve module. FinPlanRAG represents a forward-looking financial claim as a contract at a cutoff and maintains an evolving anchor state over a finite outcome space. The contract fixes the company, target period, metric, outcome space, and cutoff. The anchor state has three layers: stable relations, industry schemas, and instances. Each anchor is qualified as vacuous, stale, adversarial, hard, or soft before belief update. Revealed outcomes update Beta reliabilities of anchor types only after their public reveal date, which prevents future information from leaking into the point-in-time judgment. A calibrated posterior minimizes expected loss over a point answer, a non-singleton adjudication set, and abstention.\par
+\hspace*{2em}We evaluate the framework on 227 XBRL-verified revenue-guidance claims, 470 A-share annual-report claims, and 150 FinDVer claims, with DeepSeek Flash, GLM 5.3 Flash, and Qwen3-8B as backbones. The full-action readout lowers decision loss relative to a restricted credible-set gate by 0.749, 0.581, and 0.696 on the three backbones, with all paired intervals excluding zero. Fusion has the highest accuracy, balanced accuracy, macro-F1, and lowest decision loss on every backbone; relative to the strongest baseline, the DeepSeek and GLM intervals include zero and the Qwen interval excludes zero. On the 82 claims whose realized outcome lies inside the guidance range, fusion significantly lowers loss relative to the forest on all three backbones, with five of five seeds excluding zero on DeepSeek and Qwen and four of five on GLM. A validation-gated type-library extension lowers DeepSeek test loss from 2.934 to 2.907 and raises accuracy from 0.555 to 0.577. On the A-share backtest, the DeepSeek full system reaches 0.783 accuracy and 2.179 decision loss, above the run-rate baseline at 0.777 and 2.270 and the no-bridge variant at 0.638 and 2.421. The contribution is to recast forward-looking claims from a one-shot classification problem into an auditable, evolving decision problem, and to provide a reusable evidence state, decision protocol, and type-library extension interface.\par
+}
+\vspace{0.4cm}
+\noindent{\arial\bfseries\zihao{-4} Key Words:} {\arial\zihao{-4}\selectfont forward-looking claims\hspace{0.8em}anchor evolution\hspace{0.8em}point-in-time evidence\hspace{0.8em}evidence adjudication\hspace{0.8em}auditable AI}
+
+% ==================== 目录 ====================
+\clearpage
+\tableofcontents
+\markboth{目\quad 录}{目\quad 录}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{图\texorpdfstring{\quad}{ }目\texorpdfstring{\quad}{ }录}
+\listoffigures
+\markboth{图\quad 目\quad 录}{图\quad 目\quad 录}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{表\texorpdfstring{\quad}{ }目\texorpdfstring{\quad}{ }录}
+\listoftables
+\markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
+\clearpage
+
+\mainmatter
+\zihao{-4}
+\setlength{\parindent}{2em}
+
+\input{chapters}
+\input{backmatter}
+
+\end{document}

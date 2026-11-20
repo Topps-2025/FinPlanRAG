@@ -1,0 +1,73 @@
+{
+  "schema": "finplan-company-disjoint-protocol-v1",
+  "status": "implemented and run; constants fixed in scripts/run_company_disjoint_benchmark.py before execution",
+  "date": "2026-10-31",
+  "data": "C:\\Users\\Lenovo\\Desktop\\Paper\\AnchorEvolve\\real_data_v4\\dataset_v4.json",
+  "claim_unit": "one revenue-guidance claim (company, cutoff date, target period)",
+  "test_claims": 273,
+  "test_years": [2022, 2023, 2024, 2025],
+  "company_folds": 5,
+  "fold_seeds": [1, 2, 3, 4, 5],
+  "fold_assignment": "int(sha256('{seed}:{company}').hexdigest(), 16) % 5",
+  "training_filter": "company fold != test fold AND outcome date < January 1 of the test year",
+  "point_in_time": true,
+  "company_disjoint": true,
+  "features": [
+    "guidance width (high-low)/mid",
+    "current-quarter value / guidance mid - 1",
+    "guidance mid / current-quarter value - 1",
+    "number of prior outcomes public before cutoff",
+    "prior outcome distribution below/within/above (add-one smoothed)",
+    "previous-guidance growth",
+    "previous-guidance width",
+    "target quarter",
+    "cutoff year",
+    "sector (one-hot)"
+  ],
+  "model": "multinomial logistic regression, C=1.0, class_weight=balanced",
+  "calibration": "none in the primary benchmark; temperature scaling on internal company-disjoint folds in the decision-layer sensitivity",
+  "primary_metrics": ["macro F1", "balanced accuracy (mean per-class recall)"],
+  "secondary_metrics": [
+    "accuracy",
+    "per-class recall",
+    "selective accuracy at 50% coverage",
+    "AURC",
+    "ECE",
+    "Brier score",
+    "log loss"
+  ],
+  "uncertainty": {
+    "per_seed": "paired bootstrap over claims",
+    "claim_level": "average each claim's correctness over the five fold seeds, then bootstrap claims",
+    "ensemble": "average the five fold-seed probability vectors per claim, then paired bootstrap over claims",
+    "significance": "two-sided sign-flip permutation test over claim-level differences; per-seed McNemar reported as a secondary test"
+  },
+  "sensitivity": {
+    "verified_only": "restrict evaluation to test claims whose outcome label is xbrl_search, xbrl_verified, or xbrl_override (n=227); text_only and text_only_mismatch labels excluded",
+    "reason": "the 46 excluded claims have text-only outcome labels and can bias accuracy/selective estimates"
+  },
+  "decision_layer": {
+    "state": "three-way probability vector from the evidence model",
+    "actions": ["answer", "adjudicate", "abstain"],
+    "policy": "Bayes action minimizing expected asymmetric loss",
+    "loss_configs": [
+      "base",
+      "symmetric",
+      "over_averse",
+      "under_averse",
+      "cheap_abstain",
+      "expensive_abstain",
+      "narrow_penalty",
+      "wide_penalty",
+      "alpha_05",
+      "alpha_20"
+    ],
+    "baselines": [
+      "always_answer",
+      "always_adjudicate",
+      "always_abstain",
+      "fixed confidence thresholds 0.40/0.50/0.60/0.70"
+    ],
+    "primary_comparison": "planner minus always-answer decision loss; planner regret relative to the best fixed policy across the loss grid"
+  }
+}

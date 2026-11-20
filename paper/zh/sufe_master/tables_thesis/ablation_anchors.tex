@@ -1,0 +1,22 @@
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{2.5pt}
+\caption{锚点组件消融（在锚点后验上进行，不改变最终决策头）。“去全部锚点”为仅使用先验与边际分数；“去硬锚点”为取消硬锚点掩码；“去…”为去除该类型锚点。}
+\label{tab:ablation-anchors}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+条件 & DeepSeek Flash Macro & Loss & GLM 5.3 Flash Macro & Loss & Qwen Macro & Loss \\
+\midrule
+完整锚点后验 & .233 & 4.110 & .286 & 3.905 & .339 & 3.744 \\
+去全部锚点 & .213 & 3.919 & .211 & 4.022 & .272 & 4.000 \\
+去硬锚点 & .233 & 4.073 & .286 & 3.875 & .341 & 3.729 \\
+去指引宽度 & .212 & 4.491 & .248 & 4.051 & .334 & 4.271 \\
+去当前季增长 & .217 & 3.678 & .252 & 3.788 & .318 & 3.788 \\
+去公司历史 & .263 & 3.839 & .291 & 3.875 & .338 & 3.883 \\
+去行业历史 & .238 & 3.861 & .288 & 3.919 & .352 & 3.985 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

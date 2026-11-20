@@ -1,0 +1,22 @@
+\begin{table*}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{DeepSeek Flash基座上的八项指标。ECE和Brier越低越好。}
+\label{tab:fullmetrics}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+方法 & 准确率 & 平衡准确率 & 宏F1 & MCC & AUROC & AUPRC & ECE & Brier \\
+\midrule
+FinDVer-style & \textbf{.551} & .461 & .464 & \textbf{.233} & .674 & .494 & .092 & .580 \\
+Fin-Fact-style & .537 & .446 & .450 & .201 & .650 & .475 & .075 & .590 \\
+Self-RAG-style & .546 & .451 & .456 & .216 & .670 & .491 & .102 & .580 \\
+CRAG-style & .529 & .423 & .418 & .177 & .643 & .473 & .097 & .593 \\
+FLARE-style & .511 & .417 & .411 & .164 & .634 & .467 & .130 & .610 \\
+Adaptive-RAG-style & .493 & .406 & .400 & .143 & .584 & .425 & .147 & .634 \\
+AnchorEvolve-LLM & .445 & .307 & .242 & -0.075 & .465 & .312 & .129 & .666 \\
+校准随机森林 & .533 & \textbf{.491} & \textbf{.486} & .229 & \textbf{.706} & \textbf{.505} & \textbf{.033} & \textbf{.566} \\
+FinPlanRAG & .533 & \textbf{.491} & \textbf{.486} & .229 & \textbf{.706} & \textbf{.505} & \textbf{.033} & \textbf{.566} \\
+\bottomrule
+\end{tabular}
+\end{table*}

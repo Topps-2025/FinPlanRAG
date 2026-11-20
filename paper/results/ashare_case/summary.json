@@ -1,0 +1,137 @@
+[
+  {
+    "file": "zhongji_2023_disclosure_date.json",
+    "point": "晚于2024-04-15",
+    "set": [
+      "2024-04-01至2024-04-15",
+      "晚于2024-04-15"
+    ],
+    "action": "adjudicate",
+    "belief": {
+      "不晚于2024-03-31": 0.188354,
+      "2024-04-01至2024-04-15": 0.223354,
+      "晚于2024-04-15": 0.588291
+    },
+    "outcome_label": "晚于2024-04-15",
+    "outcome_value": "2024-04-22",
+    "forecast": null
+  },
+  {
+    "file": "zhongji_2023_gross_margin.json",
+    "point": "高于30.31pp",
+    "set": [
+      "28.31pp至30.31pp",
+      "高于30.31pp"
+    ],
+    "action": "adjudicate",
+    "belief": {
+      "低于28.31pp": 0.04488,
+      "28.31pp至30.31pp": 0.419563,
+      "高于30.31pp": 0.535557
+    },
+    "outcome_label": "高于30.31pp",
+    "outcome_value": 32.992276,
+    "forecast": 31.75
+  },
+  {
+    "file": "zhongji_2023_net_profit_growth.json",
+    "point": "低于24.57%",
+    "set": [
+      "低于24.57%",
+      "24.57%至54.57%"
+    ],
+    "action": "adjudicate",
+    "belief": {
+      "低于24.57%": 0.603098,
+      "24.57%至54.57%": 0.330781,
+      "高于54.57%": 0.066121
+    },
+    "outcome_label": "高于54.57%",
+    "outcome_value": 77.57712151508498,
+    "forecast": 41.177524093213314
+  },
+  {
+    "file": "zhongji_2023_revenue_growth.json",
+    "point": "低于15.29%",
+    "set": [
+      "低于15.29%",
+      "15.29%至35.29%"
+    ],
+    "action": "adjudicate",
+    "belief": {
+      "低于15.29%": 0.607242,
+      "15.29%至35.29%": 0.327131,
+      "高于35.29%": 0.065626
+    },
+    "outcome_label": "低于15.29%",
+    "outcome_value": 11.161715542173267,
+    "forecast": -2.7843512464206133
+  },
+  {
+    "file": "zhongji_2024_disclosure_date.json",
+    "point": "晚于2025-04-15",
+    "set": [
+      "2025-04-01至2025-04-15",
+      "晚于2025-04-15"
+    ],
+    "action": "adjudicate",
+    "belief": {
+      "不晚于2025-03-31": 0.185132,
+      "2025-04-01至2025-04-15": 0.220132,
+      "晚于2025-04-15": 0.594736
+    },
+    "outcome_label": "晚于2025-04-15",
+    "outcome_value": "2025-04-21",
+    "forecast": null
+  },
+  {
+    "file": "zhongji_2024_gross_margin.json",
+    "point": "31.99pp至33.99pp",
+    "set": [
+      "31.99pp至33.99pp"
+    ],
+    "action": "answer",
+    "belief": {
+      "低于31.99pp": 0.053564,
+      "31.99pp至33.99pp": 0.817872,
+      "高于33.99pp": 0.128564
+    },
+    "outcome_label": "31.99pp至33.99pp",
+    "outcome_value": 33.804958,
+    "forecast": 33.32
+  },
+  {
+    "file": "zhongji_2024_net_profit_growth.json",
+    "point": "高于92.58%",
+    "set": [
+      "低于62.58%",
+      "高于92.58%"
+    ],
+    "action": "adjudicate",
+    "belief": {
+      "低于62.58%": 0.18885,
+      "62.58%至92.58%": 0.117236,
+      "高于92.58%": 0.693913
+    },
+    "outcome_label": "高于92.58%",
+    "outcome_value": 137.93052438165793,
+    "forecast": 130.2248041293245
+  },
+  {
+    "file": "zhongji_2024_revenue_growth.json",
+    "point": "高于21.16%",
+    "set": [
+      "低于1.162%",
+      "高于21.16%"
+    ],
+    "action": "adjudicate",
+    "belief": {
+      "低于1.162%": 0.188062,
+      "1.162%至21.16%": 0.114043,
+      "高于21.16%": 0.697895
+    },
+    "outcome_label": "高于21.16%",
+    "outcome_value": 122.63663287503195,
+    "forecast": 115.37631503753825
+  }
+]

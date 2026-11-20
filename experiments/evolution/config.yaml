@@ -1,0 +1,94 @@
+# Config-driven AnchorEvolve experiment.
+# No API key is stored here: the client reads the environment variable named
+# below. Every threshold/weight used by the pipeline lives in this file.
+
+data: paper/data/dataset_v4.json
+earnings_events: paper/data/earnings_events.json
+filing_cache: paper/data/filings
+results_dir: paper/results/evolution_v1
+anchor_source: new
+sources:
+  validation_old: paper/results/unified/vague_validation_v2_deepseek/per_claim.jsonl
+  test_old: paper/results/unified/vague_v2_deepseek/per_claim.jsonl
+  validation_new: paper/results/evolution_v1/anchors_validation.jsonl
+  test_new: paper/results/evolution_v1/anchors_test.jsonl
+  rf_validation: paper/results/evolution_v1/rf_validation.jsonl
+  rf_test: paper/results/rf_calibrated_repro/per_claim.jsonl
+  old_ensemble_test: paper/results/unified/ensemble_repro_deepseek_per_claim.jsonl
+prompt_path: experiments/evolution/prompts/anchor_v2.txt
+
+llm:
+  provider: deepseek
+  model: deepseek-flash[1m]
+  base_url: https://api.deepseek.com/anthropic
+  api_key_env: ANTHROPIC_AUTH_TOKEN
+  workers: 8
+  max_tokens: 1800
+  temperature: 0.0
+  cache_dir: paper/results/evolution_v1/llm_cache
+
+filing:
+  user_agent: "FinPlanRAG research (contact: research@example.com)"
+  request_delay_seconds: 0.15
+  timeout_seconds: 30
+  max_chars: 24000
+  head_chars: 5000
+  top_k_paragraphs: 12
+  min_paragraph_chars: 80
+
+anchors:
+  hard_reliability: 0.65
+  soft_p_e: 0.7
+  soft_mix: 0.5
+  alpha: 0.9
+  loss:
+    over: 12.0
+    under: 8.0
+    wrong: 10.0
+    miss: 8.0
+    width: 2.0
+    abstain: 5.0
+  types:
+    - guidance_width
+    - current_quarter_growth
+    - company_history
+    - sector_history
+    - text_signal
+    - other
+  relations:
+    - bound
+    - precedence
+    - lead_time
+    - duration
+    - conservation
+    - rate
+    - unit_conversion
+    - scope
+  max_anchors: 12
+  mask_company: true
+  fusion_weights: [0.0, 0.05, 0.1, 0.2, 0.3, 0.5, 1.0]
+
+evolution:
+  enabled: true
+  beta_alpha: 1.0
+  beta_beta: 1.0
+  half_life_days: 540
+  shrinkage: 0.5
+  min_observations: 5
+  use_peer_prior: true
+  use_company_history: true
+
+model:
+  type: random_forest
+  n_estimators: 600
+  min_samples_leaf: 5
+  class_weight: balanced_subsample
+  folds: 5
+  seeds: [1, 2, 3, 4, 5]
+  test_years: [2022, 2023, 2024, 2025]
+  calibration_folds: 3
+
+evaluation:
+  verified_only: true
+  bootstrap_resamples: 10000
+  seed: 20261118

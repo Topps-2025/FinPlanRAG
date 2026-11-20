@@ -1,0 +1,52 @@
+\begin{figure}[H]
+\centering
+\resizebox{0.98\linewidth}{!}{%
+\begin{tikzpicture}[
+  font=\normalsize,
+  >=Latex,
+  box/.style={draw, rounded corners=3pt, align=center, text width=2.6cm, minimum height=0.9cm, inner sep=3pt, fill=white},
+  panel/.style={draw, rounded corners=6pt, inner sep=7pt, fill=gray!5},
+  arrow/.style={->, thick, draw=black!65},
+  lbl/.style={font=\footnotesize, text=black!70}
+]
+\node[box, fill=gray!10] (q) at (0,0) {查询 $q$\\截止时点 $c$};
+\node[box, fill=gray!18, text width=2.6cm] (r) at (2.7,0) {LLM 路由器\\契约判断};
+
+\node[box] (o1) at (5.6,2.0) {类型化义务};
+\node[box] (o2) at (8.6,2.0) {时点检索};
+\node[box] (o3) at (11.6,2.0) {LLM 阅读器};
+
+\node[box] (a1) at (5.6,-2.0) {三层锚点};
+\node[box] (a2) at (8.6,-2.0) {资格与信念};
+\node[box] (a3) at (11.6,-2.0) {校准与损失门};
+
+\begin{scope}[on background layer]
+\node[panel, fit=(o1)(o3), label={[font=\bfseries]above:义务检索分支}] {};
+\node[panel, fit=(a1)(a3), label={[font=\bfseries]below:AnchorEvolve 分支}] {};
+\end{scope}
+
+\node[box, text width=2.1cm] (ans) at (14.6,2.0) {闭合答案};
+\node[box, text width=2.1cm] (pt) at (14.6,0.6) {点答案};
+\node[box, text width=2.1cm] (cs) at (14.6,-0.6) {可信集};
+\node[box, text width=2.1cm] (ab) at (14.6,-2.0) {弃权};
+\node[lbl, above] at (14.6,2.65) {输出};
+
+\draw[arrow] (q) -- (r);
+\draw[arrow] (r.east) -- ++(0.7,0) |- (o1.west);
+\draw[arrow] (r.east) -- ++(0.7,0) |- (a1.west);
+\draw[arrow] (o1) -- (o2);
+\draw[arrow] (o2) -- (o3);
+\draw[arrow] (a1) -- (a2);
+\draw[arrow] (a2) -- (a3);
+\draw[arrow] (o3) -- (ans);
+\draw[arrow] (a3) -- (pt);
+\draw[arrow] (a3) -- (cs);
+\draw[arrow] (a3) -- (ab);
+
+\draw[dashed, draw=black!45] (0.9,3.0) -- (0.9,-3.0);
+\node[lbl, above] at (0.9,3.05) {时点约束 $V_c$};
+\end{tikzpicture}
+}
+\caption{FinPlanRAG总体框架。路由器把查询送入义务检索分支或AnchorEvolve；前者返回闭合答案，后者返回点答案、可信集或弃权。左侧虚线表示时点约束。}
+\label{fig:framework}
+\end{figure}

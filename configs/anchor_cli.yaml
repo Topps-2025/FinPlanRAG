@@ -1,0 +1,135 @@
+# Configuration for the AnchorEvolve CLI.  No API key is stored here; the key
+# is read from the environment variable named by llm.api_key_env.
+llm:
+  provider: deepseek
+  model: deepseek-flash[1m]
+  base_url: https://api.deepseek.com/anthropic
+  api_key_env: ANTHROPIC_AUTH_TOKEN
+  max_tokens: 3200
+  temperature: 0.0
+  cache_dir: paper/results/anchor_cli/llm_cache
+
+search:
+  top_k: 5
+  fetch_top: 1
+  # The query budget is a facet portfolio, not a flat list.  Every required
+  # facet gets at least one query before optional facets and parser queries
+  # compete for the remaining slots.
+  max_queries: 8
+  max_parser_queries: 2
+  max_per_facet: 2
+  max_evidence: 8
+  max_chars_per_item: 2200
+  # If a required facet has no evidence, shrink the posterior toward the prior
+  # instead of letting the remaining channels produce an overconfident answer.
+  coverage_gap_penalty: 0.15
+  max_coverage_penalty: 0.45
+  # Facets are formatted with company, year, prior_year, next_year, metric and
+  # period.  Add a new facet for a new domain instead of increasing the flat
+  # query budget.
+  query_facets:
+    - name: latest_period
+      required: true
+      applies_to: metric
+      templates:
+        - "{company} {year}年三季报 {metric}"
+        - "{company} {period} {metric}"
+    - name: prior_period
+      required: true
+      applies_to: metric
+      templates:
+        - "{company} {prior_year}年 {metric}"
+    - name: forward_disclosure
+      required: false
+      applies_to: metric
+      templates:
+        - "{company} {year}年 业绩 预告 {metric}"
+        - "{company} {year}年 股权激励 考核 {metric}"
+        - "{company} {year}年 限制性股票 考核 {metric}"
+        - "{company} {year}年 投资者关系 活动记录 {metric}"
+    - name: industry
+      required: false
+      applies_to: metric
+      templates:
+        - "{company} 所属行业 {year}年 {metric} 趋势"
+    - name: date_disclosure
+      required: true
+      applies_to: date
+      templates:
+        - "{company} 年度报告 披露日期"
+        - "{company} 往年 年报 披露 时间"
+        - "{company} {next_year}年 年报 预约披露"
+  # Search-result pages and short-video posts are not documentary evidence.
+  exclude_url_patterns:
+    # Match Baidu search-result pages, not baijiahao.baidu.com/s?id= articles.
+    - "baidu.com/s?wd="
+    - "baidu.com/s?tn="
+    - "baidu.com/s?rtt="
+    - "image.baidu.com"
+    - "image.so.com"
+    - "wenku.baidu.com"
+    - "wenku.so.com"
+    - "douyin.com"
+    - "kuaishou.com"
+    - "xiaohongshu.com"
+
+sources:
+  cninfo:
+    # Official Shenzhen Stock Exchange announcement records.  Disclosure-date
+    # claims use the annual-report list; metric claims use incentive-plan and
+    # earnings-preview announcements when available.  The lookup returns no
+    # row for non-SZSE companies, so the source is skipped automatically.
+    enabled: true
+    metric_max_items: 4
+
+calibration:
+  # Historical calibration bundle trained by
+  # scripts/train_anchor_calibration.py.  The bundle stores the learned prior,
+  # type reliability, softmax coefficients, temperature and fusion weight.
+  enabled: true
+  bundle_path: paper/results/anchor_cli/calibration/bundle.json
+  type_shrinkage: 0.5
+  min_type_observations: 5
+  applies_to_metric_kinds: [level, growth]
+  type_mapping:
+    guidance: guidance
+    guidance_width: guidance
+    current_quarter_growth: other
+    company_history: company_history
+    sector_history: other
+    text_signal: text_signal
+    analyst_forecast: other
+    capacity: other
+    disclosure_history: other
+    regulation: other
+    model_bridge: model_bridge
+    other: other
+
+bridge:
+  # A deterministic ablation switch: the same anchors and readout, without the
+  # numeric bridge anchor.  The CLI exposes it as --no-bridge.
+  enabled: true
+  # If the extracted anchors do not provide an interval for every input, the
+  # bridge reports a heuristic interval around the point estimate.  The audit
+  # marks it as "heuristic" rather than pretending it came from the sources.
+  default_interval_pct: 0.10
+  reliability_base: 0.55
+  reliability_step: 0.08
+  max_reliability: 0.90
+
+anchors:
+  hard_reliability: 0.80
+  soft_likelihood: 0.70
+  llm_score_weight: 0.50
+  undated_reliability_cap: 0.55
+  unverified_quote_factor: 0.70
+  max_anchors: 12
+
+loss:
+  wrong: 10.0
+  over: 12.0
+  under: 8.0
+  miss: 8.0
+  width: 2.0
+  abstain: 5.0
+  alpha: 0.1

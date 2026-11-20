@@ -9,6 +9,7 @@ drafts/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+catboost_info/
 
 # Local storage override
 .env
@@ -27,3 +28,40 @@ paper/*/main.log
 paper/*/main.out
 paper/*/main.pdf
 paper/*/main.toc
+
+# ACL draft build artifacts
+paper/v2/acl/*.log
+paper/v2/acl/*.aux
+paper/v2/acl/*.bbl
+paper/v2/acl/*.blg
+paper/v2/acl/*.out
+paper/v2/acl/*.png
+paper/results/deepseek_cache/
+
+# Provider response caches (regenerable; per-claim outputs are kept)
+paper/data/sec_cache/
+paper/results/llm_cache/
+
+# Vendored official baseline repositories (data disk, not committed)
+vendor/
+
+# Evolution experiment local caches
+paper/data/filings/
+paper/results/evolution_v1/llm_cache/
+paper/results/anchor_cli/cache/
+paper/results/anchor_cli/llm_cache/
+
+# Agent caches and per-backbone retrieval caches
+.cache/
+.codex/
+paper/results/**/llm_cache/
+paper/results/**/anchor_cache/
+paper/results/**/audits/
+paper/results/**/prompts/
+paper/zh/sufe_master_vague/main.aux
+paper/zh/sufe_master_vague/main.log
+paper/zh/sufe_master_vague/main.toc
+paper/zh/sufe_master_vague/main.out
+paper/zh/sufe_master_vague/main.lof
+paper/zh/sufe_master_vague/main.lot
+paper/zh/sufe_master_vague/main.pdf

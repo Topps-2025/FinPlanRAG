@@ -1,0 +1,50 @@
+# Cloud experiment backbones.
+#
+# Qwen3-8B is served locally with vLLM on a 32 GB GPU.  DeepSeek and GLM stay
+# on their APIs.  No API key is stored here; each entry names the environment
+# variable that must be present on the cloud host.
+version: 1
+updated: "2026-11-20"
+
+backbones:
+  deepseek:
+    provider: deepseek
+    model: deepseek-flash[1m]
+    base_url: https://api.deepseek.com/anthropic
+    api_key_env: ANTHROPIC_AUTH_TOKEN
+    workers: 8
+    max_tokens: 1800
+    temperature: 0.0
+    results_dir: paper/results/cloud/deepseek
+  glm:
+    provider: glm
+    model: glm-5.3-flash
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    api_key_env: GLM_API_KEY
+    workers: 6
+    max_tokens: 1800
+    temperature: 0.0
+    reasoning_effort: low
+    results_dir: paper/results/cloud/glm
+  qwen3:
+    provider: openai
+    model: qwen3-8b
+    base_url: http://127.0.0.1:8000/v1
+    api_key_env: QWEN_API_KEY
+    workers: 8
+    max_tokens: 1800
+    temperature: 0.0
+    extra_body:
+      chat_template_kwargs:
+        enable_thinking: false
+    results_dir: paper/results/cloud/qwen3
+
+qwen_server:
+  model: Qwen/Qwen3-8B
+  served_model_name: qwen3-8b
+  host: 0.0.0.0
+  port: 8000
+  dtype: bfloat16
+  max_model_len: 32768
+  gpu_memory_utilization: 0.90
+  max_num_seqs: 16

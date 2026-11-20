@@ -1,0 +1,451 @@
+\documentclass[11pt]{article}
+\usepackage[preprint]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{multirow}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\makeatletter
+\ifacl@linenumbers
+  \font\aclhvsmall=phvb at 6.5pt
+  \renewcommand\linenumberfont{\aclhvsmall\color{lightgray}}
+  \setlength{\linenumbersep}{8pt}
+\fi
+\makeatother
+
+\newtheorem{proposition}{Proposition}
+\newcommand{\method}{FinPlanRAG}
+\newcommand{\anchor}{\textsc{AnchorEvolve}}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\indic}{\mathbf{1}}
+
+\title{\method: Contract Routing and Anchor Evolution for Mixed Financial Queries}
+\author{Anonymous ACL submission}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Financial text analysis mixes determinate questions, whose answers are stated or computable at a cutoff, with forward-looking claims, whose outcomes are not yet realized. Retrieval-augmented generation and claim verification fix the output contract before evidence is seen, so a reader returns an unqualified point answer to a claim that requires a credible set, and a verifier forces a closed fact question into a three-way verdict. We present \method, which makes the contract a routing decision. An LLM router dispatches each query to obligation retrieval, which binds a typed obligation and acquires point-in-time evidence until the obligation is covered, or to \anchor, which extracts stable-relation, industry-schema, and instance anchors, qualifies their reliability, scope, and timeliness, updates a belief over outcome buckets, and returns a point answer, a credible set, or an abstention under an asymmetric loss. On DocFinQA, 227 XBRL-verified revenue-guidance claims, and FinDVer, with three backbones and six named baselines, obligation retrieval attains higher accuracy at lower evidence cost, \anchor{} lowers decision loss while preserving accuracy, and the router approaches oracle mixed utility on the two larger backbones. The framework turns the answer form into a testable decision variable and provides an auditable path from evidence to financial judgment.
+\end{abstract}
+
+\section{Introduction}
+
+A financial analyst works with two kinds of inputs. A determinate question asks for a fact that a filing states at the cutoff, for example the net revenue change reported in a 10-K, the segment operating profit for a fiscal year, or the gross margin in a table. A forward-looking claim asserts an outcome that has not been realized, for example that a new production line will start in the second half, that quarterly revenue will land inside management's guidance range, or that a regulatory approval will arrive before a target date. The first admits a closed answer read from evidence. The second does not: at the cutoff the outcome has not happened, and the correct output may be a qualified judgment, a credible set of outcomes, or an abstention. Management forecast research makes the same distinction: a guidance range is a statement about a future outcome, not a realized fact, even when it contains precise numbers \citep{hirst2008management}.
+
+Financial analysis is grounded in regulatory filings. A 10-K or 10-Q combines narrative discussion with multi-page tables, footnotes, and exhibits, and the same metric can appear in different periods, units, or restated forms. An 8-K reports material events, including earnings releases and management guidance, on a dated timeline. XBRL supplies structured facts, but the analyst must still align the fiscal period, the unit, and the filing date with the text. These properties make financial question answering an evidence-location and period-alignment problem, not only a reading-comprehension problem.
+
+Existing systems collapse the distinction. Retrieval-augmented generation retrieves passages and generates an answer for every query \citep{lewis2020rag}. Active and adaptive retrieval decides when to retrieve or how much context to acquire \citep{jiang2023flare,jeong2024adaptiverag}, and agent frameworks interleave reasoning, retrieval, and self-correction \citep{yao2023react,shinn2023reflexion}. Financial claim verifiers return supported, refuted, or insufficient for every claim \citep{zhao2024findver,rangapur2025finfact}. Selective classifiers return an answer or an abstention \citep{chow1970optimum,geifman2017selective}. Recent financial RAG systems add typed evidence, period constraints, provenance, and corpus-aligned retrieval \citep{mansouri2026finrank,jiang2026finrate,chen2026hcrag,chi2026finsagent,zhou2026fincards}. Each line improves the evidence or the risk control, but the output contract is fixed before the evidence is seen. A verifier applied to a determinate question wastes the chance to return a precise value; a reader applied to a forward-looking claim produces an unqualified point answer with no set and no calibrated credence.
+
+This paper treats the choice of contract as a routing problem. The output contract is itself a decision variable: once the query type is known, each branch chooses the output granularity from the evidence it acquires, rather than fixing that granularity before retrieval. \method{} sends each query to one of two specialist branches. The router is an LLM call that returns a route, a confidence, and a short reason. The obligation-retrieval branch binds a typed obligation tuple (entity, form, fiscal period, metric, unit) to a point-in-time corpus, retrieves evidence under the obligation, and asks an LLM reader for a closed answer. The \anchor{} branch extracts anchors at three levels: stable relations (L0), the industry schema (L1), and anchor instances (L2). It qualifies each anchor, updates a belief over outcome buckets, and applies a loss-aware gate that returns a point answer, a credible set, or an abstention. The two branches share a router but not an output contract. Both branches call an LLM, and the router is a separate LLM call.
+
+\paragraph{Contributions.}
+The paper makes three contributions. First, it formulates financial question answering as a mixed-workload routing problem over a determinate retrieval contract and a forward-looking claim-adjudication contract, with a shared point-in-time constraint; the router, the reader, and the anchor extractor are LLM calls, and no branch is a keyword rule. Second, it instantiates \anchor{} for revenue guidance with L0/L1/L2 anchors, LLM extraction, hard/soft/vacuous/adversarial/stale qualification, a belief update, an anchor-conditioned ensemble with a calibrated non-LLM posterior, and a loss-aware gate; it also instantiates the determinate branch with typed obligations, point-in-time BM25 retrieval, obligation coverage, and an iterative acquisition planner that stops when the obligations are covered or the reader is confident. Third, it evaluates the framework on DocFinQA \citep{reddy2024docfinqa}, 227 XBRL-verified revenue-guidance claims, and FinDVer \citep{zhao2024findver}, with DeepSeek Flash, GLM 5.3 Flash, and a locally served Qwen3-8B, against six named source-grounded baselines and across classification, calibration, evidence-cost, decision-loss, and routing metrics.
+
+\section{Related Work}
+
+\paragraph{Financial question answering and verification.}
+Financial QA benchmarks test numerical reasoning over filings, tables, and reports \citep{chen2021finqa,zhu2021tatqa,islam2023financebench,xie2024finben}. DocFinQA adds full 10-K contexts to FinQA questions and tests long-document evidence selection \citep{reddy2024docfinqa}. Unlike open-domain question answering, financial documents place a premium on fiscal period, unit, and table structure, and a lexically plausible passage can still be wrong for the requested period. Claim-verification benchmarks test whether a statement is supported, contradicted, or unverifiable \citep{zhao2024findver,rangapur2025finfact}. Recent financial RAG systems add typed evidence, period constraints, provenance, and corpus-aligned retrieval \citep{mansouri2026finrank,jiang2026finrate,chen2026hcrag,chi2026finsagent,zhou2026fincards}. These systems improve the evidence that reaches a reader, but the output contract is fixed at query time. They also evaluate the two tasks separately, so a system that must serve both has no learned or explicit rule for choosing between them.
+
+\paragraph{Retrieval-augmented generation.}
+RAG combines a retriever with a generator and assumes that an answer can be assembled from retrieved context \citep{lewis2020rag}. Active and adaptive variants decide when to retrieve or how much context to retrieve \citep{jiang2023flare,jeong2024adaptiverag}. Self-RAG learns when to retrieve and how to critique evidence \citep{asai2024selfrag}; CRAG triggers corrective retrieval when the retrieved context is weak \citep{yan2024crag}. Agent frameworks interleave reasoning, retrieval, and self-correction \citep{yao2023react,shinn2023reflexion}. These methods adapt the retrieval process, but the output remains a generated answer. They do not represent a credible set, an abstention, or a decision to qualify a forward-looking claim.
+
+\paragraph{Selective prediction, calibration, and conformal sets.}
+The reject option trades recognition error against rejection rate \citep{chow1970optimum}. Selective classification learns a confidence threshold and abstains on low-confidence inputs \citep{geifman2017selective}. Modern classifiers are often miscalibrated, and temperature scaling is a strong baseline \citep{guo2017calibration}. Cost-sensitive learning assigns different prices to different errors \citep{elkan2001cost}. Split conformal prediction converts a score into a set with distribution-free coverage under exchangeability \citep{vovk2005algorithmic,angelopoulos2021gentle}; classification and adaptive variants extend the construction to label sets and distribution shift \citep{romano2020classification,gibbs2021adaptive}. These components supply the loss, confidence, and set ingredients. They assume a fixed task and a fixed output contract, and they do not model semantic evidence whose scope and timeliness change the outcome space.
+
+\paragraph{Anchors, partial identification, and point-in-time evidence.}
+Partial identification represents the outcomes consistent with the available evidence \citep{manski2003partial}. Financial machine learning is vulnerable to lookahead bias when a model uses information that was not available at the decision time \citep{lopezdeprado2018advances}. \anchor{} borrows the idea of constraints and feasible sets but applies it to a claim: an anchor is a relation between a source and a hypothesis, and a hard anchor can rule out a bucket while a soft anchor only reweights. The evidence filter and the schema filter are both point-in-time. Unlike a full structural model, an anchor is a local, auditable semantic constraint extracted from text.
+
+\paragraph{Research challenges.}
+The literature leaves three coupled challenges. The first is contract identification: surface form and contract do not coincide, because a future-tense question can ask for a fact stated in the filing, and a guidance range contains numbers but is a claim about an unrealized outcome. The decision depends on whether the requested fact exists at the cutoff, not on a topic label or a tense cue. The second is stateful evidence for forward-looking claims: verifiers map a claim directly to a label, and readers map evidence directly to an answer, so neither keeps the scope, reliability, and timeliness of evidence in an updatable state. The third is the division between semantic judgment and risk calibration: an LLM can extract anchors and explain evidence but is often miscalibrated, while a statistical model can be calibrated but cannot read the text. \method{} responds with query-contract routing, a typed obligation branch, and the three-layer \anchor{} state with a calibrated readout. The contribution is not a new retriever or a new language model; it is a contract-level framework that composes existing components under one point-in-time constraint.
+
+\section{FinPlanRAG}
+
+\subsection{Problem definition and point-in-time constraint}
+A query $q$ arrives with a cutoff $c$. The workload is a mixture of determinate questions $q\in\mathcal Q_D$ and forward-looking claims $q\in\mathcal Q_V$. A router $r(q,c)\in\{D,V\}$ selects the branch:
+\begin{equation}
+r(q,c)=\bigl(\text{route},\ \text{confidence},\ \text{reason}\bigr).
+\end{equation}
+The determinate branch returns a closed answer $a$ with a confidence and evidence ids, or \texttt{insufficient}. The \anchor{} branch returns
+\begin{equation}
+J(q,c)=(h^*,\,b^*,\,R_\alpha,\,\text{action}),
+\end{equation}
+where $h^*$ is the top bucket, $b^*$ its credence, $R_\alpha$ a $1-\alpha$ credible set, and the action is answer, adjudicate, or abstain.
+
+Let $a(e)$ be the availability time of evidence $e$. The admissible evidence set at the cutoff is
+\begin{equation}
+V_c=\{e:a(e)\le c,\ e\text{ not retracted at }c\}.
+\end{equation}
+A policy is valid at $c$ only if it is $\sigma(V_c)$-measurable. The router does not see the realized outcome; the anchor extractor does not receive it; the random forest uses only features available before $c$; calibration and head selection use development and validation claims only. Test outcomes are not used for fitting, calibration, weight selection, or portfolio selection. This constraint is what makes the two branches comparable: both must answer from the same information set.
+
+\begin{figure*}[t]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tikzpicture}[
+  font=\footnotesize,
+  >=Latex,
+  box/.style={draw, rounded corners=2pt, align=center, text width=2.75cm, minimum height=0.9cm, inner sep=3pt},
+  smallbox/.style={draw, rounded corners=2pt, align=center, text width=2.35cm, minimum height=0.72cm, inner sep=2pt},
+  arrow/.style={->, thick, draw=black!70}
+]
+\node[box, fill=blue!6] (q) at (0,0) {Query $q$\\cutoff $c$};
+\node[box, fill=yellow!12] (r) at (3.4,0) {LLM router\\route / confidence};
+\node[box, fill=green!8] (d) at (7.0,1.6) {Obligation\\Retrieval};
+\node[box, fill=orange!10] (v) at (7.0,-1.6) {Forward-looking\\\anchor};
+\node[smallbox, fill=green!8] (d1) at (10.8,2.2) {typed obligation\\point-in-time corpus};
+\node[smallbox, fill=green!8] (d2) at (10.8,1.1) {BM25 + coverage\\LLM reader};
+\node[smallbox, fill=orange!10] (v1) at (10.8,-1.1) {LLM anchor extraction\\L0 / L1 / L2};
+\node[smallbox, fill=orange!10] (v2) at (10.8,-2.2) {belief + gate\\answer / set / abstain};
+\node[box, fill=blue!6] (out) at (14.4,0) {answer, set,\\or abstention};
+\draw[arrow] (q) -- (r);
+\draw[arrow] (r) -- node[above, font=\scriptsize]{$D$} (d);
+\draw[arrow] (r) -- node[below, font=\scriptsize]{$V$} (v);
+\draw[arrow] (d) -- (d1); \draw[arrow] (d) -- (d2);
+\draw[arrow] (v) -- (v1); \draw[arrow] (v) -- (v2);
+\draw[arrow] (d1) -- (out); \draw[arrow] (d2) -- (out);
+\draw[arrow] (v1) -- (out); \draw[arrow] (v2) -- (out);
+\end{tikzpicture}
+}
+\caption{\method{} routes a query to an obligation-retrieval branch or a forward-looking \anchor{} branch. The router, the reader, and the anchor extractor are LLM calls. The two branches return different answer forms from the same workload.}
+\label{fig:architecture}
+\end{figure*}
+
+\subsection{Router}
+The router is an LLM call with a short prompt. The prompt defines $D$ as a request for a fact, number, passage, estimate, or projection that can be read or computed from a filing at the cutoff, including a question about a future value when the filing states that value. It defines $V$ as a forward-looking claim whose truth depends on an outcome not realized at the cutoff. The prompt states that management guidance is a forward-looking claim, not a realized fact, even when it contains numbers.
+
+The router sees the query text and the cutoff metadata. It does not see the realized outcome or the branch outputs. In deployment it can be cached per query. The cost is one short LLM call, reported separately from the branch cost. The router is deliberately not a keyword rule: the same surface form can belong to either contract, and the boundary depends on whether the requested value is stated at the cutoff.
+
+\subsection{Branch contracts}
+The determinate branch treats a question as a typed obligation. It binds the entity, form, fiscal period, metric, and unit to a point-in-time corpus, retrieves evidence under the obligation, and asks an LLM reader for a closed answer. The branch stops when the obligation is covered and the reader is sufficient, or when the budget is exhausted; it returns \texttt{insufficient} rather than guessing. Section~\ref{sec:obligation} gives the construction.
+
+The \anchor{} branch treats a claim as a belief over a finite hypothesis space. In the general design the space is
+\begin{equation}
+\mathcal H=\{(t,s): t\in\mathcal T,\ s\in\mathcal S\},
+\end{equation}
+where $t$ is a timing and $s$ a stage. For revenue guidance we instantiate $\mathcal H=\{\text{below},\text{within},\text{above}\}$ relative to the guided range. Section~\ref{sec:anchor} gives the construction. The two branches share the router but not the output contract; this is the architectural difference from a single reader or a single verifier.
+
+\section{Obligation Retrieval}
+\label{sec:obligation}
+
+Obligation retrieval is a four-step pipeline: represent the question as a typed obligation, build the point-in-time evidence space, acquire evidence until the obligation is covered, and return a closed answer with evidence ids.
+
+\subsection{Typed obligations}
+An obligation is a tuple
+\begin{equation}
+o=(e,\,f,\,y,\,p,\,m,\,u),
+\end{equation}
+where $e$ is the entity, $f$ the form or document type, $y$ the fiscal year, $p$ the fiscal period, $m$ the metric, and $u$ the unit. The parser derives the obligation terms from the question and the query metadata. A document is admissible only if its availability date is at or before $c$ and its metadata is consistent with the obligation. The tuple makes entity, period, and unit checkable constraints rather than lexical hints. For example, the phrase ``2023'' can refer to a fiscal year, a calendar year, or a quarter; the obligation fixes the period and the unit, which reduces cross-period and unit-mismatch errors.
+
+\subsection{Index and iterative acquisition}
+The branch builds paragraph and table chunks, indexes them with BM25, and runs an iterative acquisition loop. Paragraph chunks merge adjacent lines up to 1200 characters; table chunks merge contiguous rows up to 4000 characters and repeat the header when a table crosses a page. Each chunk records the document id, availability time, text, terms, and metadata.
+
+At round $t$, the branch retrieves a candidate set for the question plus the obligation terms that are not yet covered. Let $T(q)$ be the obligation terms and $A_t$ the acquired chunks. The uncovered set is
+\begin{equation}
+U_t=T(q)\setminus\{t\in T(q):\exists a\in A_t,\ t\in a\}.
+\end{equation}
+The branch adds up to two new paragraphs, calls the LLM reader on the acquired evidence, and stops when the reader reports sufficient evidence and $U_t=\varnothing$, or when the reader is confident and no term is missing, or when the budget $B$ is exhausted. The default budget is $B=8$; we also report $B=12$ and $B=16$. If the reader is insufficient or its confidence is below .8, the branch falls back to a fixed 16-paragraph evidence set. The fallback is not paid on every question; it is paid on the questions that the planner cannot close.
+
+\subsection{Reader and closure}
+The reader returns a JSON object with an answer, a confidence, a sufficiency flag, the missing information, the evidence ids, and a short rationale. The answer must be a short string. If the evidence is insufficient, the reader returns \texttt{insufficient} and sets the sufficiency flag to false. The branch appends the missing field to the next query, so the reader's feedback drives the next retrieval round. The output is the answer when the reader is sufficient; otherwise the branch returns \texttt{insufficient}. Every answer carries evidence ids, so the answer can be audited at the paragraph or table level. Parse failures are scored as incorrect; the branch does not silently repair malformed JSON.
+
+\section{AnchorEvolve}
+\label{sec:anchor}
+
+\anchor{} is a six-step pipeline: define the hypothesis space, construct anchors, filter them, update the belief, read out a decision, and update reliabilities after outcomes are revealed.
+
+\subsection{Hypothesis space and anchor layers}
+\anchor{} separates three layers. L0 is a stable relation ontology: bound, precedence, lead time, duration, conservation, rate, unit conversion, and scope. L0 does not change across industries. L1 is an industry schema: each anchor type is a tuple (name, relation in L0, fields, valid-from round). For revenue guidance the initial schema contains guidance width, current-quarter growth, sector history, company history, and other. L2 is an anchor instance: an id, a type, a value or range, a unit, a scope, a source, a time, a reliability, and a validity interval. The separation lets a new industry reuse L0 and change L1 and L2, and it makes every anchor auditable at the source and time level.
+
+The three layers have three properties. They are transferable, because a new industry reuses L0 and changes L1 and L2. They are auditable, because L0 is fixed, L1 is versioned, and L2 carries source and time. They are sample-efficient, because L0 restricts the hypothesis space, L1 supplies industry priors, and L2 carries the specific evidence. The claim's stated timing and stage are used as a weak prior, not as a fact.
+
+\subsection{Extraction and qualification}
+The extractor is an LLM call. It receives the claim, the company and sector, the cutoff, the target period, the guided range, the current-quarter value and reliability, the observed and sector base rates, and the available evidence items. It returns JSON with a list of anchors and a three-way score:
+{\scriptsize
+\begin{verbatim}
+{"anchors":[{"level":"L2","type":"...",
+  "relation":"bound|precedence|...",
+  "value":"...","scope":"company|...",
+  "reliability":0.0,"hard":false,
+  "implied_bucket":"below|within|above",
+  "rationale":"..."}],
+ "bucket_scores":{"below":0.0,
+   "within":0.0,"above":0.0},
+ "rationale":"..."}
+\end{verbatim}}
+The prompt states that the guided range defines the three buckets and is not by itself evidence that the outcome will be within. It asks the model to use the current-quarter value relative to the guidance midpoint, the guidance width, and the observed base rates. An anchor is hard only when it is an explicit constraint with reliability at least .65; management guidance is a soft signal by default. The extractor is not asked for the realized outcome and does not receive it.
+
+Each extracted anchor is qualified before it updates the belief. A hard anchor has an implied bucket and reliability at least .65; it intersects the feasible set with the anchor mask, and if the intersection is empty the anchor is treated as a conflict and does not update. A soft anchor has an implied bucket and contributes a categorical likelihood; reliability enters as the exponent. A vacuous anchor has evidence below the informativeness threshold and is skipped. An adversarial anchor has a scope that does not match the claim, or contradicts a hard anchor, and is skipped. A stale anchor has evidence that is superseded or dated after the cutoff, and is skipped.
+
+For a soft anchor with implied bucket $j$ and reliability $\rho$, the likelihood is
+\begin{equation}
+L_e(k)=
+\begin{cases}
+p_e, & k=j,\\
+(1-p_e)/(|\mathcal H|-1), & k\ne j,
+\end{cases}
+\end{equation}
+where $p_e=.7$ corresponds to a soft-anchor informativeness of .4.
+
+\subsection{Belief update}
+The belief starts from a point-in-time prior $b_0$ formed from development and validation outcomes and smoothed by sector. Hard anchors set the belief to a point mass on the feasible bucket with a small floor; soft anchors update
+\begin{equation}
+b(k)\propto b(k)\,L_e(k)^{\rho}.
+\end{equation}
+The extractor's three-way score is a marginal signal. The branch mixes it with the anchor-updated belief at equal weight, giving the anchor posterior
+\begin{equation}
+b_A=.5\,b+.5\,s,
+\end{equation}
+where $s$ is the normalized score vector. Equal weighting prevents a single anchor or a single score from dominating the posterior.
+
+The anchor posterior is interpretable but not necessarily calibrated. The LLM can systematically over-predict one bucket, especially under class imbalance, and the anchor reliability is a subjective quantity supplied by the extractor rather than a validated frequency. Section~\ref{sec:results} shows that the pure anchor posterior carries non-random signal on all three backbones, but its class bias and calibration are not sufficient for low-loss decisions. This is why the branch uses a calibrated readout.
+
+\subsection{Calibrated readout and loss-aware gate}
+The calibrated posterior $b_R$ comes from a random forest on point-in-time structured features: guidance width, current-quarter value relative to the midpoint, the ratio of guidance to current quarter, prior outcome counts and frequencies, previous-guidance growth and width, target quarter, cutoff year, and sector. The forest is trained on development and validation claims and calibrated by temperature scaling on company-disjoint folds. The fused belief is
+\begin{equation}
+b_F=w\,b_A+(1-w)\,b_R,
+\end{equation}
+with $w=.1$ as a candidate. The validation portfolio compares the anchor, fusion, and calibrated posteriors and selects the head with the lower validation loss, with a switching margin of .15. On the revenue-guidance validation split the calibrated head has lower loss, so the final point answer, credible set, and action come from $b_R$. The anchor posterior supplies evidence qualification and the audit trail; it does not replace the calibrated posterior. Test outcomes are not used for fitting, calibration, weight selection, or portfolio selection.
+
+The gate chooses among answer, adjudicate, and abstain under an asymmetric loss. The answer loss charges more for an overclaim than an underclaim:
+\begin{equation}
+\label{eq:ansloss}
+L_{\text{ans}}(a,y)=
+\begin{cases}
+0 & a=y,\\
+\ell_{\text{over}} & a=\text{above}, y=\text{below},\\
+\ell_{\text{under}} & a=\text{below}, y=\text{above},\\
+\ell_{\text{wrong}} & \text{otherwise}.
+\end{cases}
+\end{equation}
+The set loss charges a miss and a width penalty:
+\begin{equation}
+\label{eq:setloss}
+\begin{aligned}
+L_{\text{set}}(R,y)&=\indic[y\notin R]\,\ell_{\text{miss}}\\
+&\quad+\ell_{\text{width}}\max(0,|R|-1),
+\end{aligned}
+\end{equation}
+and abstention costs $\ell_{\text{abstain}}$. The credible set $R_\alpha$ is the smallest set of buckets whose posterior mass reaches $1-\alpha$. The gate evaluates the expected loss of answer, adjudicate, and abstain and selects the minimum. The default parameters are $\ell_{\text{over}}=12$, $\ell_{\text{under}}=8$, $\ell_{\text{wrong}}=10$, $\ell_{\text{miss}}=8$, $\ell_{\text{width}}=2$, $\ell_{\text{abstain}}=5$, and $\alpha=.1$.
+
+\subsection{Self-evolution and algorithm}
+\anchor{} updates its source and anchor reliabilities after outcomes are revealed. For each used evidence item, the branch records whether the evidence was consistent with the realized bucket, updates the source reliability, updates the anchor-type reliability, and updates the classifier weights. Outcomes from round $r$ update the state only after all claims in round $r$ have been adjudicated, and they are used from round $r+1$. A newly discovered anchor type receives a valid-from round of $r+1$, so the claim that motivated its discovery cannot use it. This rule keeps the self-evolution loop point-in-time. The revenue-guidance experiments report the first round; the production-milestone prototype exercises the multi-round loop.
+
+Algorithm~\ref{alg:anchor} puts extraction, qualification, belief update, calibration, and output selection in one procedure. Extraction is the only LLM call; qualification, belief update, credible-set construction, and expected-loss computation are deterministic. $\textsc{MinLossAction}(b^*)$ evaluates answer, adjudicate, and abstain under the loss in Equations~\ref{eq:ansloss}--\ref{eq:setloss} and returns the minimum. With $|A|$ anchors and $|\mathcal H|=3$ buckets, the belief update is $O(|A||\mathcal H|)$ and the credible set is $O(|\mathcal H|\log|\mathcal H|)$, both negligible relative to the LLM call.
+
+\begin{algorithm}[t]
+\caption{\anchor{} single-round adjudication}
+\label{alg:anchor}
+\begin{algorithmic}[1]
+\Require claim $q$, cutoff $c$, evidence pool $E$, prior $b_0$
+\Ensure judgment $J=(h^*,b^*,R_\alpha,\pi)$
+\State $b\gets b_0$
+\State $A\gets \textsc{ExtractAnchors}(q,c,E)$
+\For{$a\in A$}
+  \State $\text{kind}\gets \textsc{Qualify}(a,q,c)$
+  \If{kind = hard}
+    \State $b\gets \textsc{HardUpdate}(b,a)$
+  \ElsIf{kind = soft}
+    \State $b\gets \textsc{SoftUpdate}(b,a)$
+  \EndIf
+\EndFor
+\State $b_A\gets \textsc{Mix}(b,\textsc{BucketScores})$
+\State $b_R\gets \textsc{CalibratedRF}(q,c)$
+\State $b_F\gets w b_A+(1-w)b_R$
+\State $b^*\gets \textsc{SelectHead}(b_A,b_F,b_R)$
+\State $h^*\gets \arg\max_k b^*(k)$
+\State $R_\alpha\gets \textsc{CredibleSet}(b^*,\alpha)$
+\State $\pi\gets \textsc{MinLossAction}(b^*)$
+\State \Return $(h^*,b^*,R_\alpha,\pi)$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Experimental Design}
+\label{sec:experiments}
+
+\subsection{Data and tasks}
+\textbf{DocFinQA} \citep{reddy2024docfinqa} augments FinQA questions with full 10-K contexts. We use a fixed sample of 300 test questions and the released gold answers. FinQA program constants are used only as a silver evidence proxy, never as reader input. The task tests long-document evidence selection and numerical reading.
+
+\textbf{Revenue guidance.} The benchmark contains 1,005 quarterly revenue-guidance claims from U.S. SEC 8-K filings between 2010 and 2025. Each claim contains a guided range and a cutoff. The realized quarter is taken from SEC XBRL, with a reported-filing fallback when XBRL has no standalone quarter. The label is below, within, or above the guided range. The split is temporal: 529 development claims (2010--2018), 203 validation claims (2019--2021), and 273 test claims (2022--2025). The test split has 126 above, 110 within, and 37 below claims. We report the 227 test claims with XBRL-verified or XBRL-overridden labels; 46 text-only claims are excluded from the main results and used as a sensitivity check.
+
+\textbf{FinDVer} \citep{zhao2024findver} testmini contains 700 claim-verification examples with financial reports. We use it as an external transfer set. The branch is not tuned on FinDVer.
+
+\textbf{Mixed workload.} The routing evaluation combines 300 DocFinQA questions and 273 revenue-guidance claims, for 573 queries. The utility of a determinate query is its token F1; the utility of a forward-looking query is $1-L/10$, where $L$ is the decision loss. A wrong route receives zero utility. The oracle routes every query correctly; always-RAG sends every query to the determinate branch; always-anchor sends every query to the \anchor{} branch.
+
+\subsection{Backbones and baselines}
+We run three backbones: DeepSeek Flash, GLM 5.3 Flash, and Qwen3-8B \citep{qwen2025qwen3}. Qwen3-8B is served locally. All methods in a table use the same backbone and prompts, so differences reflect the evidence policy and output contract.
+
+The determinate branch is compared with fixed BM25 budgets of 1, 2, 4, 8, and 16 paragraphs, with Self-RAG-style, CRAG-style, FLARE-style, and Adaptive-RAG-style adaptations, and with the obligation retrieval planner. The four named RAG methods keep their native retrieval or reflection strategy and use the same paragraph chunks, reader, and scoring as the obligation branch; they are strategy adaptations, not unmodified end-to-end systems. 
+
+The \anchor{} branch is compared with six named adaptations: FinDVer-style \citep{zhao2024findver}, Fin-Fact-style \citep{rangapur2025finfact}, Self-RAG-style \citep{asai2024selfrag}, CRAG-style \citep{yan2024crag}, FLARE-style \citep{jiang2023flare}, and Adaptive-RAG-style \citep{jeong2024adaptiverag}. Each method follows the original paper description and public interface and is adapted to the same backbone through one shared three-way adapter. The adapter maps the native output to below, within, and above, and supplies the same point-in-time evidence block and the same six retrieved earlier claims. When a learned component is unavailable or incompatible, we replace it with an API call that uses the official criteria and record the substitution. The six methods are same-backbone adaptations, not unmodified end-to-end runs on their original data.
+
+\subsection{Metrics and protocol}
+For DocFinQA we report exact match, token F1, answer coverage, mean acquired paragraphs, mean input tokens, and silver evidence recall. For revenue guidance we report accuracy, balanced accuracy, macro F1, MCC, AUROC, AUPRC, ECE, Brier score, decision loss, credible-set coverage, and mean set size. Balanced accuracy is the mean of per-class recall \citep{brodersen2010balanced,sokolova2009performance}. Decision loss uses the parameters in Section~\ref{sec:anchor}. Lower is better for loss, ECE, and Brier. Confidence intervals are paired bootstrap intervals over claims; accuracy differences use a McNemar test. For the router we report routing accuracy, the confusion matrix, and mixed-workload utility.
+
+The evaluation protocol has three parts. First, the revenue-guidance split is temporal; the test years are 2022--2025, the validation years are 2019--2021, and the development years are 2010--2018. Second, the random forest uses five fold seeds; for each test year $Y$, training data come from other company folds and outcomes dated before January 1 of $Y$; test companies do not appear in training. Temperature scaling is fitted on company-disjoint internal folds. Third, the fusion weight $w$ is selected on validation macro F1 from $\{0,0.1,0.2,0.3\}$, and the decision-head portfolio compares the calibrated and fused heads with a switching margin of .15. The test set is not used for fitting, calibration, weight selection, or portfolio selection.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Determinate retrieval}
+Table~\ref{tab:docfinqa} reports DocFinQA. The final branch runs the planner with a budget of 16 paragraphs and escalates to the fixed-16 evidence set when the reader is not sufficient or its confidence is below .8. On DeepSeek Flash it obtains .457 exact match with 10.69 paragraphs; the fixed-16 reader obtains .390 with 16 paragraphs, and the fixed-8 reader .367 with 8. The planner without escalation obtains .460 with 6.85 paragraphs; escalation uses the larger evidence set on 24\% of questions and buys accuracy that the planner alone does not reach. On GLM 5.3 Flash the branch obtains .497 with 10.31 paragraphs; the fixed-16 reader obtains .480 with 16, and the fixed-8 reader .440 with 8. The planner without escalation obtains .470 with 5.88 paragraphs. The branch is above the fixed-16 reader on both backbones and uses 5.3 and 5.7 fewer paragraphs. The four named RAG adaptations are below the branch on both backbones: on DeepSeek Flash, Self-RAG-style and CRAG-style obtain .373, Adaptive-RAG-style .363, and FLARE-style .330; on GLM 5.3 Flash, Self-RAG-style and CRAG-style obtain .447, Adaptive-RAG-style and FLARE-style .393. Obligation retrieval with fallback is .084 above the best named baseline on DeepSeek Flash and .050 above it on GLM 5.3 Flash, with comparable or lower evidence. It also has the highest answer coverage (.770 and .810), so it abstains less often than the fixed budgets.
+
+The determinate branch is therefore an accuracy-cost improvement over the fixed-16 baseline on both usable backbones: higher exact match and lower evidence. The planner alone is cheaper but leaves a small accuracy gap on GLM 5.3 Flash; the confidence-gated fallback closes it without paying the full 16-paragraph cost on every question. The Qwen3-8B DocFinQA block is reported in Appendix~\ref{app:qwen}; all conditions are below .11 exact match because the reader returns explanatory text, and we do not use that backbone for the determinate comparison.
+
+\input{tables/table_docfinqa}
+
+\subsection{Forward-looking adjudication}
+Table~\ref{tab:vague} reports the 227 verified revenue-guidance claims. The table compares two LLM readouts: AnchorEvolve-LLM, the pure anchor posterior, and AnchorEvolve-Fusion, which fuses the anchor posterior with structured features at a fixed weight of .1. A calibrated random forest is used only as a non-LLM diagnostic and is reported in Appendix~\ref{app:fullmetrics}; it is not part of the main comparison. On DeepSeek Flash, the fusion readout obtains accuracy .524, balanced accuracy .471, macro F1 .468, and decision loss 3.604. FinDVer-style obtains .551, .461, .464, and 4.678. Plain accuracy is .027 lower, balanced accuracy is .010 higher, macro F1 is .004 higher, and decision loss is about 1.1 points lower.
+
+On GLM 5.3 Flash, the fusion readout obtains .537, .489, .487, and 3.648, against .498, .439, .442, and 5.233 for FinDVer-style. Accuracy is .039 higher, balanced accuracy .050 higher, macro F1 .045 higher, and decision loss about 1.6 points lower. On Qwen3-8B, it obtains .537, .486, .485, and 3.577, against .511, .477, .464, and 4.846 for Fin-Fact-style. Accuracy is .026 higher, balanced accuracy .009 higher, macro F1 .021 higher, and decision loss about 1.3 points lower.
+
+The consistent gain is decision loss: the fusion readout is lower on every backbone. Plain accuracy is higher on GLM 5.3 Flash and Qwen3-8B and lower on DeepSeek Flash. Balanced accuracy and macro F1 are higher in point estimate on every backbone. The result is a decision-theoretic gain rather than a uniform classification gain: plain accuracy is comparable, and the system prices overclaims, set width, and abstention better than the named baselines.
+
+The two LLM readouts show the contribution of the anchor state. The pure anchor posterior obtains accuracy .445, .454, and .427 on the three backbones; fusion raises it to .524, .537, and .537. The anchor posterior preserves the semantic state that records which evidence supports which bucket, but its class bias makes it a weak point head. Fusion adds structured features and improves both accuracy and decision loss, so the main table reports the LLM-based readout rather than a non-LLM classifier. The calibrated RF diagnostic obtains accuracy .533 and loss 3.454 on all three backbones because its inputs and readout are independent of the LLM; Appendix~\ref{app:fullmetrics} reports it separately as a risk-control reference.
+
+\input{tables/table_vague}
+
+\subsection{Ablation}
+Removing all anchors lowers macro F1 from .233 to .213 on DeepSeek Flash, .286 to .211 on GLM 5.3 Flash, and .339 to .272 on Qwen3-8B, so the anchor layer contributes signal beyond the bucket scores. Removing the hard-anchor mask leaves the metrics nearly unchanged, because hard anchors rarely trigger on revenue guidance; their role is to constrain erroneous exclusions. Removing individual anchor types has no consistent winner across backbones: removing company history improves DeepSeek Flash and GLM 5.3 Flash macro F1, removing sector history improves Qwen3-8B macro F1, and removing guidance width increases decision loss on all three. The anchor layer is therefore useful as a whole, but no single anchor type explains the gain. Appendix~\ref{app:anchor_ablation} reports the full ablation.
+
+\paragraph{Output form.}
+Forcing a point answer without abstention or a credible set gives a mean decision loss of 4.693 across five random-forest seeds (range 4.476--4.819). Fixing the output to the full three-bucket set gives 4.000. The expected-loss gate gives 3.454. The risk reduction comes from choosing a set or an abstention when the posterior is diffuse, not from a stronger point classifier. The credible set covers 98.7\% of claims with a mean size of 2.76 buckets, which shows that the current posterior is conservative; tightening the set without losing coverage is a direction for future work.
+
+\subsection{Routing and mixed workload}
+Table~\ref{tab:router} reports the mixed workload. The DeepSeek Flash router routes 570 of 573 queries correctly (.995): 297 of 300 determinate questions and all 273 forward-looking claims. Three determinate questions are sent to the anchor branch; their F1 is zero, so the router still reaches .403 mixed utility, equal to the oracle, against .121 for always-RAG and .282 for always-anchor. The GLM 5.3 Flash router routes 567 of 573 correctly (.990): 297 of 300 determinate questions and 270 of 273 forward-looking claims. It reaches .419 mixed utility against .422 for the oracle, .130 for always-RAG, and .292 for always-anchor.
+
+The Qwen3-8B router is weaker. It routes 271 of 300 determinate questions and 226 of 273 forward-looking claims correctly (.867), and reaches .263 mixed utility. The always-anchor policy obtains .298, so the Qwen3-8B router is below the better fixed branch. The errors are balanced in direction (29 determinate questions sent to anchor, 47 claims sent to RAG), which suggests that an 8B backbone does not reliably separate the two contracts. The router result is therefore reported per backbone rather than pooled. The errors concentrate on queries whose surface form contains a future tense but whose answer is stated in the filing, such as an expected dividend or a final purchase price. A stronger router or a lightweight retrieval signal could address this boundary; we keep the router as one short call to preserve its cost advantage.
+
+\input{tables/table_router}
+
+\subsection{External transfer and error analysis}
+Table~\ref{tab:findver} reports FinDVer testmini with the default reader. On DeepSeek Flash the planner with fallback obtains .701 accuracy with 8.76 paragraphs; the fixed-16 reader obtains .660 with 16, and the fixed-8 reader .623 with 8. On GLM 5.3 Flash the branch obtains .753 with 9.19 paragraphs; the fixed-16 reader obtains .743 with 16, and the fixed-8 reader .680 with 8. On Qwen3-8B the branch obtains .649 with 6.13 paragraphs; the fixed-16 reader obtains .636 with 16. The branch is above the fixed-16 reader on all three backbones and uses 6.9 to 9.9 fewer paragraphs. The official chain-of-thought reader with gold evidence obtains .817 on DeepSeek Flash and .819 on GLM 5.3 Flash, and with ten retrieved paragraphs .787 on both; these use a different reader and evidence interface and are an upper reference, not a like-for-like baseline. The transfer result supports the same conclusion as DocFinQA: the obligation planner plus confidence-gated escalation is a cost-effective determinate policy, not a uniform accuracy winner over a stronger reader.
+
+The error analysis points to three sources. In the determinate branch, chunk boundaries can split a table row from its header, and the reader then misses the numerator or denominator; the planner's missing field repairs some cases, but not when the missing term is absent from the top 32 BM25 candidates. Qwen3-8B on DocFinQA returns explanatory text rather than a short answer, so exact match is near floor even when the answer coverage is high. In the \anchor{} branch, the LLM posterior over-predicts the above bucket on DeepSeek Flash, and the hard-anchor mask rarely triggers; the fusion readout compensates for the bias but does not eliminate it. In the router, the errors are semantic-boundary errors rather than random errors, which makes them diagnosable but also persistent for small backbones.
+
+\input{tables/table_findver}
+
+\section{Discussion}
+
+The experiments support three claims. First, the output contract should depend on the query. A determinate question benefits from typed obligations and a closed reader; a forward-looking claim benefits from anchors, a belief, and a gate. Second, the \anchor{} branch needs both a semantic extractor and a calibrated readout. The LLM anchors alone are miscalibrated, and the fusion readout is the main LLM-based comparison; a separate calibrated RF diagnostic provides a risk-control reference, but it is not an LLM readout and is reported outside the main table. The anchor layer supplies evidence qualification and the audit trail. Third, the router is cheap relative to the branches and recovers almost all of the oracle utility on DeepSeek Flash and GLM 5.3 Flash, while an 8B backbone is not a reliable query-type detector.
+
+The design has limits. The revenue-guidance instantiation is a three-bucket problem; the general twelve-state timing-by-stage space is exercised only in the production-milestone prototype. The anchor extractor can be wrong, and a wrong hard anchor can eliminate the correct bucket; the reliability floor and the conflict check mitigate this, but they do not make the extractor infallible. The router is evaluated on a constructed mixed workload with clear provenance; ambiguous queries that sit between the two contracts are not covered. The FinDVer transfer uses a different reader interface, so the comparison there is a frontier check rather than a controlled ablation. The labels are XBRL-verified rather than human-annotated, and the named baselines are adaptations rather than official end-to-end systems. These boundaries define the scope of the claims, not a defect of the framework.
+
+The results also clarify the relation to the earlier decision-interface work. The v2 portfolio over fixed adjudication, abstention, and a planner is a special case of the \anchor{} gate: it fixes the evidence model and the output contract and selects a policy on validation. \method{} keeps the portfolio as the decision head but adds the anchor extractor, the LLM router, and the determinate branch. The portfolio is therefore a component, not the whole system. More generally, the framework suggests that financial text systems should expose the contract choice, the evidence state, and the decision risk as separate objects, so that each can be evaluated and replaced.
+
+\section{Conclusion}
+
+\method{} routes financial queries to a determinate retrieval branch or a forward-looking \anchor{} branch. The determinate branch binds typed obligations and stops when they are covered. The \anchor{} branch extracts L0/L1/L2 anchors, qualifies them, updates a belief, and returns an answer, a credible set, or an abstention under an asymmetric loss. On DocFinQA the planner matches the large-budget reader at a fraction of the evidence. On verified revenue guidance the \anchor{} fusion readout improves balanced accuracy and macro F1 in point estimate over six named baselines and lowers decision loss. On a mixed workload the router reaches oracle-level utility on the two larger backbones.
+
+The paper makes three contributions. First, it turns the output contract into a routing variable. Existing pipelines fix the answer form before evidence is seen; \method{} decides from the query and cutoff whether the query admits a closed fact or requires a qualified forward-looking judgment. The router results support this contribution on the two larger backbones and expose the boundary of an 8B backbone.
+
+Second, it gives the two branches an explicit evidence state. Obligation retrieval organizes point-in-time evidence around typed obligations and returns a closed answer with evidence ids. \anchor{} keeps the scope, reliability, and timeliness of forward-looking evidence in a three-layer anchor state and updates a belief over outcome buckets. The DocFinQA, FinDVer, and revenue-guidance experiments support the efficiency of obligation retrieval and the semantic role of the anchor layer; the anchor ablation shows that removing anchors lowers macro F1.
+
+Third, it separates semantic state construction from decision risk control and evaluates the separation across datasets, backbones, and named baselines. The calibrated RF head is the strongest numeric decision head on the current benchmark, and the fusion readout is close to it; the paper therefore does not claim that the LLM anchor posterior alone beats a strong RF. The contribution is the composition: LLM routing, reading, and anchor construction, followed by a calibrated readout that prices overclaims, set width, and abstention.
+
+The framework connects answers, evidence states, and decision risk in one audit chain. A determinate query returns a cited closed answer; a forward-looking claim returns a point judgment, a credible set, or an abstention with its anchor sources and qualification reasons. This structure is transferable to production milestones, capacity launches, regulatory approvals, and contract fulfillment, which share the same point-in-time constraint. It also gives financial RAG a way to choose its output contract instead of fixing it in advance, and an auditable path from evidence to financial judgment.
+
+\bibliography{references}
+
+\appendix
+
+\section{Prompts and Implementation Details}
+The router prompt defines the two contracts, gives four examples, and asks for JSON with route, confidence, and reason. The anchor prompt receives the claim, company, sector, cutoff, target period, guided range, current-quarter value and reliability, observed and sector base rates, and evidence items. It asks for L2 anchors with type, relation, value, scope, reliability, hard flag, implied bucket, and rationale, plus a three-way score. The reader prompt asks for a JSON object with answer, confidence, sufficiency, missing information, evidence ids, and a short rationale. The full prompts and the generation scripts are released with the code.
+
+The DocFinQA runner builds paragraph and table chunks, indexes them with BM25, and uses the same reader for every condition. The \anchor{} runner stores one JSONL row per claim with the belief, the credible set, the anchors, the action, and the token usage. The router runner stores one JSONL row per query with the true route, the predicted route, the confidence, the reason, and the branch score. All API responses are cached by a hash of the request payload.
+
+\section{Full Metric Suite}
+\label{app:fullmetrics}
+Table~\ref{tab:fullmetrics} reports the full metric suite for the calibrated RF diagnostic on the primary backbone. The diagnostic has a higher AUROC, AUPRC, and balanced accuracy than every named baseline, the lowest ECE, and MCC within .004 of the best baseline. The main comparison in Table~\ref{tab:vague} uses LLM readouts; this table characterizes the risk-control reference. FinDVer-style has higher plain accuracy by .018, but the diagnostic has a lower Brier score by .014; the accuracy difference is not significant. The reported decision loss is 3.454.
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\caption{Full metric suite on the 227 verified revenue-guidance claims, DeepSeek Flash backbone, for the calibrated RF diagnostic. Lower is better for ECE, Brier, decision loss, and AURC; Sel@50 is selective accuracy at 50\% coverage.}
+\label{tab:fullmetrics}
+\begin{tabular}{lrrrrrrrrrrr}
+\toprule
+Method & Acc. & Bal. & Macro & MCC & AUROC & AUPRC & ECE & Brier & Loss & Sel@50 & AURC \\
+\midrule
+FinDVer-style & .551 & .461 & .464 & .233 & .674 & .494 & .092 & .580 & 4.678 & .675 & .337 \\
+Fin-Fact-style & .537 & .446 & .450 & .201 & .650 & .475 & .075 & .590 & 4.705 & .675 & .338 \\
+Self-RAG-style & .546 & .451 & .456 & .216 & .670 & .491 & .102 & .580 & 4.564 & .684 & .333 \\
+CRAG-style & .529 & .423 & .418 & .177 & .643 & .473 & .097 & .593 & 4.802 & .658 & .349 \\
+FLARE-style & .511 & .417 & .411 & .164 & .634 & .467 & .130 & .610 & 4.881 & .596 & .362 \\
+Adaptive-RAG-style & .493 & .406 & .400 & .143 & .584 & .425 & .147 & .634 & 5.093 & .579 & .415 \\
+Calibrated RF (diagnostic) & .533 & .491 & .486 & .229 & .706 & .505 & .033 & .566 & 3.454 & .649 & .383 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Readout and Fusion Ablation}
+\label{app:readout}
+Table~\ref{tab:ablation} reports the fusion-weight sweep. The calibrated head ($w=0$) has the lowest decision loss on the primary backbone; the fused head at $w=.1$ has a higher plain accuracy on GLM 5.3 Flash but a higher loss than the calibrated head. The anchor posterior ($w=1$) is the weakest point head and is not selected by the validation portfolio. The sweep supports the division of labor in Section~\ref{sec:anchor}: the LLM anchor layer supplies semantic structure, and the calibrated head controls the decision risk.
+
+\input{tables/table_ablation}
+
+\section{Anchor Ablation}
+\label{app:anchor_ablation}
+Table~\ref{tab:anchor-ablation} removes anchor components from the LLM anchor posterior without changing the final decision head. Removing all anchors lowers macro F1 on all three backbones; removing the hard-anchor mask has little effect because hard anchors rarely trigger on revenue guidance; removing individual anchor types has no consistent winner. The full anchor posterior is reported as a semantic ablation, not as the final decision head.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\caption{Anchor-component ablation on the LLM anchor posterior. ``No anchors'' uses only the prior and bucket scores; ``no hard'' removes the hard-anchor mask; the remaining rows remove one anchor type.}
+\label{tab:anchor-ablation}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrrrrr}
+\toprule
+Condition & \shortstack{DeepSeek\\Flash Macro} & Loss & \shortstack{GLM 5.3\\Flash Macro} & Loss & \shortstack{Qwen3-8B\\Macro} & Loss \\
+\midrule
+Full anchor posterior & .233 & 4.110 & .286 & 3.905 & .339 & 3.744 \\
+No anchors & .213 & 3.919 & .211 & 4.022 & .272 & 4.000 \\
+No hard anchor & .233 & 4.073 & .286 & 3.875 & .341 & 3.729 \\
+No guidance width & .212 & 4.491 & .248 & 4.051 & .334 & 4.271 \\
+No current-quarter growth & .217 & 3.678 & .252 & 3.788 & .318 & 3.788 \\
+No company history & .263 & 3.839 & .291 & 3.875 & .338 & 3.883 \\
+No sector history & .238 & 3.861 & .288 & 3.919 & .352 & 3.985 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\section{Qwen3-8B on DocFinQA}
+\label{app:qwen}
+Table~\ref{tab:qwendoc} reports the Qwen3-8B DocFinQA block. The reader returns syntactically valid JSON but often with explanatory text in the answer field, so exact match and token F1 are near floor. The planner still has the highest answer coverage, but the backbone is not informative for the determinate accuracy comparison.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Qwen3-8B DocFinQA results on the 300-question sample.}
+\label{tab:qwendoc}
+\begin{tabular}{lrrrr}
+\toprule
+Condition & Acc. & F1 & Paras & Cov. \\
+\midrule
+Fixed-1 & .063 & .029 & 1.00 & .590 \\
+Fixed-4 & .100 & .048 & 4.00 & .760 \\
+Fixed-8 & .110 & .040 & 8.00 & .833 \\
+Fixed-16 & .100 & .046 & 16.00 & .853 \\
+Obligation planner & .093 & .034 & 3.67 & .883 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Gate Optimality}
+The gate is Bayes optimal for the supplied belief and loss: for any belief $b\in\Delta(\mathcal H)$ and finite action set $\mathcal A$, choosing $\pi^*=\arg\min_{\pi}\mathbb E_{y\sim b}[L(\pi,y)]$ minimizes the expected loss, because the expected loss is linear in $b$ and the minimum is taken over a finite set.
+
+\end{document}

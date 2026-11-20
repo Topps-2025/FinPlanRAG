@@ -1,0 +1,210 @@
+\begin{thebibliography}{26}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Angelopoulos and Bates(2021)}]{angelopoulos2021gentle}
+Anastasios~N. Angelopoulos and Stephen Bates. 2021.
+\newblock \href {https://arxiv.org/abs/2107.07511} {A gentle introduction to
+  conformal prediction and distribution-free uncertainty quantification}.
+\newblock \emph{Preprint}, arXiv:2107.07511.
+
+\bibitem[{Asai et~al.(2024)Asai, Wu, Wang, Sil, and
+  Hajishirzi}]{asai2024selfrag}
+Akari Asai, Zeqiu Wu, Yizhong Wang, Avirup Sil, and Hannaneh Hajishirzi. 2024.
+\newblock Self-{RAG}: Learning to retrieve, generate, and critique through
+  self-reflection.
+\newblock In \emph{International Conference on Learning Representations}.
+
+\bibitem[{Chen et~al.(2026)Chen, Tan, You, and Liang}]{chen2026hcrag}
+Siyuan Chen, Huaye Tan, Li~You, and Jiajun Liang. 2026.
+\newblock \href {https://arxiv.org/abs/2608.12335} {{HC-RAG}: Evidence-centric
+  retrieval-augmented generation over heterogeneous financial filings}.
+\newblock \emph{Preprint}, arXiv:2608.12335.
+
+\bibitem[{Chen et~al.(2021)Chen, Chen, Smiley, Shah, Borova, Langdon, Moussa,
+  Beane, Huang, Routledge, and Wang}]{chen2021finqa}
+Zhiyu Chen, Wenhu Chen, Charese Smiley, Sameena Shah, Iana Borova, Dylan
+  Langdon, Reema Moussa, Matt Beane, Ting-Hao Huang, Bryan Routledge, and
+  William~Yang Wang. 2021.
+\newblock \href {https://doi.org/10.18653/v1/2021.emnlp-main.300} {{FinQA}: A
+  dataset of numerical reasoning over financial data}.
+\newblock In \emph{Proceedings of the 2021 Conference on Empirical Methods in
+  Natural Language Processing}, pages 3697--3711.
+
+\bibitem[{Chi et~al.(2026)Chi, Tai, Wu, Kwok, He, Liao, Xiao, Jiang, Lei,
+  Huang, Lu, Li, Ma, Wu, Lyu, Tian, Li, Ma, Hu, and Cui}]{chi2026finsagent}
+Jijun Chi, Zhenghan Tai, Hanwei Wu, Tung Sum~Thomas Kwok, Hailin He, Zixing
+  Liao, Bohuai Xiao, Chaolong Jiang, Jianliang Lei, Jerry Huang, Peng Lu, Muzhi
+  Li, Liheng Ma, Yihong Wu, Sicheng Lyu, Jingrui Tian, Yihan Li, Yanzhang Ma,
+  Dingtao Hu, and Yufei Cui. 2026.
+\newblock \href {https://arxiv.org/abs/2607.18102} {{FinSAgent}: Corpus-aligned
+  multi-agent {RAG} framework for evidence-grounded {SEC} filing question
+  answering}.
+\newblock \emph{Preprint}, arXiv:2607.18102.
+
+\bibitem[{Chow(1970)}]{chow1970optimum}
+C.~K. Chow. 1970.
+\newblock \href {https://doi.org/10.1109/TIT.1970.1054406} {On optimum
+  recognition error and reject tradeoff}.
+\newblock \emph{IEEE Transactions on Information Theory}, 16(1):41--46.
+
+\bibitem[{Elkan(2001)}]{elkan2001cost}
+Charles Elkan. 2001.
+\newblock The foundations of cost-sensitive learning.
+\newblock In \emph{Proceedings of the 17th International Joint Conference on
+  Artificial Intelligence}, pages 973--978.
+
+\bibitem[{Geifman and El-Yaniv(2017)}]{geifman2017selective}
+Yonatan Geifman and Ran El-Yaniv. 2017.
+\newblock Selective classification for deep neural networks.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~30.
+
+\bibitem[{Guo et~al.(2017)Guo, Pleiss, Sun, and
+  Weinberger}]{guo2017calibration}
+Chuan Guo, Geoff Pleiss, Yu~Sun, and Kilian~Q. Weinberger. 2017.
+\newblock On calibration of modern neural networks.
+\newblock In \emph{Proceedings of the 34th International Conference on Machine
+  Learning}, volume~70 of \emph{Proceedings of Machine Learning Research},
+  pages 1321--1330.
+
+\bibitem[{Islam et~al.(2023)Islam, Kannappan, Kiela, Qian, Scherrer, and
+  Vidgen}]{islam2023financebench}
+Pranab Islam, Anand Kannappan, Douwe Kiela, Rebecca Qian, Nino Scherrer, and
+  Bertie Vidgen. 2023.
+\newblock \href {https://arxiv.org/abs/2311.11944} {{FinanceBench}: A new
+  benchmark for financial question answering}.
+\newblock \emph{Preprint}, arXiv:2311.11944.
+
+\bibitem[{Jeong et~al.(2024)Jeong, Baek, Cho, Hwang, and
+  Park}]{jeong2024adaptiverag}
+Seongyun Jeong, Jinheon Baek, Soyeong Cho, Sung~Ju Hwang, and Jangwon Park.
+  2024.
+\newblock \href {https://doi.org/10.18653/v1/2024.naacl-long.389}
+  {Adaptive-{RAG}: Learning to adapt retrieval-augmented large language models
+  through question complexity}.
+\newblock In \emph{Proceedings of the 2024 Conference of the North American
+  Chapter of the Association for Computational Linguistics}, pages 7039--7053.
+
+\bibitem[{Jiang et~al.(2026)Jiang, Chen, Makri, Chen, Li, Maatouk, Tassiulas,
+  Brenner, Xiang, and Ying}]{jiang2026finrate}
+Yidong Jiang, Junrong Chen, Eftychia Makri, Jialin Chen, Peiwen Li, Ali
+  Maatouk, Leandros Tassiulas, Eliot Brenner, Bing Xiang, and Rex Ying. 2026.
+\newblock \href {https://arxiv.org/abs/2602.07294} {{Fin-RATE}: A real-world
+  financial analytics and tracking evaluation benchmark for {LLMs} on {SEC}
+  filings}.
+\newblock \emph{Preprint}, arXiv:2602.07294.
+
+\bibitem[{Jiang et~al.(2023)Jiang, Xu, Gao, Sun, Liu, Dwivedi-Yu, Yang, Callan,
+  and Neubig}]{jiang2023flare}
+Zhengbao Jiang, Fangkai Xu, Luyu Gao, Zhiqing Sun, Qian Liu, Jane Dwivedi-Yu,
+  Yiming Yang, Jamie Callan, and Graham Neubig. 2023.
+\newblock \href {https://doi.org/10.18653/v1/2023.emnlp-main.495} {Active
+  retrieval augmented generation}.
+\newblock In \emph{Proceedings of the 2023 Conference on Empirical Methods in
+  Natural Language Processing}, pages 7969--7992.
+
+\bibitem[{Lewis et~al.(2020)Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal,
+  Kuttler, Lewis, Yih, Rocktaschel, Riedel, and Kiela}]{lewis2020rag}
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
+  Karpukhin, Naman Goyal, Heinrich Kuttler, Mike Lewis, Wen-tau Yih, Tim
+  Rocktaschel, Sebastian Riedel, and Douwe Kiela. 2020.
+\newblock Retrieval-augmented generation for knowledge-intensive {NLP} tasks.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~33, pages 9459--9474.
+
+\bibitem[{L{\'o}pez~de Prado(2018)}]{lopezdeprado2018advances}
+Marcos L{\'o}pez~de Prado. 2018.
+\newblock \emph{Advances in Financial Machine Learning}.
+\newblock Wiley.
+
+\bibitem[{Manski(2003)}]{manski2003partial}
+Charles~F. Manski. 2003.
+\newblock \emph{Partial Identification of Probability Distributions}.
+\newblock Springer.
+
+\bibitem[{Mansouri et~al.(2026)Mansouri, Saad, Wahrenburg, Weissel, and
+  Woebbeking}]{mansouri2026finrank}
+Sasan Mansouri, Daniel Saad, Mark Wahrenburg, Manu Weissel, and Fabian
+  Woebbeking. 2026.
+\newblock \href {https://arxiv.org/abs/2608.07400} {{FinRank}: An
+  evidence-grounded benchmark for financial question answering and retrieval
+  over {SEC} filings}.
+\newblock \emph{Preprint}, arXiv:2608.07400.
+
+\bibitem[{Rangapur et~al.(2025)Rangapur, Wang, Jian, and
+  Shu}]{rangapur2025finfact}
+Aman Rangapur, Haoran Wang, Ling Jian, and Kai Shu. 2025.
+\newblock \href {https://doi.org/10.1145/3701716.3715292} {{Fin-Fact}: A
+  benchmark dataset for multimodal financial fact-checking and explanation
+  generation}.
+\newblock In \emph{Companion Proceedings of the ACM Web Conference 2025}, pages
+  785--788.
+
+\bibitem[{Reddy et~al.(2024)Reddy, Koncel-Kedziorski, Lai, Krumdick, Lovering,
+  and Tanner}]{reddy2024docfinqa}
+Varshini Reddy, Rik Koncel-Kedziorski, Viet~Dac Lai, Michael Krumdick, Charles
+  Lovering, and Chris Tanner. 2024.
+\newblock \href {https://doi.org/10.18653/v1/2024.acl-short.42} {{DocFinQA}: A
+  long-context financial reasoning dataset}.
+\newblock In \emph{Proceedings of the 62nd Annual Meeting of the Association
+  for Computational Linguistics (Volume 2: Short Papers)}, pages 445--458,
+  Bangkok, Thailand. Association for Computational Linguistics.
+
+\bibitem[{Shinn et~al.(2023)Shinn, Cassano, Berman, Gopinath, Narasimhan, and
+  Yao}]{shinn2023reflexion}
+Noah Shinn, Federico Cassano, Ashwin Berman, Ashay Gopinath, Karthik
+  Narasimhan, and Shunyu Yao. 2023.
+\newblock Reflexion: Language agents with verbal reinforcement learning.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~36.
+
+\bibitem[{Vovk et~al.(2005)Vovk, Gammerman, and Shafer}]{vovk2005algorithmic}
+Vladimir Vovk, Alex Gammerman, and Glenn Shafer. 2005.
+\newblock \emph{Algorithmic Learning in a Random World}.
+\newblock Springer.
+
+\bibitem[{Xie et~al.(2024)Xie, Han, Chen, Xiang, Zhang, He, Xiao, Li, Dai,
+  Feng, Xu, Kang, Kuang, Yuan, Yang, Luo, Zhang, Liu, Xiong, Deng, Jiang, Yao,
+  Li, Yu, Hu, Huang, Liu, Lopez-Lira, Wang, Lai, Wang, Peng, Ananiadou, and
+  Huang}]{liu2024finben}
+Qianqian Xie, Weiguang Han, Zhengyu Chen, Ruoyu Xiang, Xiao Zhang, Yueru He,
+  Mengxi Xiao, Dong Li, Yongfu Dai, Duanyu Feng, Yijing Xu, Haoqiang Kang,
+  Ziyan Kuang, Chenhan Yuan, Kailai Yang, Zheheng Luo, Tianlin Zhang, Zhiwei
+  Liu, Guojun Xiong, and 15 others. 2024.
+\newblock {FinBen}: A holistic financial benchmark for large language models.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~37.
+
+\bibitem[{Yan et~al.(2024)Yan, Gu, Zhu, and Ling}]{yan2024crag}
+Shi-Qi Yan, Jia-Chen Gu, Yun Zhu, and Zhen-Hua Ling. 2024.
+\newblock Corrective retrieval augmented generation.
+\newblock \emph{arXiv preprint arXiv:2401.15884}.
+
+\bibitem[{Yao et~al.(2023)Yao, Zhao, Yu, Du, Shafran, Narasimhan, and
+  Cao}]{yao2023react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan,
+  and Yuan Cao. 2023.
+\newblock React: Synergizing reasoning and acting in language models.
+\newblock In \emph{International Conference on Learning Representations}.
+
+\bibitem[{Zhao et~al.(2024)Zhao, Long, Jiang, Wang, Chen, Liu, Tang, Zhang,
+  Zhao, and Cohan}]{zhao2024findver}
+Yilun Zhao, Yitao Long, Tintin Jiang, Chengye Wang, Weiyuan Chen, Hongjun Liu,
+  Xiangru Tang, Yiming Zhang, Chen Zhao, and Arman Cohan. 2024.
+\newblock \href {https://doi.org/10.18653/v1/2024.emnlp-main.818} {{FinDVer}:
+  Explainable claim verification over long and hybrid-content financial
+  documents}.
+\newblock In \emph{Proceedings of the 2024 Conference on Empirical Methods in
+  Natural Language Processing}, pages 14739--14752.
+
+\bibitem[{Zhu et~al.(2021)Zhu, Lei, Huang, Wang, Zhang, Lv, Feng, and
+  Chua}]{zhu2021tatqa}
+Fengbin Zhu, Wenqiang Lei, Youcheng Huang, Chao Wang, Shuo Zhang, Jiancheng Lv,
+  Fuli Feng, and Tat-Seng Chua. 2021.
+\newblock \href {https://doi.org/10.18653/v1/2021.acl-long.254} {{TAT-QA}: A
+  question answering benchmark on a hybrid of tabular and textual content in
+  finance}.
+\newblock In \emph{Proceedings of the 59th Annual Meeting of the Association
+  for Computational Linguistics}, pages 3277--3287.
+
+\end{thebibliography}

@@ -1,0 +1,8 @@
+# Cloud GPU environment for Qwen3-8B served by vLLM.
+# Install the paper's pinned CPU dependencies first, then vLLM.
+-r requirements-reproduce.txt
+
+# vLLM must match the installed CUDA/PyTorch stack on the cloud image.
+# The exact wheel is platform-specific; install it from the vLLM index or the
+# cloud image's prebuilt package, then record the version in the run manifest.
+vllm>=0.8.0

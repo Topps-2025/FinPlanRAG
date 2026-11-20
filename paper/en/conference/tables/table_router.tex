@@ -1,0 +1,18 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\caption{Mixed-workload routing over 300 DocFinQA questions and 273 forward-looking claims. Utility is the task-specific score defined in Section~\ref{sec:metrics}.}
+\label{tab:router}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrrrr}
+\toprule
+Backbone & Route acc. & Router & Always RAG & Always anchor & Oracle \\
+\midrule
+DeepSeek & .995 & .403 & .121 & .282 & .403 \\
+GLM 5.3 & .990 & .419 & .130 & .292 & .422 \\
+Qwen3-8B & .867 & .263 & .018 & .298 & .316 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

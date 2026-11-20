@@ -1,0 +1,3479 @@
+{
+  "schema": "finplan-ashare-annual-backtest-v1",
+  "config": "C:\\Users\\Lenovo\\Desktop\\Paper\\FinPlanRAG\\configs\\ashare_backtest.yaml",
+  "cutoff_template": "{next_year}-01-31",
+  "years": [
+    2024,
+    2025
+  ],
+  "bands": {
+    "revenue_growth_pp": 10.0,
+    "net_profit_growth_pp": 15.0,
+    "gross_margin_pp": 1.0
+  },
+  "companies": [
+    {
+      "name": "中际旭创",
+      "ticker": "300308.SZ"
+    },
+    {
+      "name": "新易盛",
+      "ticker": "300502.SZ"
+    },
+    {
+      "name": "贵州茅台",
+      "ticker": "600519.SH"
+    },
+    {
+      "name": "宁德时代",
+      "ticker": "300750.SZ"
+    },
+    {
+      "name": "比亚迪",
+      "ticker": "002594.SZ"
+    }
+  ],
+  "n_claims": 40,
+  "claims": [
+    {
+      "claim_id": "ashare_002594_2024_disclosure_date",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2025-03-31",
+        "2025-04-01至2025-04-15",
+        "晚于2025-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2025-03-31",
+          "start": "2025-01-01",
+          "end": "2025-03-31"
+        },
+        {
+          "label": "2025-04-01至2025-04-15",
+          "start": "2025-04-01",
+          "end": "2025-04-15"
+        },
+        {
+          "label": "晚于2025-04-15",
+          "start": "2025-04-16",
+          "end": "2025-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2025-03-31": "2024年年度报告在2025年3月31日或之前披露",
+        "2025-04-01至2025-04-15": "2024年年度报告在2025年4月1日至4月15日之间披露",
+        "晚于2025-04-15": "2024年年度报告在2025年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2020年年报于2021-03-30披露；2021年年报于2022-03-30披露；2022年年报于2023-03-29披露；2023年年报于2024-03-27披露；法定截止日2025-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF",
+          "text": "2020年年报于2021-03-30披露；2021年年报于2022-03-30披露；2022年年报于2023-03-29披露；2023年年报于2024-03-27披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "不晚于2025-03-31",
+        "value": "2025-03-25",
+        "unit": "date",
+        "date": "2025-03-25",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_002594_2024_net_profit_growth",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于65.72%",
+        "65.72%至95.72%",
+        "高于95.72%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于65.72%",
+          "low": null,
+          "high": 65.72434938584256
+        },
+        {
+          "label": "65.72%至95.72%",
+          "low": 65.72434938584256,
+          "high": 95.72434938584256
+        },
+        {
+          "label": "高于95.72%",
+          "low": 95.72434938584256,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于65.72%": "实际值低于65.72%",
+        "65.72%至95.72%": "实际值在65.72%至95.72%之间（含下限，不含上限）",
+        "高于95.72%": "实际值不低于95.72%"
+      },
+      "reference_value": 300.40811,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 80.72434938584256,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-03-29/1216246589.PDF",
+          "text": "2022年年度报告：归母净利润 166.22 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 166.22448,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-27/1219412018.PDF",
+          "text": "2023年年度报告：归母净利润 300.41 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 300.40811,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 252.38 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 252.38115,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度归母净利润 213.67 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 213.66896,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于65.72%",
+        "value": 33.99886574300541,
+        "unit": "%",
+        "date": "2025-03-25",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_002594_2024_gross_margin",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于19.21pp",
+        "19.21pp至21.21pp",
+        "高于21.21pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于19.21pp",
+          "low": null,
+          "high": 19.214826
+        },
+        {
+          "label": "19.21pp至21.21pp",
+          "low": 19.214826,
+          "high": 21.214826
+        },
+        {
+          "label": "高于21.21pp",
+          "low": 21.214826,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于19.21pp": "实际值低于19.21pp",
+        "19.21pp至21.21pp": "实际值在19.21pp至21.21pp之间（含下限，不含上限）",
+        "高于21.21pp": "实际值不低于21.21pp"
+      },
+      "reference_value": 20.214826,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-27/1219412018.PDF",
+          "text": "2023年年度报告：综合毛利率 20.21%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 20.214826,
+          "unit": "%",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 20.77%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 20.766048,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度综合毛利率 19.79%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 19.785258,
+          "unit": "%",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "19.21pp至21.21pp",
+        "value": 19.438342,
+        "unit": "%",
+        "date": "2025-03-25",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_002594_2024_revenue_growth",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于32.04%",
+        "32.04%至52.04%",
+        "高于52.04%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于32.04%",
+          "low": null,
+          "high": 32.03519598087666
+        },
+        {
+          "label": "32.04%至52.04%",
+          "low": 32.03519598087666,
+          "high": 52.03519598087666
+        },
+        {
+          "label": "高于52.04%",
+          "low": 52.03519598087666,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于32.04%": "实际值低于32.04%",
+        "32.04%至52.04%": "实际值在32.04%至52.04%之间（含下限，不含上限）",
+        "高于52.04%": "实际值不低于52.04%"
+      },
+      "reference_value": 6023.15354,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 42.03519598087666,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-03-29/1216246589.PDF",
+          "text": "2022年年度报告：营业总收入 4240.61 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 4240.60635,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-27/1219412018.PDF",
+          "text": "2023年年度报告：营业总收入 6023.15 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 6023.15354,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 5022.51 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 5022.51312,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度营业总收入 4222.75 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 4222.74838,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于32.04%",
+        "value": 29.01920062957586,
+        "unit": "%",
+        "date": "2025-03-25",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_002594_2025_disclosure_date",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2026-03-31",
+        "2026-04-01至2026-04-15",
+        "晚于2026-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2026-03-31",
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        {
+          "label": "2026-04-01至2026-04-15",
+          "start": "2026-04-01",
+          "end": "2026-04-15"
+        },
+        {
+          "label": "晚于2026-04-15",
+          "start": "2026-04-16",
+          "end": "2026-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2026-03-31": "2025年年度报告在2026年3月31日或之前披露",
+        "2026-04-01至2026-04-15": "2025年年度报告在2026年4月1日至4月15日之间披露",
+        "晚于2026-04-15": "2025年年度报告在2026年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2021年年报于2022-03-30披露；2022年年报于2023-03-29披露；2023年年报于2024-03-27披露；2024年年报于2025-03-25披露；法定截止日2026-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2025-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-03-28/1225045351.PDF",
+          "text": "2021年年报于2022-03-30披露；2022年年报于2023-03-29披露；2023年年报于2024-03-27披露；2024年年报于2025-03-25披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "不晚于2026-03-31",
+        "value": "2026-03-28",
+        "unit": "date",
+        "date": "2026-03-28",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-28/1225045351.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_002594_2025_net_profit_growth",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于19%",
+        "19%至49%",
+        "高于49%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于19%",
+          "low": null,
+          "high": 18.99886574300541
+        },
+        {
+          "label": "19%至49%",
+          "low": 18.99886574300541,
+          "high": 48.99886574300541
+        },
+        {
+          "label": "高于49%",
+          "low": 48.99886574300541,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于19%": "实际值低于19%",
+        "19%至49%": "实际值在19%至49%之间（含下限，不含上限）",
+        "高于49%": "实际值不低于49%"
+      },
+      "reference_value": 402.54346,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 33.99886574300541,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-27/1219412018.PDF",
+          "text": "2023年年度报告：归母净利润 300.41 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 300.40811,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF",
+          "text": "2024年年度报告：归母净利润 402.54 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 402.54346,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度归母净利润 233.33 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 233.33173,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 252.38 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 252.38115,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于19%",
+        "value": -18.967701027859206,
+        "unit": "%",
+        "date": "2026-03-28",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-28/1225045351.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_002594_2025_gross_margin",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于18.44pp",
+        "18.44pp至20.44pp",
+        "高于20.44pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于18.44pp",
+          "low": null,
+          "high": 18.438342
+        },
+        {
+          "label": "18.44pp至20.44pp",
+          "low": 18.438342,
+          "high": 20.438342
+        },
+        {
+          "label": "高于20.44pp",
+          "low": 20.438342,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于18.44pp": "实际值低于18.44pp",
+        "18.44pp至20.44pp": "实际值在18.44pp至20.44pp之间（含下限，不含上限）",
+        "高于20.44pp": "实际值不低于20.44pp"
+      },
+      "reference_value": 19.438342,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF",
+          "text": "2024年年度报告：综合毛利率 19.44%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 19.438342,
+          "unit": "%",
+          "period": "2024FY"
+        },
+        {
+          "id": "E2",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度综合毛利率 17.87%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 17.873574,
+          "unit": "%",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 20.77%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 20.766048,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于18.44pp",
+        "value": 17.744529,
+        "unit": "%",
+        "date": "2026-03-28",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-28/1225045351.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_002594_2025_revenue_growth",
+      "company": "比亚迪",
+      "ticker": "002594.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于19.02%",
+        "19.02%至39.02%",
+        "高于39.02%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于19.02%",
+          "low": null,
+          "high": 19.01920062957586
+        },
+        {
+          "label": "19.02%至39.02%",
+          "low": 19.01920062957586,
+          "high": 39.01920062957586
+        },
+        {
+          "label": "高于39.02%",
+          "low": 39.01920062957586,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于19.02%": "实际值低于19.02%",
+        "19.02%至39.02%": "实际值在19.02%至39.02%之间（含下限，不含上限）",
+        "高于39.02%": "实际值不低于39.02%"
+      },
+      "reference_value": 7771.02455,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 29.01920062957586,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-27/1219412018.PDF",
+          "text": "2023年年度报告：营业总收入 6023.15 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 6023.15354,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-25/1222881496.PDF",
+          "text": "2024年年度报告：营业总收入 7771.02 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 7771.02455,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度营业总收入 5662.66 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 5662.65546,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 5022.51 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 5022.51312,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于19.02%",
+        "value": 3.4567517869957154,
+        "unit": "%",
+        "date": "2026-03-28",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-28/1225045351.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2024_disclosure_date",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2025-03-31",
+        "2025-04-01至2025-04-15",
+        "晚于2025-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2025-03-31",
+          "start": "2025-01-01",
+          "end": "2025-03-31"
+        },
+        {
+          "label": "2025-04-01至2025-04-15",
+          "start": "2025-04-01",
+          "end": "2025-04-15"
+        },
+        {
+          "label": "晚于2025-04-15",
+          "start": "2025-04-16",
+          "end": "2025-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2025-03-31": "2024年年度报告在2025年3月31日或之前披露",
+        "2025-04-01至2025-04-15": "2024年年度报告在2025年4月1日至4月15日之间披露",
+        "晚于2025-04-15": "2024年年度报告在2025年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露；2023年年报于2024-04-22披露；法定截止日2025-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF",
+          "text": "2020年年报于2021-04-27披露；2021年年报于2022-04-25披露；2022年年报于2023-04-24披露；2023年年报于2024-04-22披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "晚于2025-04-15",
+        "value": "2025-04-21",
+        "unit": "date",
+        "date": "2025-04-21",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2024_net_profit_growth",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于62.58%",
+        "62.58%至92.58%",
+        "高于92.58%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于62.58%",
+          "low": null,
+          "high": 62.57712151508498
+        },
+        {
+          "label": "62.58%至92.58%",
+          "low": 62.57712151508498,
+          "high": 92.57712151508498
+        },
+        {
+          "label": "高于92.58%",
+          "low": 92.57712151508498,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于62.58%": "实际值低于62.58%",
+        "62.58%至92.58%": "实际值在62.58%至92.58%之间（含下限，不含上限）",
+        "高于92.58%": "实际值不低于92.58%"
+      },
+      "reference_value": 21.7352774777,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 77.57712151508498,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-04-24/1216523562.PDF",
+          "text": "2022年年度报告：归母净利润 12.24 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 12.239908661800001,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+          "text": "2023年年度报告：归母净利润 21.74 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 21.7352774777,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 37.53 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 37.5265917015,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度归母净利润 12.96 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 12.958678796300001,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于92.58%",
+        "value": 137.93052438165793,
+        "unit": "%",
+        "date": "2025-04-21",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2024_gross_margin",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于31.99pp",
+        "31.99pp至33.99pp",
+        "高于33.99pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于31.99pp",
+          "low": null,
+          "high": 31.992275999999997
+        },
+        {
+          "label": "31.99pp至33.99pp",
+          "low": 31.992275999999997,
+          "high": 33.992276
+        },
+        {
+          "label": "高于33.99pp",
+          "low": 33.992276,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于31.99pp": "实际值低于31.99pp",
+        "31.99pp至33.99pp": "实际值在31.99pp至33.99pp之间（含下限，不含上限）",
+        "高于33.99pp": "实际值不低于33.99pp"
+      },
+      "reference_value": 32.992276,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+          "text": "2023年年度报告：综合毛利率 32.99%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 32.992276,
+          "unit": "%",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 33.32%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 33.321447,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度综合毛利率 31.75%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 31.746521,
+          "unit": "%",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "31.99pp至33.99pp",
+        "value": 33.804958,
+        "unit": "%",
+        "date": "2025-04-21",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2024_revenue_growth",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于1.162%",
+        "1.162%至21.16%",
+        "高于21.16%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于1.162%",
+          "low": null,
+          "high": 1.1617155421732672
+        },
+        {
+          "label": "1.162%至21.16%",
+          "low": 1.1617155421732672,
+          "high": 21.16171554217327
+        },
+        {
+          "label": "高于21.16%",
+          "low": 21.16171554217327,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于1.162%": "实际值低于1.162%",
+        "1.162%至21.16%": "实际值在1.162%至21.16%之间（含下限，不含上限）",
+        "高于21.16%": "实际值不低于21.16%"
+      },
+      "reference_value": 107.1798447103,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 11.161715542173267,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-04-24/1216523562.PDF",
+          "text": "2022年年度报告：营业总收入 96.42 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 96.4179476608,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+          "text": "2023年年度报告：营业总收入 107.18 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 107.1798447103,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 173.13 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 173.12601820150002,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度营业总收入 70.30 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 70.302903716,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于21.16%",
+        "value": 122.63663287503195,
+        "unit": "%",
+        "date": "2025-04-21",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2025_disclosure_date",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2026-03-31",
+        "2026-04-01至2026-04-15",
+        "晚于2026-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2026-03-31",
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        {
+          "label": "2026-04-01至2026-04-15",
+          "start": "2026-04-01",
+          "end": "2026-04-15"
+        },
+        {
+          "label": "晚于2026-04-15",
+          "start": "2026-04-16",
+          "end": "2026-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2026-03-31": "2025年年度报告在2026年3月31日或之前披露",
+        "2026-04-01至2026-04-15": "2025年年度报告在2026年4月1日至4月15日之间披露",
+        "晚于2026-04-15": "2025年年度报告在2026年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2021年年报于2022-04-25披露；2022年年报于2023-04-24披露；2023年年报于2024-04-22披露；2024年年报于2025-04-21披露；法定截止日2026-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2025-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-03-31/1225056459.PDF",
+          "text": "2021年年报于2022-04-25披露；2022年年报于2023-04-24披露；2023年年报于2024-04-22披露；2024年年报于2025-04-21披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "不晚于2026-03-31",
+        "value": "2026-03-31",
+        "unit": "date",
+        "date": "2026-03-31",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-31/1225056459.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2025_net_profit_growth",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于122.9%",
+        "122.9%至152.9%",
+        "高于152.9%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于122.9%",
+          "low": null,
+          "high": 122.93052438165793
+        },
+        {
+          "label": "122.9%至152.9%",
+          "low": 122.93052438165793,
+          "high": 152.93052438165793
+        },
+        {
+          "label": "高于152.9%",
+          "low": 152.93052438165793,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于122.9%": "实际值低于122.9%",
+        "122.9%至152.9%": "实际值在122.9%至152.9%之间（含下限，不含上限）",
+        "高于152.9%": "实际值不低于152.9%"
+      },
+      "reference_value": 51.714859678500005,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 137.93052438165793,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+          "text": "2023年年度报告：归母净利润 21.74 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 21.7352774777,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF",
+          "text": "2024年年度报告：归母净利润 51.71 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 51.714859678500005,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度归母净利润 71.32 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 71.319324367,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 37.53 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 37.5265917015,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于122.9%",
+        "value": 108.78436812115848,
+        "unit": "%",
+        "date": "2026-03-31",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-31/1225056459.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2025_gross_margin",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于32.8pp",
+        "32.8pp至34.8pp",
+        "高于34.8pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于32.8pp",
+          "low": null,
+          "high": 32.804958
+        },
+        {
+          "label": "32.8pp至34.8pp",
+          "low": 32.804958,
+          "high": 34.804958
+        },
+        {
+          "label": "高于34.8pp",
+          "low": 34.804958,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于32.8pp": "实际值低于32.8pp",
+        "32.8pp至34.8pp": "实际值在32.8pp至34.8pp之间（含下限，不含上限）",
+        "高于34.8pp": "实际值不低于34.8pp"
+      },
+      "reference_value": 33.804958,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF",
+          "text": "2024年年度报告：综合毛利率 33.80%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 33.804958,
+          "unit": "%",
+          "period": "2024FY"
+        },
+        {
+          "id": "E2",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度综合毛利率 40.74%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 40.741148,
+          "unit": "%",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 33.32%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 33.321447,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于34.8pp",
+        "value": 42.035631,
+        "unit": "%",
+        "date": "2026-03-31",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-31/1225056459.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300308_2025_revenue_growth",
+      "company": "中际旭创",
+      "ticker": "300308.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于112.6%",
+        "112.6%至132.6%",
+        "高于132.6%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于112.6%",
+          "low": null,
+          "high": 112.63663287503195
+        },
+        {
+          "label": "112.6%至132.6%",
+          "low": 112.63663287503195,
+          "high": 132.63663287503195
+        },
+        {
+          "label": "高于132.6%",
+          "low": 132.63663287503195,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于112.6%": "实际值低于112.6%",
+        "112.6%至132.6%": "实际值在112.6%至132.6%之间（含下限，不含上限）",
+        "高于132.6%": "实际值不低于132.6%"
+      },
+      "reference_value": 238.6215973837,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 122.63663287503195,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF",
+          "text": "2023年年度报告：营业总收入 107.18 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 107.1798447103,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-21/1223155483.PDF",
+          "text": "2024年年度报告：营业总收入 238.62 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 238.6215973837,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度营业总收入 250.05 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 250.0480085132,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 173.13 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 173.12601820150002,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于112.6%",
+        "value": 60.25345593165545,
+        "unit": "%",
+        "date": "2026-03-31",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-31/1225056459.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2024_disclosure_date",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2025-03-31",
+        "2025-04-01至2025-04-15",
+        "晚于2025-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2025-03-31",
+          "start": "2025-01-01",
+          "end": "2025-03-31"
+        },
+        {
+          "label": "2025-04-01至2025-04-15",
+          "start": "2025-04-01",
+          "end": "2025-04-15"
+        },
+        {
+          "label": "晚于2025-04-15",
+          "start": "2025-04-16",
+          "end": "2025-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2025-03-31": "2024年年度报告在2025年3月31日或之前披露",
+        "2025-04-01至2025-04-15": "2024年年度报告在2025年4月1日至4月15日之间披露",
+        "晚于2025-04-15": "2024年年度报告在2025年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2020年年报于2021-04-23披露；2021年年报于2022-04-22披露；2022年年报于2023-04-27披露；2023年年报于2024-04-23披露；法定截止日2025-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF",
+          "text": "2020年年报于2021-04-23披露；2021年年报于2022-04-22披露；2022年年报于2023-04-27披露；2023年年报于2024-04-23披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "晚于2025-04-15",
+        "value": "2025-04-23",
+        "unit": "date",
+        "date": "2025-04-23",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2024_net_profit_growth",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于-38.82%",
+        "-38.82%至-8.819%",
+        "高于-8.819%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于-38.82%",
+          "low": null,
+          "high": -38.81855905119369
+        },
+        {
+          "label": "-38.82%至-8.819%",
+          "low": -38.81855905119369,
+          "high": -8.818559051193688
+        },
+        {
+          "label": "高于-8.819%",
+          "low": -8.818559051193688,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于-38.82%": "实际值低于-38.82%",
+        "-38.82%至-8.819%": "实际值在-38.82%至-8.819%之间（含下限，不含上限）",
+        "高于-8.819%": "实际值不低于-8.819%"
+      },
+      "reference_value": 6.8836109512,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": -23.818559051193688,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-04-27/1216626421.PDF",
+          "text": "2022年年度报告：归母净利润 9.04 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 9.0358109081,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-23/1219746778.PDF",
+          "text": "2023年年度报告：归母净利润 6.88 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 6.8836109512,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 16.46 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 16.4607287121,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度归母净利润 4.30 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 4.2956350352,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于-8.819%",
+        "value": 312.2565386812414,
+        "unit": "%",
+        "date": "2025-04-23",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2024_gross_margin",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于29.99pp",
+        "29.99pp至31.99pp",
+        "高于31.99pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于29.99pp",
+          "low": null,
+          "high": 29.990043
+        },
+        {
+          "label": "29.99pp至31.99pp",
+          "low": 29.990043,
+          "high": 31.990043
+        },
+        {
+          "label": "高于31.99pp",
+          "low": 31.990043,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于29.99pp": "实际值低于29.99pp",
+        "29.99pp至31.99pp": "实际值在29.99pp至31.99pp之间（含下限，不含上限）",
+        "高于31.99pp": "实际值不低于31.99pp"
+      },
+      "reference_value": 30.990043,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-23/1219746778.PDF",
+          "text": "2023年年度报告：综合毛利率 30.99%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 30.990043,
+          "unit": "%",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 42.34%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 42.335319,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度综合毛利率 28.19%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 28.192252,
+          "unit": "%",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于31.99pp",
+        "value": 44.717413,
+        "unit": "%",
+        "date": "2025-04-23",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2024_revenue_growth",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于-16.43%",
+        "-16.43%至3.567%",
+        "高于3.567%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于-16.43%",
+          "low": null,
+          "high": -16.432964600251534
+        },
+        {
+          "label": "-16.43%至3.567%",
+          "low": -16.432964600251534,
+          "high": 3.567035399748466
+        },
+        {
+          "label": "高于3.567%",
+          "low": 3.567035399748466,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于-16.43%": "实际值低于-16.43%",
+        "-16.43%至3.567%": "实际值在-16.43%至3.567%之间（含下限，不含上限）",
+        "高于3.567%": "实际值不低于3.567%"
+      },
+      "reference_value": 30.9760575052,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": -6.432964600251534,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-04-27/1216626421.PDF",
+          "text": "2022年年度报告：营业总收入 33.11 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 33.1057379053,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-23/1219746778.PDF",
+          "text": "2023年年度报告：营业总收入 30.98 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 30.9760575052,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 51.30 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 51.30435808520001,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度营业总收入 20.87 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 20.8704755182,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于3.567%",
+        "value": 179.1456315210043,
+        "unit": "%",
+        "date": "2025-04-23",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2025_disclosure_date",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2026-03-31",
+        "2026-04-01至2026-04-15",
+        "晚于2026-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2026-03-31",
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        {
+          "label": "2026-04-01至2026-04-15",
+          "start": "2026-04-01",
+          "end": "2026-04-15"
+        },
+        {
+          "label": "晚于2026-04-15",
+          "start": "2026-04-16",
+          "end": "2026-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2026-03-31": "2025年年度报告在2026年3月31日或之前披露",
+        "2026-04-01至2026-04-15": "2025年年度报告在2026年4月1日至4月15日之间披露",
+        "晚于2026-04-15": "2025年年度报告在2026年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2021年年报于2022-04-22披露；2022年年报于2023-04-27披露；2023年年报于2024-04-23披露；2024年年报于2025-04-23披露；法定截止日2026-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2025-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-04-24/1225172598.PDF",
+          "text": "2021年年报于2022-04-22披露；2022年年报于2023-04-27披露；2023年年报于2024-04-23披露；2024年年报于2025-04-23披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "晚于2026-04-15",
+        "value": "2026-04-24",
+        "unit": "date",
+        "date": "2026-04-24",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-24/1225172598.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2025_net_profit_growth",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于297.3%",
+        "297.3%至327.3%",
+        "高于327.3%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于297.3%",
+          "low": null,
+          "high": 297.2565386812414
+        },
+        {
+          "label": "297.3%至327.3%",
+          "low": 297.2565386812414,
+          "high": 327.2565386812414
+        },
+        {
+          "label": "高于327.3%",
+          "low": 327.2565386812414,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于297.3%": "实际值低于297.3%",
+        "297.3%至327.3%": "实际值在297.3%至327.3%之间（含下限，不含上限）",
+        "高于327.3%": "实际值不低于327.3%"
+      },
+      "reference_value": 28.3781362437,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 312.2565386812414,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-23/1219746778.PDF",
+          "text": "2023年年度报告：归母净利润 6.88 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 6.8836109512,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF",
+          "text": "2024年年度报告：归母净利润 28.38 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 28.3781362437,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度归母净利润 63.27 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 63.270925078400005,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 16.46 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 16.4607287121,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于297.3%",
+        "value": 235.88966690108498,
+        "unit": "%",
+        "date": "2026-04-24",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-24/1225172598.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2025_gross_margin",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于43.72pp",
+        "43.72pp至45.72pp",
+        "高于45.72pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于43.72pp",
+          "low": null,
+          "high": 43.717413
+        },
+        {
+          "label": "43.72pp至45.72pp",
+          "low": 43.717413,
+          "high": 45.717413
+        },
+        {
+          "label": "高于45.72pp",
+          "low": 45.717413,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于43.72pp": "实际值低于43.72pp",
+        "43.72pp至45.72pp": "实际值在43.72pp至45.72pp之间（含下限，不含上限）",
+        "高于45.72pp": "实际值不低于45.72pp"
+      },
+      "reference_value": 44.717413,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF",
+          "text": "2024年年度报告：综合毛利率 44.72%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 44.717413,
+          "unit": "%",
+          "period": "2024FY"
+        },
+        {
+          "id": "E2",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度综合毛利率 47.25%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 47.246975,
+          "unit": "%",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 42.34%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 42.335319,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于45.72pp",
+        "value": 47.805628,
+        "unit": "%",
+        "date": "2026-04-24",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-24/1225172598.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300502_2025_revenue_growth",
+      "company": "新易盛",
+      "ticker": "300502.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于169.1%",
+        "169.1%至189.1%",
+        "高于189.1%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于169.1%",
+          "low": null,
+          "high": 169.1456315210043
+        },
+        {
+          "label": "169.1%至189.1%",
+          "low": 169.1456315210043,
+          "high": 189.1456315210043
+        },
+        {
+          "label": "高于189.1%",
+          "low": 189.1456315210043,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于169.1%": "实际值低于169.1%",
+        "169.1%至189.1%": "实际值在169.1%至189.1%之间（含下限，不含上限）",
+        "高于189.1%": "实际值不低于189.1%"
+      },
+      "reference_value": 86.4683113432,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 179.1456315210043,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-23/1219746778.PDF",
+          "text": "2023年年度报告：营业总收入 30.98 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 30.9760575052,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-23/1223219348.PDF",
+          "text": "2024年年度报告：营业总收入 86.47 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 86.4683113432,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度营业总收入 165.05 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 165.0479121136,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 51.30 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 51.30435808520001,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "169.1%至189.1%",
+        "value": 187.29432151878842,
+        "unit": "%",
+        "date": "2026-04-24",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-24/1225172598.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2024_disclosure_date",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2025-03-31",
+        "2025-04-01至2025-04-15",
+        "晚于2025-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2025-03-31",
+          "start": "2025-01-01",
+          "end": "2025-03-31"
+        },
+        {
+          "label": "2025-04-01至2025-04-15",
+          "start": "2025-04-01",
+          "end": "2025-04-15"
+        },
+        {
+          "label": "晚于2025-04-15",
+          "start": "2025-04-16",
+          "end": "2025-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2025-03-31": "2024年年度报告在2025年3月31日或之前披露",
+        "2025-04-01至2025-04-15": "2024年年度报告在2025年4月1日至4月15日之间披露",
+        "晚于2025-04-15": "2024年年度报告在2025年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2020年年报于2021-04-28披露；2021年年报于2022-04-22披露；2022年年报于2023-03-10披露；2023年年报于2024-03-16披露；法定截止日2025-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF",
+          "text": "2020年年报于2021-04-28披露；2021年年报于2022-04-22披露；2022年年报于2023-03-10披露；2023年年报于2024-03-16披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "不晚于2025-03-31",
+        "value": "2025-03-15",
+        "unit": "date",
+        "date": "2025-03-15",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2024_net_profit_growth",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于28.58%",
+        "28.58%至58.58%",
+        "高于58.58%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于28.58%",
+          "low": null,
+          "high": 28.581025236824303
+        },
+        {
+          "label": "28.58%至58.58%",
+          "low": 28.581025236824303,
+          "high": 58.5810252368243
+        },
+        {
+          "label": "高于58.58%",
+          "low": 58.5810252368243,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于28.58%": "实际值低于28.58%",
+        "28.58%至58.58%": "实际值在28.58%至58.58%之间（含下限，不含上限）",
+        "高于58.58%": "实际值不低于58.58%"
+      },
+      "reference_value": 441.21248,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 43.5810252368243,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-03-10/1216084559.PDF",
+          "text": "2022年年度报告：归母净利润 307.29 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 307.291635,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-16/1219313047.PDF",
+          "text": "2023年年度报告：归母净利润 441.21 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 441.21248,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 360.01 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 360.01074,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度归母净利润 311.45 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 311.454736,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于28.58%",
+        "value": 15.01189177604405,
+        "unit": "%",
+        "date": "2025-03-15",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2024_gross_margin",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于21.91pp",
+        "21.91pp至23.91pp",
+        "高于23.91pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于21.91pp",
+          "low": null,
+          "high": 21.90913
+        },
+        {
+          "label": "21.91pp至23.91pp",
+          "low": 21.90913,
+          "high": 23.90913
+        },
+        {
+          "label": "高于23.91pp",
+          "low": 23.90913,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于21.91pp": "实际值低于21.91pp",
+        "21.91pp至23.91pp": "实际值在21.91pp至23.91pp之间（含下限，不含上限）",
+        "高于23.91pp": "实际值不低于23.91pp"
+      },
+      "reference_value": 22.90913,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-16/1219313047.PDF",
+          "text": "2023年年度报告：综合毛利率 22.91%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 22.90913,
+          "unit": "%",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 28.19%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 28.185032,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度综合毛利率 21.92%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 21.915913,
+          "unit": "%",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于23.91pp",
+        "value": 24.444896,
+        "unit": "%",
+        "date": "2025-03-15",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2024_revenue_growth",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于12.01%",
+        "12.01%至32.01%",
+        "高于32.01%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于12.01%",
+          "low": null,
+          "high": 12.009854182131061
+        },
+        {
+          "label": "12.01%至32.01%",
+          "low": 12.009854182131061,
+          "high": 32.009854182131065
+        },
+        {
+          "label": "高于32.01%",
+          "low": 32.009854182131065,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于12.01%": "实际值低于12.01%",
+        "12.01%至32.01%": "实际值在12.01%至32.01%之间（含下限，不含上限）",
+        "高于32.01%": "实际值不低于32.01%"
+      },
+      "reference_value": 4009.17045,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 22.00985418213106,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-03-10/1216084559.PDF",
+          "text": "2022年年度报告：营业总收入 3285.94 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 3285.939875,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-16/1219313047.PDF",
+          "text": "2023年年度报告：营业总收入 4009.17 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 4009.17045,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 2590.45 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 2590.44749,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "",
+          "text": "2023年三季度报告：前三季度营业总收入 2946.77 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 2946.772506,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于12.01%",
+        "value": -9.703875523675976,
+        "unit": "%",
+        "date": "2025-03-15",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2025_disclosure_date",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2026-03-31",
+        "2026-04-01至2026-04-15",
+        "晚于2026-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2026-03-31",
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        {
+          "label": "2026-04-01至2026-04-15",
+          "start": "2026-04-01",
+          "end": "2026-04-15"
+        },
+        {
+          "label": "晚于2026-04-15",
+          "start": "2026-04-16",
+          "end": "2026-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2026-03-31": "2025年年度报告在2026年3月31日或之前披露",
+        "2026-04-01至2026-04-15": "2025年年度报告在2026年4月1日至4月15日之间披露",
+        "晚于2026-04-15": "2025年年度报告在2026年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2021年年报于2022-04-22披露；2022年年报于2023-03-10披露；2023年年报于2024-03-16披露；2024年年报于2025-03-15披露；法定截止日2026-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2025-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-03-10/1225002214.PDF",
+          "text": "2021年年报于2022-04-22披露；2022年年报于2023-03-10披露；2023年年报于2024-03-16披露；2024年年报于2025-03-15披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "不晚于2026-03-31",
+        "value": "2026-03-10",
+        "unit": "date",
+        "date": "2026-03-10",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-10/1225002214.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2025_net_profit_growth",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于0.01189%",
+        "0.01189%至30.01%",
+        "高于30.01%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于0.01189%",
+          "low": null,
+          "high": 0.011891776044050673
+        },
+        {
+          "label": "0.01189%至30.01%",
+          "low": 0.011891776044050673,
+          "high": 30.011891776044052
+        },
+        {
+          "label": "高于30.01%",
+          "low": 30.011891776044052,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于0.01189%": "实际值低于0.01189%",
+        "0.01189%至30.01%": "实际值在0.01189%至30.01%之间（含下限，不含上限）",
+        "高于30.01%": "实际值不低于30.01%"
+      },
+      "reference_value": 507.44682,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 15.01189177604405,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-16/1219313047.PDF",
+          "text": "2023年年度报告：归母净利润 441.21 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 441.21248,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF",
+          "text": "2024年年度报告：归母净利润 507.45 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 507.44682,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度归母净利润 490.34 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 490.34109,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度归母净利润 360.01 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 360.01074,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于30.01%",
+        "value": 42.283445583519466,
+        "unit": "%",
+        "date": "2026-03-10",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-10/1225002214.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2025_gross_margin",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于23.44pp",
+        "23.44pp至25.44pp",
+        "高于25.44pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于23.44pp",
+          "low": null,
+          "high": 23.444896
+        },
+        {
+          "label": "23.44pp至25.44pp",
+          "low": 23.444896,
+          "high": 25.444896
+        },
+        {
+          "label": "高于25.44pp",
+          "low": 25.444896,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于23.44pp": "实际值低于23.44pp",
+        "23.44pp至25.44pp": "实际值在23.44pp至25.44pp之间（含下限，不含上限）",
+        "高于25.44pp": "实际值不低于25.44pp"
+      },
+      "reference_value": 24.444896,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF",
+          "text": "2024年年度报告：综合毛利率 24.44%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 24.444896,
+          "unit": "%",
+          "period": "2024FY"
+        },
+        {
+          "id": "E2",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度综合毛利率 25.31%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 25.309759,
+          "unit": "%",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度综合毛利率 28.19%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 28.185032,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于25.44pp",
+        "value": 26.272847,
+        "unit": "%",
+        "date": "2026-03-10",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-10/1225002214.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_300750_2025_revenue_growth",
+      "company": "宁德时代",
+      "ticker": "300750.SZ",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于-19.7%",
+        "-19.7%至0.2961%",
+        "高于0.2961%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于-19.7%",
+          "low": null,
+          "high": -19.703875523675976
+        },
+        {
+          "label": "-19.7%至0.2961%",
+          "low": -19.703875523675976,
+          "high": 0.2961244763240245
+        },
+        {
+          "label": "高于0.2961%",
+          "low": 0.2961244763240245,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于-19.7%": "实际值低于-19.7%",
+        "-19.7%至0.2961%": "实际值在-19.7%至0.2961%之间（含下限，不含上限）",
+        "高于0.2961%": "实际值不低于0.2961%"
+      },
+      "reference_value": 3620.12554,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": -9.703875523675976,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-03-16/1219313047.PDF",
+          "text": "2023年年度报告：营业总收入 4009.17 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 4009.17045,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-03-15/1222806982.PDF",
+          "text": "2024年年度报告：营业总收入 3620.13 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 3620.12554,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "",
+          "text": "2025年三季度报告：前三季度营业总收入 2830.72 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 2830.71987,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "",
+          "text": "2024年三季度报告：前三季度营业总收入 2590.45 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 2590.44749,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "高于0.2961%",
+        "value": 17.040646606968224,
+        "unit": "%",
+        "date": "2026-03-10",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-03-10/1225002214.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2024_disclosure_date",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2025-03-31",
+        "2025-04-01至2025-04-15",
+        "晚于2025-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2025-03-31",
+          "start": "2025-01-01",
+          "end": "2025-03-31"
+        },
+        {
+          "label": "2025-04-01至2025-04-15",
+          "start": "2025-04-01",
+          "end": "2025-04-15"
+        },
+        {
+          "label": "晚于2025-04-15",
+          "start": "2025-04-16",
+          "end": "2025-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2025-03-31": "2024年年度报告在2025年3月31日或之前披露",
+        "2025-04-01至2025-04-15": "2024年年度报告在2025年4月1日至4月15日之间披露",
+        "晚于2025-04-15": "2024年年度报告在2025年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2020年年报于2021-03-31披露；2021年年报于2022-03-31披露；2022年年报于2023-03-31披露；2023年年报于2024-04-03披露；法定截止日2025-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF",
+          "text": "2020年年报于2021-03-31披露；2021年年报于2022-03-31披露；2022年年报于2023-03-31披露；2023年年报于2024-04-03披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "2025-04-01至2025-04-15",
+        "value": "2025-04-03",
+        "unit": "date",
+        "date": "2025-04-03",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2024_net_profit_growth",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于4.16%",
+        "4.16%至34.16%",
+        "高于34.16%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于4.16%",
+          "low": null,
+          "high": 4.159899289165928
+        },
+        {
+          "label": "4.16%至34.16%",
+          "low": 4.159899289165928,
+          "high": 34.15989928916593
+        },
+        {
+          "label": "高于34.16%",
+          "low": 34.15989928916593,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于4.16%": "实际值低于4.16%",
+        "4.16%至34.16%": "实际值在4.16%至34.16%之间（含下限，不含上限）",
+        "高于34.16%": "实际值不低于34.16%"
+      },
+      "reference_value": 747.3407155075,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 19.159899289165928,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-03-31/1216281757.PDF",
+          "text": "2022年年度报告：归母净利润 627.17 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 627.1746787012,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-03/1219506510.PDF",
+          "text": "2023年年度报告：归母净利润 747.34 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 747.3407155075,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-10-26/1221523519.PDF",
+          "text": "2024年三季度报告：前三季度归母净利润 608.28 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 608.2755211851,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-10-21/1218110141.PDF",
+          "text": "2023年三季度报告：前三季度归母净利润 528.76 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 528.7621706412,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "4.16%至34.16%",
+        "value": 15.37996610162564,
+        "unit": "%",
+        "date": "2025-04-03",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2024_gross_margin",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于90.96pp",
+        "90.96pp至92.96pp",
+        "高于92.96pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于90.96pp",
+          "low": null,
+          "high": 90.964937
+        },
+        {
+          "label": "90.96pp至92.96pp",
+          "low": 90.964937,
+          "high": 92.964937
+        },
+        {
+          "label": "高于92.96pp",
+          "low": 92.964937,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于90.96pp": "实际值低于90.96pp",
+        "90.96pp至92.96pp": "实际值在90.96pp至92.96pp之间（含下限，不含上限）",
+        "高于92.96pp": "实际值不低于92.96pp"
+      },
+      "reference_value": 91.964937,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-03/1219506510.PDF",
+          "text": "2023年年度报告：综合毛利率 91.96%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 91.964937,
+          "unit": "%",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-10-26/1221523519.PDF",
+          "text": "2024年三季度报告：前三季度综合毛利率 91.53%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 91.531375,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-10-21/1218110141.PDF",
+          "text": "2023年三季度报告：前三季度综合毛利率 91.71%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 91.707471,
+          "unit": "%",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "90.96pp至92.96pp",
+        "value": 91.931216,
+        "unit": "%",
+        "date": "2025-04-03",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2024_revenue_growth",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2024,
+      "cutoff": "2025-01-31",
+      "target_period": "2024年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于8.037%",
+        "8.037%至28.04%",
+        "高于28.04%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于8.037%",
+          "low": null,
+          "high": 8.03657924586659
+        },
+        {
+          "label": "8.037%至28.04%",
+          "low": 8.03657924586659,
+          "high": 28.03657924586659
+        },
+        {
+          "label": "高于28.04%",
+          "low": 28.03657924586659,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于8.037%": "实际值低于8.037%",
+        "8.037%至28.04%": "实际值在8.037%至28.04%之间（含下限，不含上限）",
+        "高于28.04%": "实际值不低于28.04%"
+      },
+      "reference_value": 1505.6033031644997,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 18.03657924586659,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2022年年度报告",
+          "date": "2022-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-03-31/1216281757.PDF",
+          "text": "2022年年度报告：营业总收入 1275.54 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 1275.5395935597,
+          "unit": "亿元",
+          "period": "2022FY"
+        },
+        {
+          "id": "E2",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-03/1219506510.PDF",
+          "text": "2023年年度报告：营业总收入 1505.60 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 1505.6033031644997,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-10-26/1221523519.PDF",
+          "text": "2024年三季度报告：前三季度营业总收入 1231.23 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 1231.2254262545,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2023年三季度报告",
+          "date": "2023-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2023-10-21/1218110141.PDF",
+          "text": "2023年三季度报告：前三季度营业总收入 1053.16 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 1053.159004481,
+          "unit": "亿元",
+          "period": "2023Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "8.037%至28.04%",
+        "value": 15.663979743024825,
+        "unit": "%",
+        "date": "2025-04-03",
+        "source": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2025_disclosure_date",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "年度报告披露日期",
+      "metric_kind": "date",
+      "model_template": "date_window",
+      "labels": [
+        "不晚于2026-03-31",
+        "2026-04-01至2026-04-15",
+        "晚于2026-04-15"
+      ],
+      "date_windows": [
+        {
+          "label": "不晚于2026-03-31",
+          "start": "2026-01-01",
+          "end": "2026-03-31"
+        },
+        {
+          "label": "2026-04-01至2026-04-15",
+          "start": "2026-04-01",
+          "end": "2026-04-15"
+        },
+        {
+          "label": "晚于2026-04-15",
+          "start": "2026-04-16",
+          "end": "2026-04-30"
+        }
+      ],
+      "label_defs": {
+        "不晚于2026-03-31": "2025年年度报告在2026年3月31日或之前披露",
+        "2026-04-01至2026-04-15": "2025年年度报告在2026年4月1日至4月15日之间披露",
+        "晚于2026-04-15": "2025年年度报告在2026年4月15日之后披露，但不晚于法定截止日4月30日"
+      },
+      "reference": "历史披露：2021年年报于2022-03-31披露；2022年年报于2023-03-31披露；2023年年报于2024-04-03披露；2024年年报于2025-04-03披露；法定截止日2026-04-30",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "历史年度报告披露记录",
+          "date": "2025-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2026-04-17/1225114741.PDF",
+          "text": "2021年年报于2022-03-31披露；2022年年报于2023-03-31披露；2023年年报于2024-04-03披露；2024年年报于2025-04-03披露。",
+          "facet": "date_disclosure",
+          "metric": "年度报告披露日期",
+          "value": null,
+          "unit": "date",
+          "period": "history"
+        }
+      ],
+      "outcome": {
+        "label": "晚于2026-04-15",
+        "value": "2026-04-17",
+        "unit": "date",
+        "date": "2026-04-17",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-17/1225114741.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2025_net_profit_growth",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "归母净利润同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于0.38%",
+        "0.38%至30.38%",
+        "高于30.38%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于0.38%",
+          "low": null,
+          "high": 0.3799661016256408
+        },
+        {
+          "label": "0.38%至30.38%",
+          "low": 0.3799661016256408,
+          "high": 30.37996610162564
+        },
+        {
+          "label": "高于30.38%",
+          "low": 30.37996610162564,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于0.38%": "实际值低于0.38%",
+        "0.38%至30.38%": "实际值在0.38%至30.38%之间（含下限，不含上限）",
+        "高于30.38%": "实际值不低于30.38%"
+      },
+      "reference_value": 862.2814642162,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 15.37996610162564,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-03/1219506510.PDF",
+          "text": "2023年年度报告：归母净利润 747.34 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 747.3407155075,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF",
+          "text": "2024年年度报告：归母净利润 862.28 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 862.2814642162,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-10-30/1224764517.PDF",
+          "text": "2025年三季度报告：前三季度归母净利润 646.27 亿元。",
+          "facet": "latest_period",
+          "metric": "归母净利润",
+          "value": 646.2674671218,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-10-26/1221523519.PDF",
+          "text": "2024年三季度报告：前三季度归母净利润 608.28 亿元。",
+          "facet": "prior_period",
+          "metric": "归母净利润",
+          "value": 608.2755211851,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于0.38%",
+        "value": -4.532254817158088,
+        "unit": "%",
+        "date": "2026-04-17",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-17/1225114741.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2025_gross_margin",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "综合毛利率",
+      "metric_kind": "margin",
+      "model_template": "margin_bridge",
+      "labels": [
+        "低于90.93pp",
+        "90.93pp至92.93pp",
+        "高于92.93pp"
+      ],
+      "thresholds": [
+        {
+          "label": "低于90.93pp",
+          "low": null,
+          "high": 90.931216
+        },
+        {
+          "label": "90.93pp至92.93pp",
+          "low": 90.931216,
+          "high": 92.931216
+        },
+        {
+          "label": "高于92.93pp",
+          "low": 92.931216,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于90.93pp": "实际值低于90.93pp",
+        "90.93pp至92.93pp": "实际值在90.93pp至92.93pp之间（含下限，不含上限）",
+        "高于92.93pp": "实际值不低于92.93pp"
+      },
+      "reference_value": 91.931216,
+      "reference_unit": "%",
+      "unit": "%",
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF",
+          "text": "2024年年度报告：综合毛利率 91.93%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 91.931216,
+          "unit": "%",
+          "period": "2024FY"
+        },
+        {
+          "id": "E2",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-10-30/1224764517.PDF",
+          "text": "2025年三季度报告：前三季度综合毛利率 91.29%。",
+          "facet": "latest_period",
+          "metric": "毛利率",
+          "value": 91.293383,
+          "unit": "%",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E3",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-10-26/1221523519.PDF",
+          "text": "2024年三季度报告：前三季度综合毛利率 91.53%。",
+          "facet": "prior_period",
+          "metric": "毛利率",
+          "value": 91.531375,
+          "unit": "%",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "90.93pp至92.93pp",
+        "value": 91.179551,
+        "unit": "%",
+        "date": "2026-04-17",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-17/1225114741.PDF"
+      }
+    },
+    {
+      "claim_id": "ashare_600519_2025_revenue_growth",
+      "company": "贵州茅台",
+      "ticker": "600519.SH",
+      "year": 2025,
+      "cutoff": "2026-01-31",
+      "target_period": "2025年年度报告",
+      "metric": "营业收入同比增速",
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "labels": [
+        "低于5.664%",
+        "5.664%至25.66%",
+        "高于25.66%"
+      ],
+      "thresholds": [
+        {
+          "label": "低于5.664%",
+          "low": null,
+          "high": 5.663979743024825
+        },
+        {
+          "label": "5.664%至25.66%",
+          "low": 5.663979743024825,
+          "high": 25.663979743024825
+        },
+        {
+          "label": "高于25.66%",
+          "low": 25.663979743024825,
+          "high": null
+        }
+      ],
+      "label_defs": {
+        "低于5.664%": "实际值低于5.664%",
+        "5.664%至25.66%": "实际值在5.664%至25.66%之间（含下限，不含上限）",
+        "高于25.66%": "实际值不低于25.66%"
+      },
+      "reference_value": 1741.4406995824997,
+      "reference_unit": "亿元",
+      "unit": "%",
+      "prior_growth": 15.663979743024825,
+      "evidence": [
+        {
+          "id": "E1",
+          "title": "2023年年度报告",
+          "date": "2023-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-04-03/1219506510.PDF",
+          "text": "2023年年度报告：营业总收入 1505.60 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 1505.6033031644997,
+          "unit": "亿元",
+          "period": "2023FY"
+        },
+        {
+          "id": "E2",
+          "title": "2024年年度报告",
+          "date": "2024-12-31",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-04-03/1222993920.PDF",
+          "text": "2024年年度报告：营业总收入 1741.44 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 1741.4406995824997,
+          "unit": "亿元",
+          "period": "2024FY"
+        },
+        {
+          "id": "E3",
+          "title": "2025年三季度报告",
+          "date": "2025-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2025-10-30/1224764517.PDF",
+          "text": "2025年三季度报告：前三季度营业总收入 1309.04 亿元。",
+          "facet": "latest_period",
+          "metric": "营业收入",
+          "value": 1309.0388963488,
+          "unit": "亿元",
+          "period": "2025Q1-Q3"
+        },
+        {
+          "id": "E4",
+          "title": "2024年三季度报告",
+          "date": "2024-09-30",
+          "url": "https://static.cninfo.com.cn/finalpage/2024-10-26/1221523519.PDF",
+          "text": "2024年三季度报告：前三季度营业总收入 1231.23 亿元。",
+          "facet": "prior_period",
+          "metric": "营业收入",
+          "value": 1231.2254262545,
+          "unit": "亿元",
+          "period": "2024Q1-Q3"
+        }
+      ],
+      "outcome": {
+        "label": "低于5.664%",
+        "value": -1.2000971769185131,
+        "unit": "%",
+        "date": "2026-04-17",
+        "source": "https://static.cninfo.com.cn/finalpage/2026-04-17/1225114741.PDF"
+      }
+    }
+  ]
+}

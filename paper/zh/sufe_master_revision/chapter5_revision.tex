@@ -1,0 +1,227 @@
+% ==================== 第5章（重构版） ====================
+\chapter{AnchorEvolve：前瞻性断言分支}
+\label{ch:anchor}
+
+\begin{revbox}
+\noindent\textbf{本章修订说明。}本章把 AnchorEvolve 从“一次性锚点抽取 + 静态后验”重构为“时点文本证据 → 五类资格 → 时间演化可靠性/先验 → 信念 → 校准融合 → 全动作损失感知读出”的链条。高亮部分为新增或重写内容；未高亮的概念定义保留原稿。实现边界在 5.3、5.4 和 5.6 节明确标注，避免把设计目标写成已实现的实验性质。
+\end{revbox}
+
+AnchorEvolve 可以概括为六步：定义假设空间，构造文本锚点，过滤锚点，演化可靠性并更新信念，校准融合，最后在全动作空间上读出。前两步对应状态表示与状态构造，第三步对应五类资格判定，第四步对应时间演化与信念更新，第五步对应校准融合，第六步对应全动作损失感知读出。
+
+\section{状态表示：假设空间与三层锚点}
+
+前瞻性断言的真值取决于截止时点之后披露的信息。系统在截止时点只能形成关于未来结果的判断，不能把判断当作已实现事实。AnchorEvolve 把断言表示为有限假设空间上的信念。通用设计中，假设空间是时机与阶段的笛卡尔积：
+\begin{equation}
+\mathcal H=\{(t,s):t\in\mathcal T,\ s\in\mathcal S\},
+\end{equation}
+其中$\mathcal T$为季度或年度时机，$\mathcal S$为试验、量产等阶段。对于收入指引，本文实例化为
+\begin{equation}
+\mathcal H=\{\text{低于区间},\text{区间内},\text{高于区间}\}.
+\end{equation}
+断言自带的时机与阶段作为弱先验，不作为事实。系统不接收已实现结果，只接收截止时点之前的证据。
+
+AnchorEvolve 的核心状态是三层锚点。L0 是稳定关系本体：界、先后、前置时间、持续时间、守恒、比率、单位换算和作用域。L0 不随行业变化，为锚点提供可复用的关系类型。例如，“当前季度值落在指引区间内”是一个界关系，“新产品在指引季度之后投产”是一个先后关系，“产能爬坡需要两个季度”是一个前置时间关系。L0 的作用是限制锚点可以表达的关系种类，使不同行业的锚点共享同一套语义骨架。
+
+L1 是行业模式：每个锚点类型是（名称、L0 关系、字段、生效轮次）四元组。收入指引的初始模式包含指引宽度、当前季度增长、公司历史、行业历史、文本信号和其他。L1 把 L0 关系绑定到具体字段和生效规则。例如，“指引宽度”绑定到界关系，字段是上限与下限之差除以中点；“当前季度增长”绑定到比率关系，字段是当前季度值相对指引中点的比例。L1 带有生效轮次，使新发现的锚点类型不会在同一轮中使用。
+
+L2 是锚点实例：编号、类型、取值或区间、单位、作用域、来源、时间、可靠性和有效期。L2 是 LLM 抽取器的直接输出，也是信念更新的输入。每个 L2 锚点都记录来源和时间，因此可以被逐条检查。
+
+\begin{revbox}
+\noindent\textbf{表示边界。}L0/L1/L2 在当前实现中是“关系词表 + 类型 schema + 实例”的三层表示，不是三个独立训练的模块：L1 类型用于可靠性演化，L0 关系用于语义分类，L2 实例进入信念更新。L1 的文本信号类型（\texttt{text\_signal}）是本次修订新增的类型，用于承载 8-K 原文中的管理层评论、分部/需求信号；其余五类沿用原稿。
+\end{revbox}
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  >=Latex,
+  box/.style={draw, rounded corners=2pt, align=center, text width=3.4cm, minimum height=1.05cm, inner sep=2pt},
+  small/.style={draw, rounded corners=2pt, align=center, text width=3.0cm, minimum height=1.0cm, inner sep=2pt},
+  arrow/.style={->, thick, draw=black!70}
+]
+\node[box] (q) at (0,0) {前瞻性断言 $q$\\截止时点 $c$};
+\node[box] (e) at (0,-1.8) {时点 8-K 原文\\段落 $P\#$ / 证据 $E\#$};
+\node[box, fill=gray!8] (x) at (0,-3.6) {LLM 锚点抽取\\L0/L1/L2};
+\node[small] (h) at (-3.8,-5.5) {硬锚点\\可靠性 $\ge$ 阈值};
+\node[small] (s) at (0,-5.5) {软锚点\\似然更新};
+\node[small] (f) at (3.8,-5.5) {空泛/过期/对抗\\过滤};
+\node[box] (b) at (0,-7.2) {结果桶信念 $b$};
+\node[box] (ev) at (-3.8,-8.9) {时间演化状态\\类型可靠性 / 时点先验};
+\node[box] (ba) at (0,-8.9) {锚点后验 $b_A$};
+\node[box, fill=gray!8] (br) at (3.8,-8.9) {结构化 RF $b_R$};
+\node[box] (sel) at (0,-10.6) {校准融合 $b_F$};
+\node[box] (out) at (0,-12.3) {全动作损失感知读出\\点答案 / 裁决集 / 弃权};
+\draw[arrow] (q) -- (e);
+\draw[arrow] (e) -- (x);
+\draw[arrow] (x) -- (h);
+\draw[arrow] (x) -- (s);
+\draw[arrow] (x) -- (f);
+\draw[arrow] (h) -- (b);
+\draw[arrow] (s) -- (b);
+\draw[arrow] (b) -- (ba);
+\draw[arrow] (ev) -- (ba);
+\draw[arrow] (ba) -- (sel);
+\draw[arrow] (br) -- (sel);
+\draw[arrow] (sel) -- (out);
+\end{tikzpicture}
+\caption{AnchorEvolve 修订版机制。时点 8-K 原文经 LLM 抽取 L0/L1/L2 锚点；五类资格判定将硬/软锚点送入信念更新，空泛/过期/对抗锚点被过滤；时间演化状态（类型可靠性 Beta 后验与时点先验）参与信念更新；锚点后验与结构化 RF 融合后，由全动作损失感知读出生成点答案、裁决集或弃权。}
+\label{fig:anchormechanism}
+\end{figure}
+
+\section{状态构造：时点文本证据与锚点抽取}
+
+\begin{revbox}
+\noindent\textbf{文本证据。}每条 asserted claim 的输入是 \texttt{claim\_source.url} 指向的、截止时点可得的 8-K exhibit，而不是结果揭示的 earnings release。系统保留开头若干段落（标题、当季实际、下一季指引），再按 revenue/guidance/outlook/segment/demand 等关键词选取段落；每个段落带稳定编号 $P1,P2,\dots$，结构化证据带 $E1,E2,\dots$。公司名默认脱敏，prompt 只接收匿名公司标识、行业、截止时点、目标期间、指引区间、当前季度值和时点先验。
+\end{revbox}
+
+锚点抽取器是一个 LLM 调用。输入包括前瞻性断言、公司匿名标识、行业、截止时点、目标期间、指引区间、当前季度值与可靠性、观测先验和行业先验、演化类型可靠性、可用证据项和 8-K 段落摘录。输出包括一组 L2 锚点以及三类桶的分数。每个锚点记录类型、关系、取值、作用域、来源编号、日期、可靠性、硬软标记、隐含桶和理由；三类分数给出低于区间、区间内和高于区间的边际判断。
+
+\begin{revbox}
+\noindent\textbf{提示词约束。}修订版 prompt 明确要求：（1）锚点必须引用 \texttt{P\#} 或 \texttt{E\#} 来源，并给出不晚于 cutoff 的日期；（2）\texttt{reliability} 是“隐含桶正确的校准概率”，不是推理置信度；（3）指引区间定义三个桶，但区间本身不是“结果落在区间内”的证据；（4）证据不足时返回 \texttt{missing}，不编造锚点。提示词与结构化输出 schema 见附录 D 的修订版。
+\end{revbox}
+
+抽取器的三类分数是边际信号。分支把它与锚点更新后的信念等权混合，得到锚点后验。混合后的后验保留锚点的结构化信息，同时利用抽取器对三类结果的边际判断；混合权重 $\gamma$ 是配置项，默认 $0.5$。
+
+\section{状态过滤：五类资格判定}
+
+每个锚点在更新信念之前经过资格判定。修订版把五类判定写成确定性规则；所有阈值在配置文件中给出，不在代码中写死。
+
+\begin{table}[H]
+\centering
+\zihao{5}
+\caption{五类锚点资格判定。}
+\label{tab:qualification}
+\begin{tabular}{p{2.2cm}p{5.2cm}p{4.8cm}}
+\toprule
+类型 & 判定条件 & 处理 \\
+\midrule
+\rowcolor{yellow!18} vacuous & 无隐含桶，或锚点不提供有效桶信息 & 不进入更新 \\
+\rowcolor{yellow!18} stale & 锚点日期晚于 cutoff，或来源日期晚于 cutoff & 不进入更新 \\
+\rowcolor{yellow!18} adversarial & 引用的段落/证据不在时点摘录中，或作用域不匹配 & 不进入更新 \\
+\rowcolor{yellow!18} hard & 显式约束且可靠性不低于硬锚点阈值 & 限制可行桶（当前实现为点质量+小底） \\
+\rowcolor{yellow!18} soft & 其余有效锚点 & 以似然更新信念 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{revbox}
+\noindent\textbf{实现边界。}当前代码对 hard 锚点采用“隐含桶点质量 + 小底”的更新；多个 hard 锚点的可行集交集、冲突检测和回退到软更新是论文原设计，代码中尚未实现，作为扩展接口保留。空泛/过期/对抗三类已经实现确定性检查；在当前收入指引数据上主要触发 hard/soft，这与原稿的边界说明一致。
+\end{revbox}
+
+五类判定分开处理证据的不同维度。硬、软刻画约束强度；空泛刻画信息量；对抗刻画作用域；过期刻画时效。把它们合并为一个可靠性分数会丢失诊断信息：一条高可靠性但作用域错误的锚点不应进入更新，一条作用域正确但信息量低的锚点也不应主导信念。分开判定使每个被拒绝的锚点都有明确理由，也使审计者可以检查过滤规则是否合理。
+
+\section{状态更新：时间演化与信念}
+
+\begin{revbox}
+\noindent\textbf{时间演化。}对 cutoff 为 $c$ 的断言，系统只使用结果公开揭示日早于 $c$ 的锚点和结果。揭示日取 \texttt{earnings\_events.json} 的 earnings event 日期；缺失时回退到 10-Q 日期；若揭示日不早于 $c$，该结果在 $c$ 时不可见。这样，可靠性更新和先验更新都是时点正确的，而不是把未来结果泄漏到当前判断。
+\end{revbox}
+
+信念从时点先验 $b_0$ 开始。修订版不再使用固定的开发集先验，而是用历史已揭示结果的平滑计数：
+\begin{equation}
+b_0(k)=\frac{n_k+1}{n+3},\qquad k\in\mathcal H,
+\end{equation}
+其中 $n_k$ 是在 $c$ 之前已公开揭示的、结果为桶 $k$ 的断言数，$n=\sum_k n_k$。当 $n=0$ 时退化为均匀先验。
+
+每个锚点类型 $t$ 维护一个 Beta 可靠性后验。设截至 $c$ 已揭示的、类型 $t$ 的锚点中，隐含桶与结果一致的数量为 $m_t$，总数为 $n_t$，则
+\begin{equation}
+r_t=\frac{m_t+\alpha}{n_t+\alpha+\beta},
+\end{equation}
+其中 $\alpha,\beta$ 是配置中的 Beta 先验参数。修订版把演化可靠性与原 LLM 主观可靠性做收缩：
+\begin{equation}
+\rho_t=\lambda r_t+(1-\lambda)r_{\mathrm{LLM}},
+\end{equation}
+其中 $\lambda$ 是收缩系数（默认 $0.5$）。$\rho_t$ 作为软锚点更新的指数。
+
+软锚点的似然为
+\begin{equation}
+L_e(k)=
+\begin{cases}
+p_e, & k=j,\\
+(1-p_e)/(|\mathcal H|-1), & k\ne j,
+\end{cases}
+\end{equation}
+其中 $j$ 为隐含桶，$p_e$ 是配置项（默认 $0.7$）。软锚点执行
+\begin{equation}
+b(k)\propto b(k)\,L_e(k)^{\rho_t}.
+\end{equation}
+硬锚点把信念置为隐含桶上的点质量加一个小底，以避免后续软锚点无法恢复。每一步更新后对信念做归一化。
+
+抽取器的三类分数是边际信号。分支把它与锚点更新后的信念按权重 $\gamma$ 混合：
+\begin{equation}
+b_A=\gamma\,b+(1-\gamma)\,s,
+\end{equation}
+其中 $s$ 为三类分数的归一化向量，$\gamma$ 为配置项（默认 $0.5$）。
+
+锚点后验的优点是语义可解释：每个桶的概率变化可以追溯到具体锚点，硬锚点的排除和软锚点的加权都有记录。缺点是概率质量不一定校准；LLM 抽取器可能系统性地高估某一类桶，锚点可靠性是抽取器给出的主观量，不是经过验证的频率。时间演化用已揭示结果校准类型可靠性，但并不能消除所有类别偏置；因此第 5.5 节仍引入结构化 RF 和校准融合。
+
+\section{决策读出：校准融合与全动作损失感知门}
+
+\begin{revbox}
+\noindent\textbf{从受限 gate 到全动作 gate。}原稿的读出只在“点答案”和“最高密度 $1-\alpha$ 可信集”之间比较。修订版把动作空间扩展为：3 个点标签 $a\in\mathcal H$、全部 7 个非空裁决集 $R\subseteq\mathcal H$、以及弃权。对每个动作计算期望损失并取最小。该读出在同一个后验和同一个损失下是严格改进；原受限 gate 是新动作空间的一个子集。
+\end{revbox}
+
+校准后端是一个随机森林，输入为截止时点可得的结构化特征：指引宽度、当前季度值相对指引中点的比例、指引与当前季度的比值、历史结果计数与频率、前次指引增长与宽度、目标季度、截止年份、行业，以及本次修订加入的演化先验特征（peer/sector 历史、公司 surprise 历史、日历、当前季度相对 low/high 的位置、可靠性标志）。随机森林在开发集与验证集上训练，并在公司不重叠折上做温度缩放；测试公司不出现在训练集中。
+
+锚点后验与校准随机森林后验 $b_R$ 融合：
+\begin{equation}
+b_F=w\,b_A+(1-w)\,b_R,
+\end{equation}
+其中 $w$ 只在验证集上从配置的权重网格中选择，测试集不参与选择。修订版不再把 $w$ 写死为 $0.1$；DeepSeek 上新锚点 + 演化先验 RF 的验证选择为 $w=0.20$。
+
+给定输出后验 $b^\ast$，系统在点回答、裁决集和弃权之间选择期望损失最低的动作。回答损失为
+\begin{equation}
+L_{\text{ans}}(a,y)=
+\begin{cases}
+0, & a=y,\\
+\ell_{\text{over}}, & a=\text{高于},y=\text{低于},\\
+\ell_{\text{under}}, & a=\text{低于},y=\text{高于},\\
+\ell_{\text{wrong}}, & \text{其他}.
+\end{cases}
+\end{equation}
+集合损失为
+\begin{equation}
+L_{\text{set}}(R,y)=\mathbf{1}[y\notin R]\,\ell_{\text{miss}}
++\ell_{\text{width}}\max(0,|R|-1),
+\end{equation}
+弃权损失为$\ell_{\text{abstain}}$。全动作读出在 $b^\ast$ 下计算三类动作的期望损失并取最小：
+\begin{equation}
+\pi^\star=\arg\min_{\pi\in\{\text{answer},\text{adjudicate},\text{abstain}\}}
+\mathbb E_{y\sim b^\ast}\big[L(\pi,y)\big].
+\end{equation}
+默认参数为$\ell_{\text{over}}=12$、$\ell_{\text{under}}=8$、$\ell_{\text{wrong}}=10$、$\ell_{\text{miss}}=8$、$\ell_{\text{width}}=2$、$\ell_{\text{abstain}}=5$、$\alpha=0.1$。
+
+\begin{revbox}
+\noindent\textbf{可信集与裁决集的区分。}$1-\alpha$ 可信集
+\begin{equation}
+R_\alpha=\arg\min_{R\subseteq\mathcal H}\{|R|:\textstyle\sum_{k\in R}b^\ast(k)\ge 1-\alpha\}
+\end{equation}
+仍作为覆盖率和审计口径报告，但它不再等同于决策集。全动作 gate 选择的裁决集 $R^\star$ 是损失最优集，可以在 $1-\alpha$ 集更宽时选择更窄的集合，或在不确定性高时选择弃权。DeepSeek 上 $1-\alpha$ 集的平均大小约 2.8、覆盖率约 .99；损失最优动作集的平均大小约 1.9、覆盖率约 .86。这是给定非对称损失下的最优权衡，不应把“覆盖率低于名义值”误读为缺陷。
+\end{revbox}
+
+损失参数的选择影响动作分布。本文使用一组固定参数报告主结果，并在附录中给出参数含义与敏感性分析的计划；参数不是从测试集调出来的，而是对应金融分析中对过度乐观、漏报和集合宽度的相对定价。不同机构可以根据自身风险偏好替换参数，而不改变框架结构。
+
+\section{时点演化与算法}
+
+AnchorEvolve 在结果揭示后更新来源可靠性和锚点类型可靠性。对每个使用过的证据项，分支记录其与已实现桶是否一致，更新来源可靠性、锚点类型可靠性和分类器权重。第 $r$ 轮的结果在第 $r$ 轮全部断言裁决完成后才更新状态，并从第 $r+1$ 轮开始使用。新发现的锚点类型生效轮次为 $r+1$，因此触发发现的断言不能使用该锚点。该规则保证自演化是时点的。收入指引实验报告第一轮；多轮循环作为扩展接口保留。
+
+\begin{algorithm}[H]
+\caption{AnchorEvolve 单条断言的演化与全动作裁决}
+\label{alg:anchor}
+\begin{algorithmic}[1]
+\Require 断言$q$，截止时点$c$，时点 8-K 分段$E_c$，演化状态$S_c$，结构化 RF 后验$b_R$
+\Ensure 动作$\pi$，点答案$h^\ast$，裁决集$R^\ast$，后验$b_F$
+\State $A\gets\textsc{ExtractAnchors}(q,c,E_c,S_c)$
+\State $A_q\gets\textsc{Qualify}(A,q,c)$ \Comment{vacuous/stale/adversarial/hard/soft}
+\State $b_A\gets\textsc{BeliefUpdate}(S_c,A_q)$
+\State $b_F\gets w\,b_A+(1-w)\,b_R$
+\State $(\pi,h^\ast,R^\ast)\gets\textsc{FullActionGate}(b_F)$
+\State $S_{c^+}\gets\textsc{RevealUpdate}(S_c,c)$ \Comment{仅用揭示日早于下一 cutoff 的结果}
+\State \Return $(\pi,h^\ast,R^\ast,b_F)$
+\end{algorithmic}
+\end{algorithm}
+
+算法的时间成本主要由锚点抽取的输入和输出长度决定。单条断言的输入与输出通常在数千 token 量级；随机森林推断在本地完成，不产生 API 成本。与端到端微调相比，该流程不需要锚点级人工标注，锚点类型和资格规则可以逐条检查；与直接提示模型输出类别相比，AnchorEvolve 保留从证据到锚点、从锚点到信念、从信念到动作的中间状态。
+
+\begin{revbox}
+\noindent\textbf{可审计性与边界。}每个被采纳或拒绝的锚点都有来源编号、时间、作用域和理由；每个桶的信念变化都可以追溯到具体锚点；每个动作都有对应的期望损失。需要强调：当前实现尚未做人工审计实验，因此“可审计”是设计属性而非已测量的用户收益；LLM 抽取器仍可能出错，错误的硬锚点可能排除正确桶，可靠性阈值和冲突检查只能缓解、不能消除。多轮演化、来源可靠性单独更新和硬锚点可行集交集是后续工作。
+\end{revbox}

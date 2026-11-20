@@ -1,0 +1,464 @@
+\documentclass[10.5pt,a4paper]{ctexart}
+\usepackage[a4paper,left=2.5cm,right=2.5cm,top=2.6cm,bottom=2.5cm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,graphicx,array,multirow}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
+\usepackage[round,authoryear]{natbib}
+\usepackage[hidelinks]{hyperref}
+\linespread{1.15}
+\sloppy
+\setlength{\parskip}{0.15em}
+\setlength{\textfloatsep}{7pt plus 2pt minus 2pt}
+\setlength{\floatsep}{7pt plus 2pt minus 2pt}
+\setlength{\intextsep}{7pt plus 2pt minus 2pt}
+\newtheorem{theorem}{定理}
+\newtheorem{proposition}{命题}
+\newtheorem{lemma}{引理}
+\newtheorem{corollary}{推论}
+\renewcommand{\proofname}{证明}
+\newcommand{\finplan}{FinPlan\mbox{-}RAG}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\indic}[1]{\mathbf{1}\{#1\}}
+\title{\finplan{}：面向金融证据检索的\\时点约束义务状态规划}
+\author{匿名作者}
+\date{}
+
+\begin{document}
+\pagestyle{plain}
+\maketitle
+
+\begin{abstract}
+金融问答本质上是证据装配问题：一个问题包含若干申报期义务，只有当每个义务都由截止时点前公开的申报文件支持时，答案才可接受。现有检索系统按问题相关性排序段落，但相关性并不说明问题包含哪些义务，也不说明哪些文件在时点上可得。本文将金融检索形式化为预算约束下的义务闭合，并提出\finplan：把问题解析为（实体、申报类型、财年、财期）类型化义务，按义务绑定检索，在证据账本中记录支持与限制证据，仅在闭合时停止，否则结构化拒答。我们证明：当每个义务有$k$个同分干扰项且预算为$m$条记录时，仅分数选择器的闭合率至多$1/\binom{m(k+1)}{m}$；义务状态是价值保持控制的必要条件；类型化财期绑定在读者之前执行截止安全；答案误差可分解为证据项与读者项。在冻结受控诊断（5{,}600例）上，闭合率由.1011升至.3655，查询由10降至8.87。在LOFin（1{,}572题）与FinGLM（1{,}829题、11{,}587份年报）上，类型化绑定把错误文件率由.798降至.311、由.809降至.013，配对95\%区间不跨零。一个复用相同义务但不使用级联策略的元数据填充对照在金融语料上与规划器完全持平，表明增益来自义务表示而非搜索策略。
+\end{abstract}
+
+\noindent\textbf{关键词：}金融问答；证据检索；时点约束；义务状态；检索增强生成；可审计性
+
+\section{引言}
+金融问题是一组证据义务。“比较2023财年和2024财年的营业收入”包含两个年度义务。“2024年上半年营业收入与上年同期相比如何”包含两个半年度义务，且由不同申报类型披露。分析者在截止时点$c$只能使用$c$之前公开的文件。一个段落可能与问题高度相关，却属于错误的财期、错误的申报类型，或者属于截止时点尚不存在的文件。只取一个高分段落就停止的系统，可能关闭一个义务、遗漏其余义务，并且不返回任何“尚未闭合”的信号。
+
+这一失败模式不是重排序的细节，而是信息问题。相关性分数是文档到标量的投影；共享同一分数的文档，恰恰可能在决定可采纳性的属性上不同：财年、财期、申报类型和可得时间。当两个文档在分数空间碰撞、却在义务有效性上相反时，任何阈值、校准或基于同一分数的重排序都无法恢复这一区分。该碰撞在金融场景中尤其昂贵：后续申报经常重述前期数据，而前视偏差既可能通过预训练、也可能通过检索进入模型\citep{sarkar2025lookahead}；即使时间表达显式存在，时序问答仍然困难\citep{chen2021timeqa,zhu2025fintmmb}。因此，首先要指定的是检索目标，而不是检索算法。
+
+我们将金融证据检索形式化为\emph{预算约束下的义务闭合}。问题被解析为类型化义务$o_i=(e_i,f_i,y_i,p_i)$：实体、申报类型、财年和财期。文档只有在不晚于截止时点公开、且在全部类型化字段上与义务匹配时才可采纳。规划器维护一个证据状态，把未解决义务与已闭合义务分开，记录支持证据与限制证据，并据此选择下一个检索动作。它在全部义务闭合时停止；在预算耗尽或缺失可采纳支持时，给出结构化拒答。相关性是循环内部的检索信号，而不是闭合证书。
+
+\paragraph{研究问题。}在固定预算下，显式义务状态规划能否改善金融证据检索的可靠性—成本前沿？增益来自表示（类型化义务及其解析器）还是来自搜索策略（风险排序级联、反证、自适应停止）？这个问题是两部分。第一部分问契约是否有效；第二部分问哪个部件承载增益。二者对应不同的研究优先级：表示结果说明金融RAG应投资于检索目标，策略结果说明应投资于控制器。
+
+\paragraph{贡献。}
+\begin{itemize}[leftmargin=*,topsep=2pt,itemsep=1pt]
+\item \textbf{面向金融检索的时点义务契约。}我们定义类型化义务、可采纳性、闭合、拒答与预算目标（第\ref{sec:problem}节）。契约不依赖特定索引或读者，可实例化在稀疏、稠密或混合检索上。
+\item \textbf{下界与分解。}我们证明$m$义务闭合的分数纤维下界（定理\ref{thm:score}），说明义务状态是价值保持控制的必要条件（命题\ref{prop:state}），证明类型化检索下的截止安全（定理\ref{thm:cutoff}），建立反证对选择性可靠性的必要性（命题\ref{prop:counter}），并把答案误差分解为证据项与读者项（定理\ref{thm:decomp}）。附录\ref{app:counterexample}的穷举反例与下界精确吻合。
+\item \textbf{\finplan{}：可审计的实例化。}确定性解析器规范化财期语言；风险排序规划器在类型化约束下检索；证据账本记录支持、冲突、限制证据与可得时间；门控返回带引用的答案或结构化拒答（第\ref{sec:method}节）。实现与供应商无关，并提供JSONL/OpenAI兼容接口。
+\item \textbf{证据与识别结果。}冻结受控诊断、LOFin与FinGLM公开语料、覆盖六家留出公司的预注册24题留出集、SEC时点谱系研究和中国混合财期试验支持该契约（第\ref{sec:experiments}节）。决定性结果是识别性的：复用相同义务、但不使用级联的元数据填充对照，在LOFin、FinGLM和冻结留出集上与规划器完全持平。增益在表示，不在搜索策略。
+\end{itemize}
+
+\begin{figure*}[!t]
+\centering
+\begin{tikzpicture}[
+  font=\small,
+  >={Latex[length=1.5mm,width=1.1mm]},
+  box/.style={draw=black!65,rounded corners=2pt,align=center,inner sep=2pt,minimum height=7mm,fill=white,text width=2.35cm},
+  obl/.style={draw=black!65,rounded corners=2pt,align=center,inner sep=1.5pt,fill=blue!4,text width=4.8cm,font=\scriptsize},
+  arrow/.style={->,draw=black!70,line width=0.5pt}
+]
+\node[box] (q) at (1.3,2.2) {问题$q$\\截止时点$c$};
+\node[box] (p) at (3.7,2.2) {确定性\\财期解析};
+\node[obl] (o) at (7.9,2.2) {$o_1=(e,\text{10K},2023,\text{FY})$\\$o_2=(e,\text{10K},2024,\text{FY})$};
+\node[box] (r) at (12.0,2.2) {类型化\\检索};
+\node[box] (v) at (12.0,0.7) {核验支持\\与限制证据};
+\node[box] (l) at (8.3,0.7) {证据\\账本};
+\node[box] (g) at (4.9,0.7) {闭合\\门控};
+\node[box] (out) at (1.3,0.7) {带引用答案\\或结构化拒答};
+\draw[arrow] (q) -- (p);
+\draw[arrow] (p) -- (o);
+\draw[arrow] (o) -- (r);
+\draw[arrow] (r) -- (v);
+\draw[arrow] (v) -- (l);
+\draw[arrow] (l) -- (g);
+\draw[arrow] (g) -- (out);
+\draw[arrow,dashed] (g.north) -- ++(0,0.30) -| (r.west);
+\node[font=\footnotesize,anchor=south] at (9.6,1.34) {未闭合且预算未尽};
+\node[draw=black!45,dashed,rounded corners=2pt,align=left,inner sep=3pt,font=\footnotesize,text width=12.5cm,anchor=north west] at (0.0,-0.30) {相关性只用于排序候选；它从不关闭义务。闭合要求每个类型化义务至少有一条可采纳支持记录，且不存在未解决的限制证据。};
+\end{tikzpicture}
+\caption{\finplan{}契约。问题与截止时点被解析为每个申报期一个义务，而不是每句话一个查询。规划器在实体、申报类型、财年、财期和截止时点约束下检索，核验支持与限制证据，更新账本；只要仍有未闭合义务且预算未尽，就重新进入检索。门控输出带引用答案或结构化拒答。虚线框是设计不变量：相关性是动作选择信号，不是闭合证书。}
+\label{fig:framework}
+\end{figure*}
+
+\section{相关工作与研究缺口}
+\paragraph{检索与自适应控制。}检索增强生成把检索器与生成器耦合\citep{lewis2020rag}。一类工作决定何时、以何频率检索：FLARE在生成置信度下降时检索\citep{jiang2023flare}，Self-RAG学习用于检索与批判的反思标记\citep{asai2024selfrag}，DRAGIN从词级信息需求触发检索\citep{su2024dragin}，Adaptive-RAG按问题复杂度路由\citep{jeong2024adaptiverag}。智能体框架增加迭代行动与自我修正\citep{yao2023react,shinn2023reflexion}。这些系统改善的是\emph{如何}搜索；它们不把金融问题表示为一组申报期义务，停止信号也在生成侧而非证据侧。
+
+\paragraph{金融问答与结构化检索。}金融基准强调表格与文本上的数值推理\citep{chen2021finqa,zhu2021tatqa,islam2023financebench}。近期工作转向来源与结构。FinRank把证据检索与答案正确性分开，并提供跨公司、跨期间的逐题困难负例\citep{mansouri2026finrank}。Fin-RATE评估SEC文件上的纵向与跨实体分析\citep{jiang2026finrate}。HiREC分层检索并用可回答性判断策展证据\citep{choe2025hirec}。FinSAgent以角色化智能体把查询与语料结构对齐\citep{chi2026finsagent}。HC-RAG构建覆盖文档、章节和单元的类型化证据图\citep{chen2026hcrag}。FinCARDS把片段与查询表示为金融感知卡片，并按字段级约束满足重排\citep{zhou2026fincards}。这些系统使“金融RAG忽略来源”这一宽泛主张不再成立，也把可辩护的缺口收窄：结构与类型化匹配本身已不再是新颖点。
+
+\paragraph{时序有效性与时点评估。}时序问答研究答案随时间变化的问题\citep{chen2021timeqa}；金融时序RAG进一步覆盖表格、新闻和价格\citep{zhu2025fintmmb}。前视偏差表明，在包含未来文本的数据上训练或检索的模型，可能看起来具有预测力，实际却使用了分析者信息集之外的信息\citep{sarkar2025lookahead}。时点推理在因果推断中是标准约束：处理或决策只能使用其发生前观测到的协变量\citep{hernan2020causal}。金融检索继承同一约束，但现有基准很少评分“证据在截止时点是否已经公开”。
+
+\paragraph{研究缺口。}满足该契约的系统必须同时做到：(i) 在申报期粒度上类型化义务；(ii) 在证据进入读者之前执行信息集截止；(iii) 把限制证据作为一等检索动作；(iv) 仅在完整类型化支持时闭合，否则拒答；(v) 分别报告证据误差与读者误差。已有工作覆盖(i)—(v)的子集：HiREC策展证据并判断可回答性；FinSAgent把查询与语料结构对齐；HC-RAG构建类型化证据图；FinCARDS匹配实体、指标与财期；FinRank提供来源感知困难负例；Fin-RATE评估纵向追踪。但没有工作把五项要求表述为同一个预算契约，也没有工作报告区分义务表示与搜索策略的对照。缺口是一个缺失的可检验属性，而不是缺失的部件。规划器借用了受控感知\citep{krishnamurthy2017pomdp,satsangi2018active}、价值保持抽象\citep{li2006abstraction,abel2020abstraction}和拒绝选项\citep{geifman2017selective,chow1970optimum}；这些工作都没有实例化金融契约。
+
+\section{问题定义}
+\label{sec:problem}
+\paragraph{义务与可采纳性。}对问题$q$，解析器返回义务集合
+\begin{equation}
+O(q)=\{o_1,\dots,o_m\},\qquad o_i=(e_i,f_i,y_i,p_i,d_i),
+\end{equation}
+其中$e_i$为实体，$f_i$为申报类型，$y_i$为财年，$p_i$为财期，$d_i$为可选的比较方向或统计量。文档$z$带有元数据$m(z)=(e_z,f_z,y_z,p_z)$与可得时间$a_z$。给定截止时点$c$，$z$可采纳当且仅当$a_z\le c$。若$z$可采纳、在全部类型化字段上与$o_i$匹配、且内容断言了所求数值，则称$z$支持$o_i$。限制记录是指与支持声明矛盾或限制其范围的记录，例如后续修订、范围条件或终止状态。
+
+\paragraph{证据状态与闭合。}规划器维护
+\begin{equation}
+S_t=(O_t,U_t,C_t,L_t,n_t),
+\end{equation}
+其中$O_t$为义务集合，$U_t$与$C_t$把义务划分为未解决与已闭合，$L_t$记录可采纳限制证据与未解决冲突，$n_t$为检索动作数。当且仅当$O_t$中每个义务至少有一条可采纳支持记录、没有高风险冲突、且没有未解决的限制记录时，状态闭合，记为$G_t=1$。闭合是类型化证据上的谓词，不是相关性阈值。
+
+\paragraph{目标。}设查询成本为$\lambda$、无支持陈述惩罚为$\eta$、泄漏惩罚为$\rho$，策略$\pi$最大化
+\begin{equation}
+J(\pi)=\E_{\pi}\!\left[\indic{G_T}-\lambda n_T-\eta A_T-\rho L_T\right],\qquad n_T\le B,
+\label{eq:objective}
+\end{equation}
+其中$A_T$为无支持陈述数，$L_T$为读者可见的$a_z>c$文档数。该目标是证据装配的可靠性—成本前沿，不是收益预测。
+
+\section{为什么状态必须包含义务}
+\label{sec:theory}
+\subsection{分数不能证明闭合}
+令$s(z,q)$为任意标量相关性分数，$\mathcal{F}_r=\{z:s(z,q)=r\}$为分数纤维。
+
+\begin{theorem}[仅分数闭合下界]
+\label{thm:score}
+考虑$m$个义务。每个义务有一条有效记录与$k$条无效记录，全部$m(k+1)$条记录具有相同相关性分数。仅观察分数、且恰好选择$m$条记录的策略，其闭合概率至多
+\begin{equation}
+\frac{1}{\binom{m(k+1)}{m}}.
+\end{equation}
+\end{theorem}
+\begin{proof}
+分数观测为常数，故任意$m$子集在策略信息下可交换。闭合要求选中“每个义务的有效记录”这一唯一子集；确定性策略选择一个子集，随机化策略是子集上的混合，均不可能超过该子集在均匀分布下的概率。附录\ref{app:proofs}把论证推广到自适应选择。
+\end{proof}
+
+当$m=1,k=1$时下界为$1/2$；$m=2,k=1$时为$1/6$；$m=2,k=2$时为$1/15$。附录\ref{app:counterexample}穷举所有等分呈现顺序，结果与这些值精确吻合。该定理陈述的是一个失败类，而不是“所有排序器在所有语料上都失败”。它说明：当分数纤维混合了义务有效与无效记录时，缺失的信息是决策相关的；在同一组特征上加重排序器无法恢复，加入义务身份与截止元数据可以。
+
+\subsection{义务状态是价值保持控制的必要条件}
+\begin{proposition}[状态必要性]
+\label{prop:state}
+若两个历史$h$与$h'$产生相同的相关性观测，但未解决义务集合不同，即$U(h)\neq U(h')$；若闭合义务具有正价值，且某个动作能在一个历史中闭合义务、在另一个历史中不能，则最优后续价值不同，$V^*(h)\neq V^*(h')$。因此，仅依赖相关性的状态不是价值保持的。
+\end{proposition}
+\begin{proof}
+即时奖励与终点闭合价值依赖$U$，只要闭合价值为正，Bellman备份就会区分两个历史。这是价值保持状态抽象的一个实例\citep{li2006abstraction,abel2020abstraction}；附录\ref{app:proofs}给出反向归纳论证。
+\end{proof}
+
+该命题的假设很弱、结论很强：它不要求特定规划器，只要求状态区分未解决义务。它也解释了为什么仅依赖相关性的停止规则不仅在优化意义上次优，而且在信息结构上不充分。
+
+\subsection{截止安全是结构性的}
+\begin{theorem}[截止安全]
+\label{thm:cutoff}
+若检索动作返回的每个文档都满足$a_z\le c$，且读者只接收返回的文档，则任何$a_z>c$的文档都不可能进入读者上下文。
+\end{theorem}
+\begin{proof}
+读者上下文是返回文档的子集，而全部返回文档按假设满足截止约束，故泄漏指示为零。
+\end{proof}
+
+\begin{proposition}[安全完备性要求拒答]
+\label{prop:abstain}
+若某义务不存在可采纳支持记录，则任何策略都不能同时返回该义务的有支持答案并保证零未来泄漏；满足两项要求的策略必须拒答或报告该义务未解决。
+\end{proposition}
+\begin{proof}
+无支持地回答违反支持条件；使用$a_z>c$的记录违反截止条件。回答只有这两种方式，故拒答是必要的。
+\end{proof}
+
+定理\ref{thm:cutoff}是初等的，但其实现不是。检索后再做后置过滤，可以把未来文档从上下文中删除；而一个从不为未来财期形成义务的解析器，则使该文档从一开始就不会被检索。第\ref{sec:pointintime}节表明，真实文件上起作用的是第二种机制：移除显式时间门后，规划器输出不变，因为类型化财期已经进入检索键。
+
+\subsection{限制证据是选择性可靠的必要条件}
+\begin{proposition}[反证必要性]
+\label{prop:counter}
+假设两个世界对某义务具有相同的支持证据，但其中一个世界存在可采纳的限制记录，另一个不存在。从不搜索限制证据的策略在两个世界中观察到相同历史，因此作出相同决策；它至少在其中一个世界中过度主张。在等先验下，过度主张概率至少为$1/2$。
+\end{proposition}
+\begin{proof}
+支持证据相同，故无反证策略的输出相同；但两个世界的正确输出不同（断言与限定或拒答），所以至少一个输出错误。等先验给出下界；附录\ref{app:proofs}给出随机化版本。
+\end{proof}
+
+\subsection{闭合是答案正确的必要非充分条件}
+\begin{theorem}[闭合—答案分解]
+\label{thm:decomp}
+令$G$为义务集合闭合事件，$Y$为读者返回正确答案事件，则
+\begin{equation}
+1-P(Y)=P(\neg G)+P(G)\,P(\neg Y\mid G).
+\label{eq:decomp}
+\end{equation}
+等价地，若读者在闭合证据上的可靠性至少为$1-\varepsilon$，则$P(Y)\ge(1-\varepsilon)P(G)$。
+\end{theorem}
+\begin{proof}
+按$G$划分样本空间：$1-P(Y)=P(\neg G)+P(G)-P(Y,G)=P(\neg G)+P(G)(1-P(Y\mid G))$。代入$P(Y\mid G)\ge1-\varepsilon$即得。
+\end{proof}
+
+该恒等式把金融问答中经常混淆的两类错误分开：没有装配出证据，以及装配出证据后没有读对。我们的实验度量第一项及其文件级组成；读者项是独立仪器，第\ref{sec:discussion}节说明估计它需要什么。
+
+\section{\finplan{}方法}
+\label{sec:method}
+\subsection{义务解析}
+解析器是确定性且保守的。它把财期语言映射到实际披露该财期的申报：季度映射到10-Q财期；年度与第四季度语言映射到10-K财年；上半年映射到累计第二季度申报；下半年映射到第三季度申报加年度申报；“fiscal year $N$”映射到$N$的年度义务；“first $n$ quarters”映射到累计第$n$季度。同时命名两个季度的问题产生两个义务；与上年同期比较时，每个财期复制到$y-1$。解析器从不读取金标准答案或隐藏文档列表。附录\ref{app:parser}给出语法、规范化表与示例。对FinGLM，一套并行规则把“年度、半年度、第一季度、前三季度”等中文财期短语映射到相同签名。
+
+\subsection{证据账本与类型化绑定}
+对每个义务，检索动作绑定实体、申报类型、财年、财期，以及在已解析时绑定文档标识。绑定是硬过滤而非软特征；缺少必需字段的候选被记为未解决，而不是被语义匹配静默接受。账本按候选记录文档标识、匹配义务、可得时间、支持片段、核验结果与限制记录，使门控能够检查义务为何闭合、哪条记录支持它、以及有什么证据反对它。
+
+\subsection{风险排序规划}
+每轮为每个未解决义务计算风险分数
+\begin{equation}
+r(o_i)=\frac{\alpha_i\,(1-\kappa_i)}{1+\beta n_i},
+\end{equation}
+其中$\kappa_i$为当前支持置信度，$n_i$为对该义务的尝试次数，$\alpha_i$为优先考虑状态与限制证据的槽位权重，$\beta$为衰减因子。规划器对风险最高的义务检索、核验返回记录、在义务涉及状态时搜索限制证据，并更新$S_t$；重复直到闭合或预算耗尽，然后回答或拒答。风险分数是启发式排序，不是Bellman最优；命题\ref{prop:state}规定状态必须包含什么，而不是如何在其内部排序动作。
+
+\subsection{停止、拒答与读者门}
+当$G_t=1$或预算耗尽时停止。闭合要求每个义务都有类型化支持，且没有未解决限制证据。若预算结束时$U_t\neq\emptyset$，门控返回结构化拒答，列出未解决义务、已尝试查询、已检索文档与缺失字段；若已闭合，则返回带支持账本条目的答案。存在冲突的闭合义务在冲突解决或被标记为限制之前不会回答，这是命题\ref{prop:abstain}的操作内容。
+
+\subsection{后端、复杂度与接口}
+规划器与后端无关。报告实验使用稀疏BM25索引\citep{robertson2009bm25}；稠密\citep{karpukhin2020dpr}与混合RRF\citep{cormack2009rrf}后端共享类型化过滤接口，但不属于本文报告的比较。规划需要$O(Bm)$次义务检查加后端检索成本。JSONL/OpenAI兼容函数\texttt{finplan\_rag\_plan}返回闭合标志、账本、未解决义务、查询数与建议，代码智能体可以调用同一策略，而不把主张绑定到特定供应商。
+
+\section{实验}
+\label{sec:experiments}
+\subsection{协议与指标}
+我们在两个层面评估。\emph{受控诊断}是一个合成的关证证据基准，包含七个世界（均衡、多路径、反证密集、稀疏、来源冲突、未来修订、随机）、20个种子、每世界40例、预算10，共5{,}600例。它把义务契约抽象为类型化关系槽，在缺失、冲突、多路径与未来修订下隔离规划机制；它不是金融文件基准，其状态标签也不是自然语言答案准确率。\emph{金融评估}使用LOFin（1{,}572题，SEC文件）、FinGLM中文年报语料\citep{finglm2023}（1{,}829题，11{,}587份年报）、覆盖六家未参与开发公司的预注册24题留出集、SEC时点谱系研究（12条留出谱系）和中国混合财期试验（3个冻结案例，15份文档、1{,}894页）。
+
+主要指标为闭合率、错误文件率、义务精确匹配、反证召回、未来泄漏、查询数与效用。闭合率与错误文件率是文件级的：它们说明检索文档是否匹配义务，而不说明读者是否抽取了正确数值。区间为按案例配对的bootstrap区间（20{,}000次重采样，种子20261021）或小样本Wilson区间；配对二值比较使用精确McNemar检验。主比较在每张表内通过Holm校正；SEC与中国试验为描述性。附录\ref{app:repro}列出命令与工件。
+
+\subsection{受控诊断}
+表\ref{tab:controlled}报告受控诊断。相比单次检索，\finplan{}把闭合率由.1011提高到.3655（配对差.2645，95\% CI .2404--.2884），查询由10降至8.87（差$-1.13$，CI $-1.26$至$-1.00$），效用由$-0.4072$提高到$-0.3583$（差.0489，CI .0299--.0680）。相比通用自适应检索，闭合增益为.0230（CI .0155--.0309），查询节省1.13，效用增益为.0125（CI .0032--.0218）。诊断还输出状态标签：\finplan{}与通用自适应相差.0020（CI $-0.0032$至.0071），而\finplan{}高于单次检索（.1246，CI .1111--.1382）。该标签由基准解析器产生，度量的是定理\ref{thm:decomp}的读者项；证据项是闭合率，规划器的增益出现在那里。
+
+\begin{table}[t]\centering\small
+\caption{受控诊断（5{,}600例，预算10）。闭合率与效用越高越好；过度主张、查询数与泄漏越低越好。上块比较策略，下块从\finplan{}移除一个部件。}
+\label{tab:controlled}
+\begin{tabular}{lrrrrrr}
+\toprule
+方法 & 闭合率 & 过度主张 & 反证召回 & 查询数 & 效用 & 泄漏\\
+\midrule
+单次检索 & .1011 & .0038 & .6509 & 10.0000 & $-.4072$ & .0000\\
+固定分解 & .2930 & .0136 & .6579 & 10.0000 & $-.3630$ & .0000\\
+通用自适应 & .3425 & .0154 & .6319 & 10.0000 & $-.3708$ & .0000\\
+\finplan{} & \textbf{.3655} & \textbf{.0132} & .6051 & \textbf{8.8721} & $\mathbf{-.3583}$ & .0000\\
+\midrule
+移除反证 & .5109 & .0350 & .3154 & 7.9195 & $-.2840$ & .0000\\
+移除自适应停止 & .3371 & .0123 & .6056 & 10.0000 & $-.3696$ & .0000\\
+移除时间过滤 & .4327 & .0211 & .5780 & 8.5684 & $-.4384$ & .5020\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{部件消融}
+移除反证使闭合率升至.5109、效用升至$-0.2840$，但过度主张由.0132翻倍至.0350（差.0218，CI .0180--.0257），反证召回由.6051降至.3154。闭合上升不是覆盖增益：该消融同时把限制证据从闭合谓词中移除，因此它关闭了完整规划器视为未解决的义务。有信息量的是过度主张，而反证控制它。移除自适应停止迫使系统用满预算，查询增加1.13，闭合率下降.0284，效用下降.0113；额外低质量检索会引入冲突，阻止可靠闭合。移除时间过滤使闭合率提高.0671、效用下降.0801，但在.5020的案例中产生未来泄漏。三个部件各司其职：反证保护可靠性，停止保护成本，截止保护信息集。
+
+\subsection{金融语料}
+表\ref{tab:real}报告两个公开金融语料。在LOFin上，类型化绑定把闭合率由.6425提高到.8919（相比单次检索差.2494，CI .2239--.2754），把错误文件率由.7983降至.3108（差$-.4875$，CI $-.5049$至$-.4700$）。与最强结构化基线相比，闭合率接近或持平，但错误文件率更低：相比通用自适应为$-0.1634$（$-0.1746$至$-0.1524$），相比HiREC风格为$-0.3136$（$-0.3262$至$-0.3008$），相比财期感知元数据分解为$-0.0074$（$-0.0124$至$-0.0025$）。在FinGLM上，闭合率由.7594升至.9978（.2384，CI .2192--.2581），错误文件率由.8087降至.0126（$-0.7962$，CI $-0.8022$至$-0.7900$）；相比通用自适应为$-0.2586$，相比HiREC风格为$-0.5477$。LOFin的义务精确匹配为.4637：剩余差距在财期解析，不在搜索。
+
+\begin{table}[t]\centering\small
+\caption{金融语料。闭合率与错误文件率为文件级。元数据填充对照使用相同类型化义务与相同索引，但以元数据查找填充每个义务，而不是使用风险排序级联。}
+\label{tab:real}
+\begin{tabular}{llrrr}
+\toprule
+语料 & 方法 & 闭合率 & 错误文件率 & 义务精确\\
+\midrule
+\multirow{6}{*}{LOFin（$n=1{,}572$）}
+ & 单次检索 & .6425 & .7983 & --\\
+ & 财期元数据分解 & .8950 & .3182 & --\\
+ & 通用自适应 & .8925 & .4742 & --\\
+ & HiREC风格 & .8588 & .6244 & --\\
+ & \finplan{} v9 & .8919 & .3108 & .4637\\
+ & \quad 元数据填充对照 & .8919 & .3108 & .4637\\
+\midrule
+\multirow{5}{*}{FinGLM（$n=1{,}829$）}
+ & 单次检索 & .7594 & .8087 & --\\
+ & 财期元数据分解 & .9858 & .0120 & --\\
+ & 通用自适应 & .9885 & .2712 & --\\
+ & HiREC风格 & .9913 & .5602 & --\\
+ & \finplan{} v9 & \textbf{.9978} & \textbf{.0126} & --\\
+ & \quad 元数据填充对照 & .9978 & .0126 & --\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{表示在哪里起作用}
+附录\ref{app:ladder}在预注册留出集上隔离解析器：24道冻结题，覆盖六家留出公司、五个模板。v4解析器绑定实体与财年；v7加入申报类型与财期；v8加入半年度别名；v9加入“fiscal year $N$”与“first $n$ quarters”。闭合率单调上升，增益集中在后续解析器针对的模板：v4闭合4/24，v7为10/24，v8为19/24，v9为24/24。v7在4道上半年题上闭合0道、在5道下半年题上闭合0道；v8在5道下半年题上全部闭合，但在5道“fiscal year $N$”题上闭合0道；v9全部闭合。v9相对v8多闭合5例（精确McNemar $p=.0625$），相对v7多14例（$p=.00012$），相对单次检索多13例（$p=.00024$）。该集合无未来泄漏，开发与冻结阶段可确定性复现。24/24的Wilson区间为.862--1.000，因此剩余错误低于24例的分辨率。
+
+\subsection{识别：表示与搜索策略}
+\label{sec:identification}
+元数据填充对照是识别检验。它接收相同解析义务、相同索引、相同截止与相同闭合谓词，但以类型化元数据查找填充每个义务，而不是风险排序级联。在LOFin上，它与\finplan{}在闭合率（.8919）和错误文件率（.3108）上完全持平；在FinGLM上两项均持平（.9978与.0126）；在冻结留出集上同为24/24。配对检验无法拒绝相等，因为逐案输出完全相同（三次比较的McNemar $p=1.0$）。因此，级联不是这些语料上的有效成分；有效成分是两个方法共享的义务表示：类型化解析器、硬绑定与闭合谓词。
+
+这也解释了附录\ref{app:ladder}的表示阶梯。解析器版本决定能形成哪些义务；搜索策略无法检索一个从未被表示的义务。v4只闭合4/24，因为实体—年度绑定把不同季度折叠为同一年的键；v7恢复季度，但不能处理半年度或“fiscal year $N$”语言；v8恢复半年度，但不能把“fiscal year $N$”读作年度；v9覆盖全部五个模板。增益是表示性的，并且集中在解析器新增的语言形式上。
+
+\subsection{时点与跨语言压力测试}
+\label{sec:pointintime}
+在SEC谱系留出集上，参考策略闭合10/12条谱系，无时间变体闭合7/12；未来泄漏为0/12对5/12（精确McNemar $p=.0625$）。该检验是描述性的：留出集小，配对检验未预注册。其价值是机制性的：无时间变体通过年度回退泄漏——当半年度短语未被解析时，回退形成年度义务，未来10-K可以满足它；类型化解析器移除回退，因此未来文件从未被检索。在预注册的14例验证集上，v8规划器在有无显式时间门时逐案完全相同（闭合11/14、泄漏0/14），而单次检索在无门时泄漏10/14。在中国混合财期试验上，财期感知策略闭合3/3冻结案例，实体—年度检索0/3，元数据填充对照也闭合3/3（确定性字段读取器，15份文档、1,894页）。LOFin的残余错误主要来自财期解析（义务精确匹配.4637，闭合率.8919）；FinGLM的残余错误是实体歧义与缺失报告。附录\ref{app:failure}列出失败模式及其账本签名。
+
+\section{讨论}
+\label{sec:discussion}
+\paragraph{表示就是检索。}一旦问题被表示为类型化义务，元数据查找与风险排序级联在三个语料上产生相同闭合。级联并非普遍无用——当索引有噪声、多个路径可满足义务、或必须寻找限制证据时它很重要——但在干净文件语料上，约束是义务是否存在于状态中。在修复检索目标之前投资更好的排序器，优化的是二阶项。
+
+\paragraph{时点是表示的属性。}validation7消融表明，当类型化财期解析器在位时，显式时间门是冗余的：v8在有无时间门时逐案完全相同（0/14泄漏）。SEC试验展示了另一面：从财期绑定较弱的管线中移除时间门，规划器泄漏5/12。门是安全网；解析器才是机制。形成未来财期义务再过滤的系统，已经支付了检索成本，并把文档暴露给诊断；从不形成该义务的系统不可能泄漏它。同一逻辑适用于修订与重述：账本应记录版本关系，而不仅是可得时间戳。
+
+\paragraph{闭合不是答案。}定理\ref{thm:decomp}是恒等式，不是免责声明：证据项与读者项可以分别度量；只报告端到端准确率的论文无法判断哪一项移动。我们的实验度量证据项，因为现有语料提供文件级金标准；下一个仪器是同一冻结义务上的共享读者，并配有数值答案金标准和人工锚点。附录\ref{app:answer}说明为什么逐字数值覆盖不能充当该仪器：即使oracle上下文也只逐字覆盖LOFin的.4561和FinGLM的.3384，因为金标准答案包含派生数字。金融证据是文件级的；FinGLM标签为自行构造，SEC与中国试验样本小，报告规划器使用BM25。这些限制把主张限定在证据检索，而这正是本文的主张。
+
+\section{结论}
+金融RAG通常被框定为搜索问题：检索更多、重排更好、读者自信时停止。我们表明约束更早。金融问题是一组类型化、时点约束的义务，相关性分数不能证明这些义务已经闭合。\finplan{}把义务显式化、把检索绑定到义务、记录支持与限制证据，并且只在闭合时停止或拒答。该契约在受控诊断上改善闭合与成本，在两个公开金融语料上把错误文件率降低2.6倍与64倍。识别结果比总体增益更尖锐：具有相同义务但没有级联的元数据填充对照与规划器完全持平，因此增益属于表示。下一步是在同一冻结义务上构建共享读者基准；闭合—答案分解精确说明该基准将度量哪一项。
+
+\section*{可复现性声明}
+受控诊断、解析器、规划器、测试与冻结结果工件包含在补充材料中。附录\ref{app:repro}列出命令、冻结工件的SHA-256以及每张表到源文件的映射。外部语料保留在仓库之外；其审计摘要与哈希已包含，完整逐案工件以路径和哈希标识。预注册留出集在v9解析器评估之前冻结，开发到冻结的回放是确定性的。
+
+\section*{伦理声明}
+本文使用公开金融文件和程序生成的诊断世界，不引入新的人类受试者数据。规划器是证据检索方法，不是投资建议系统；报告的效用是基准成本契约，不是收益。时点过滤减少一种前视偏差来源，但不证明文件内容未受后续事件影响。
+
+\section*{AI使用声明}
+生成式AI工具用于文献检索、LaTeX编辑以及代码与工件审阅。引用已对照原始记录核验，数值主张已对照附录\ref{app:repro}列出的冻结工件核验；工具未生成实验数据。
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\section{证明}
+\label{app:proofs}
+\paragraph{定理\ref{thm:score}。}策略观察到常数分数，其信息划分是记录集合的平凡划分。确定性策略选择一个$m$子集；随机化策略选择$m$子集上的分布。闭合只对包含每个义务有效记录的那个子集发生。共有$\binom{m(k+1)}{m}$个子集，有效子集是其中之一，均匀概率为$1/\binom{m(k+1)}{m}$。对自适应策略，每一步的观测历史都是常数，同一可交换性论证适用于选择序列；选中有效子集的概率不可能超过均匀概率。推论由代入得到。
+
+\paragraph{命题\ref{prop:state}。}令$V_t(x)$为剩余$B-n_t$次查询时的最优价值，Bellman备份为
+\begin{equation}
+V_t(x)=\max_{a\in\mathcal{A}(x)}\left\{r(x,a)+\E[V_{t+1}(X')\mid x,a]\right\},
+\end{equation}
+终点值为$V_T(x)=\indic{G(x)}-\eta A(x)-\rho L(x)$。若$U(h)\neq U(h')$且闭合义务具有正价值，则对某个动作，终点价值或即时闭合奖励在两个历史间不同。因此最大化动作不可能在所有后续下都相同，故$V^*(h)\neq V^*(h')$。把两个历史映射到同一相关性值的状态不是\citet{li2006abstraction}与\citet{abel2020abstraction}意义下的价值保持状态。
+
+\paragraph{定理\ref{thm:cutoff}。}读者上下文是返回文档的子集；由检索约束，每个返回文档满足$a_z\le c$。因此上下文中不存在$a_z>c$的文档，泄漏指示为零。证明假设读者没有独立的语料访问路径；附录\ref{app:repro}给出强制该接口的契约。
+
+\paragraph{命题\ref{prop:counter}。}设两个世界为$w_0$（无限制记录）与$w_1$（有可采纳限制记录）。支持证据相同，故从不搜索限制证据的策略具有相同观测历史，并选择相同动作。正确动作在$w_0$中断言、在$w_1$中限定或拒答，至少一个动作错误。等先验下期望过度主张概率至少为$1/2$。随机化策略不能改进下界，因为观测相同。
+
+\paragraph{定理\ref{thm:decomp}。}按$G$划分样本空间：
+$1-P(Y)=P(\neg G)+P(G)-P(Y\mid G)P(G)=P(\neg G)+P(G)(1-P(Y\mid G))$。代入$P(Y\mid G)\ge1-\varepsilon$得$1-P(Y)\le P(\neg G)+\varepsilon P(G)$，故$P(Y)\ge(1-\varepsilon)P(G)$。
+
+\section{穷举反例}
+\label{app:counterexample}
+\begin{table}[H]\centering\footnotesize
+\caption{穷举有限反例。所有记录相关性相同。仅分数策略选择前$m$条记录；义务状态策略在截止过滤后按类型化义务各选一条。闭合表示每个义务获得一条有效的截止前记录。}
+\label{tab:counterexample}
+\begin{tabular}{lrrrrrr}
+\toprule
+义务数$m$ & 干扰数$k$ & 未来记录 & 案例数 & 仅分数闭合 & 状态闭合 & 仅分数泄漏\\
+\midrule
+1 & 1 & 否 & 2   & .5000 & 1.0000 & .0000\\
+2 & 1 & 否 & 24  & .1667 & 1.0000 & .0000\\
+2 & 2 & 否 & 720 & .0667 & 1.0000 & .0000\\
+2 & 1 & 是 & 720 & .0667 & 1.0000 & .6000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{表示阶梯}
+\label{app:ladder}
+\begin{table}[H]\centering\footnotesize
+\caption{预注册24题留出集上的表示阶梯。单元格为每个模板的闭合题数。元数据填充对照与v9同为24/24。}
+\label{tab:ladder}
+\begin{tabular}{lrrrrrr}
+\toprule
+解析器 & 上半年(4) & 上半年9月(5) & Q1--Q2(5) & 下半年(5) & 财年Q1..n(5) & 合计(24)\\
+\midrule
+v4：实体$\times$财年 & 1 & 0 & 0 & 0 & 3 & 4\\
+v7：实体$\times$类型$\times$财年$\times$财期 & 0 & 5 & 5 & 0 & 0 & 10\\
+v8：v7+半年度别名 & 4 & 5 & 5 & 5 & 0 & 19\\
+v9：v8+财年与前置$n$季度 & \textbf{4} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{5} & \textbf{24}\\
+单次检索 & 3 & 3 & 3 & 1 & 1 & 11\\
+v9解析器+元数据填充 & 4 & 5 & 5 & 5 & 5 & 24\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{解析语法与规范化}
+\label{app:parser}
+解析器把表层形式映射为$(y,p)$对，再映射为$(y,f,p)$申报签名。表\ref{tab:grammar}列出核心模式。映射是保守的：无法解析的短语保持未解决，而不默认成年度义务；只有当问题完全不含财期短语、且语料仅为年报时，规划器才形成年度义务。对FinGLM，并行规则处理中文财期。解析器不使用学习模型，因此表示可审计、消融可解释。
+
+\begin{table}[H]\centering\small
+\caption{解析模式与规范申报签名。}
+\label{tab:grammar}
+\begin{tabular}{lll}
+\toprule
+表层形式 & 规范财期 & 申报签名\\
+\midrule
+“Q1--Q3 of FY2024” & Q1, Q2, Q3 & 10-Q Q1, 10-Q Q2, 10-Q Q3\\
+“first half of FY2024” & Q2 & 10-Q Q2（累计）\\
+“second half of FY2024” & Q3, FY & 10-Q Q3, 10-K FY\\
+“fiscal year 2024” / “FY2024” & FY & 10-K FY\\
+“first three quarters of FY2024” & Q3 & 10-Q Q3（累计）\\
+“same period last year” & 复制$y-1$ & 同类型，上一年\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{受控实验细节}
+\label{app:controlled}
+每个世界由确定性种子生成。一个案例包含一到三条关系路径；每条路径有隐藏状态（direct、indirect、conditional、none）与类型化槽位（实体、概念/资产、状态、条件/范围/交付、反证）。文档按槽位采样，正确性与相关性依赖来源；可得时间在截止前抽取，未来修订世界加入截止后文档。所有方法接收相同候选路径、文档、截止与预算。闭合要求每个槽位置信度至少.56且聚合关系状态可解析。效用为：正确$+1$，拒答$-0.15$，错误$-1$，过度主张额外$-1$，每次查询$-0.03$。诊断是合成的，不是金融文件基准。
+
+\section{基线与共享契约}
+\label{app:baselines}
+金融评估中的所有方法接收相同语料、文档元数据、截止时点、预算（4）与候选深度；差别在于如何形成检索目标以及何时停止。\emph{单次检索}用问题构造一个查询，取前四篇文档，不做类型化绑定。\emph{财期元数据分解}用v7规则解析问题的财期短语，每个财期发一次元数据过滤检索并取并集；它没有风险排序、反证或自适应停止。\emph{通用自适应}运行与\finplan{}相同的迭代循环，但仅按置信度对槽位排序，不使用义务风险权重或类型化闭合谓词。\emph{HiREC风格}把“先文档后段落”的分层检索与证据策展适配到共享接口：先检索文档集，再策展段落，若某财期未被覆盖则发出补充查询。\emph{元数据填充}复用v9解析器与相同义务状态，但以索引上的类型化元数据查找填充每个义务，而不是风险排序级联；它是识别对照，不是排序基线。受控诊断使用自己的共享契约（附录\ref{app:controlled}）：每个方法接收相同候选路径、文档、截止、解析器与预算。
+
+\section{完整外部结果}
+\label{app:external}
+表\ref{tab:lofin_full}报告完整LOFin审计（含主表省略的方法），表\ref{tab:finglm_full}报告完整FinGLM审计。数值为文件级闭合与文档正确性，不是答案准确率。LOFin的1{,}572例中有1例对规划器方法产生未来泄漏诊断；冻结24题留出集为零。
+
+\begin{table}[H]\centering\small
+\caption{完整LOFin审计（$n=1{,}572$，预算4）。}
+\label{tab:lofin_full}
+\begin{tabular}{lrrr}
+\toprule
+方法 & 闭合率 & 错误文件率 & 义务精确\\
+\midrule
+FinPlan v4（实体$\times$财年） & .5770 & .5429 & .4256\\
+FinPlan v7 & .8950 & .3182 & .4497\\
+FinPlan v8 & .8950 & .3182 & .4497\\
+FinPlan v9 & .8919 & .3108 & .4637\\
+元数据v9填充 & .8919 & .3108 & .4637\\
+财期元数据分解 & .8950 & .3182 & --\\
+通用自适应 & .8925 & .4742 & --\\
+HiREC风格 & .8588 & .6244 & --\\
+单次检索 & .6425 & .7983 & --\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]\centering\small
+\caption{完整FinGLM审计（$n=1{,}829$，11{,}587份年报，预算4）。}
+\label{tab:finglm_full}
+\begin{tabular}{lrr}
+\toprule
+方法 & 闭合率 & 错误文件率\\
+\midrule
+FinPlan v4 & .9978 & .0126\\
+FinPlan v9 & .9978 & .0126\\
+元数据v9填充 & .9978 & .0126\\
+财期元数据分解 & .9858 & .0120\\
+通用自适应 & .9885 & .2712\\
+HiREC风格 & .9913 & .5602\\
+单次检索 & .7594 & .8087\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{答案支撑诊断}
+\label{app:answer}
+LOFin与FinGLM的答案层使用逐字数值核心覆盖度量审计：若金标准数值字符串出现在引用上下文中，则预测被支持。oracle上下文在LOFin达到.4561、在FinGLM达到.3384。在LOFin上，单次检索为.4752，FinPlan v9为.4688，HiREC风格为.5032，通用自适应为.4892；在FinGLM上，包括oracle在内的全部方法均为.3384。该模式是诊断性的而非比较性的：金标准答案包含派生数字（比率、增长率、差值），没有任何逐字片段包含它们，因此度量上限低于1，方法差异不识别检索质量。这解释了主文为何报告文件级闭合，以及定理\ref{thm:decomp}为何把读者项单列。
+
+\section{失败模式}
+\label{app:failure}
+账本暴露四类失败。\emph{财期歧义}：问题使用“最后一个季度”或非标准财历时可能解析到错误的$(y,p)$；审计记录未解决财期，而不是语义猜测。\emph{文件缺失或延迟}：义务保持开放，门控拒答；规划器不替换为邻近财期。\emph{修订或重述}：原始文件与修订文件是可得时间不同的两个文档；账本记录版本关系，门控在解决前把修订视为限制证据。\emph{实体歧义}：股票代码或简称可能匹配多个实体；解析器记录候选集，规划器不在部分实体匹配上闭合义务。LOFin的残余义务精确错误以第一类为主，FinGLM以第四类为主。正确检索后的读者错误不在文件级指标内，由定理\ref{thm:decomp}分离。
+
+\section{复现与溯源}
+\label{app:repro}
+受控诊断由\texttt{src/finplan\_rag/controlled\_planning.py}生成（20个种子、每世界40例、预算10）。解析器为\texttt{src/finplan\_rag/temporal.py}；规划器接口为\texttt{src/finplan\_rag/planner.py}与\texttt{agent\_adapter.py}。冻结摘要为\texttt{paper/results/controlled\_summary.json}、\texttt{budget\_sensitivity.json}、\texttt{gap\_proof\_small.json}与\texttt{real\_data\_summary.json}。配对重分析为\texttt{paper/results/reanalysis\_v1.py}，输出为\texttt{reanalysis\_v1.json}，使用20{,}000次配对bootstrap重采样，种子20261021。外部工件在\texttt{paper/real\_data\_provenance.md}中以SHA-256标识；大型语料与模型输出保留在仓库之外。表\ref{tab:hashes}给出主表到源工件的映射。
+
+\begin{table}[H]\centering\small
+\caption{表—工件映射。哈希为SHA-256前缀。}
+\label{tab:hashes}
+\begin{tabular}{lll}
+\toprule
+表 & 工件 & 哈希前缀\\
+\midrule
+\ref{tab:counterexample} & \texttt{gap\_proof\_small.json} & 仓库内冻结\\
+\ref{tab:controlled} & \texttt{controlled\_results.json} & E5D207A2\\
+\ref{tab:real}, \ref{tab:ladder} & \texttt{real\_data\_summary.json}+外部审计 & 892268C0 / B0A21EBE\\
+\ref{tab:lofin_full} & \texttt{lofin\_full\_benchmark\_audit\_v1.json} & 892268C0\\
+\ref{tab:finglm_full} & \texttt{finglm\_full\_combined\_audit\_v1.json} & 368566E0\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

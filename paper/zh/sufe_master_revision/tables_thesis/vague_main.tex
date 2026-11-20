@@ -1,0 +1,26 @@
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{2.5pt}
+\caption{227条XBRL核验断言上的主结果。FinPlanRAG为包含LLM锚点信号的AnchorEvolve-Fusion，共享校准RF仅作非LLM诊断。Acc为准确率，Bal为平衡准确率，Macro为宏F1，Loss为非对称决策损失（越低越好）。完整指标见附录表\ref{tab:vague-ds}至表\ref{tab:vague-qwen}。}
+\label{tab:vague}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+方法 & DeepSeek Acc & Bal & Macro & Loss & GLM Acc & Bal & Macro & Loss & Qwen Acc & Bal & Macro & Loss \\
+\midrule
+FinDVer-style & \textbf{.551} & .461 & .464 & 4.678 & .498 & .439 & .442 & 5.233 & .445 & .422 & .406 & 5.524 \\
+Fin-Fact-style & .537 & .446 & .450 & 4.705 & .454 & .398 & .402 & 5.339 & .511 & .477 & .464 & 4.846 \\
+Self-RAG-style & .546 & .451 & .456 & 4.564 & .454 & .406 & .404 & 5.163 & .489 & .447 & .437 & 5.093 \\
+CRAG-style & .529 & .423 & .418 & 4.802 & .515 & .431 & .435 & 4.846 & .454 & .418 & .399 & 5.366 \\
+FLARE-style & .511 & .417 & .411 & 4.881 & .471 & .388 & .387 & 5.286 & .326 & .298 & .212 & 6.740 \\
+Adaptive-RAG-style & .493 & .406 & .400 & 5.093 & .427 & .372 & .376 & 5.630 & .344 & .324 & .290 & 6.485 \\
+\midrule
+AnchorEvolve-LLM & .445 & .307 & .242 & 4.035 & .454 & .329 & .295 & 3.903 & .427 & .353 & .355 & 3.586 \\
+\midrule
+FinPlanRAG（AnchorEvolve-Fusion, $w=0.1$） & .524 & .471 & .468 & 3.604 & \textbf{.537} & .489 & \textbf{.487} & 3.648 & \textbf{.537} & .486 & .485 & 3.577 \\
+共享校准RF（非LLM诊断） & .533 & \textbf{.491} & \textbf{.486} & \textbf{3.454} & .533 & \textbf{.491} & .486 & \textbf{3.454} & .533 & \textbf{.491} & \textbf{.486} & \textbf{3.454} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

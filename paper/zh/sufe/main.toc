@@ -1,0 +1,63 @@
+\contentsline {chapter}{原创性声明}{i}{chapter*.1}%
+\contentsline {chapter}{摘\hskip 1em\relax 要}{ii}{section*.2}%
+\contentsline {chapter}{Abstract}{iv}{section*.3}%
+\contentsline {chapter}{\numberline {第一章\hspace {.3em}}引言}{1}{chapter.1}%
+\contentsline {section}{\numberline {1.1}研究背景}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.2}研究问题}{1}{section.1.2}%
+\contentsline {section}{\numberline {1.3}主要贡献}{2}{section.1.3}%
+\contentsline {section}{\numberline {1.4}论文结构}{2}{section.1.4}%
+\contentsline {chapter}{\numberline {第二章\hspace {.3em}}相关工作与能力边界}{3}{chapter.2}%
+\contentsline {section}{\numberline {2.1}检索增强生成}{3}{section.2.1}%
+\contentsline {section}{\numberline {2.2}金融问答与断言验证}{3}{section.2.2}%
+\contentsline {section}{\numberline {2.3}金融RAG系统}{3}{section.2.3}%
+\contentsline {section}{\numberline {2.4}选择性预测、共形预测与代价敏感学习}{4}{section.2.4}%
+\contentsline {section}{\numberline {2.5}能力边界}{4}{section.2.5}%
+\contentsline {chapter}{\numberline {第三章\hspace {.3em}}问题形式化与理论边界}{5}{chapter.3}%
+\contentsline {section}{\numberline {3.1}证据、时点与可信状态}{5}{section.3.1}%
+\contentsline {section}{\numberline {3.2}动作与损失}{5}{section.3.2}%
+\contentsline {section}{\numberline {3.3}目标与规划器}{6}{section.3.3}%
+\contentsline {section}{\numberline {3.4}固定接口作为特例}{6}{section.3.4}%
+\contentsline {section}{\numberline {3.5}三个命题}{6}{section.3.5}%
+\contentsline {section}{\numberline {3.6}为什么不直接使用路由器}{7}{section.3.6}%
+\contentsline {chapter}{\numberline {第四章\hspace {.3em}}损失感知策略组合}{8}{chapter.4}%
+\contentsline {section}{\numberline {4.1}候选策略}{8}{section.4.1}%
+\contentsline {section}{\numberline {4.2}为什么使用组合而不是单一策略}{8}{section.4.2}%
+\contentsline {section}{\numberline {4.3}随机森林基座}{8}{section.4.3}%
+\contentsline {section}{\numberline {4.4}共形替代方案}{8}{section.4.4}%
+\contentsline {section}{\numberline {4.5}实现与复现}{9}{section.4.5}%
+\contentsline {chapter}{\numberline {第五章\hspace {.3em}}基准与实验设计}{10}{chapter.5}%
+\contentsline {section}{\numberline {5.1}数据}{10}{section.5.1}%
+\contentsline {section}{\numberline {5.2}按年份滚动的公司不重叠协议}{10}{section.5.2}%
+\contentsline {section}{\numberline {5.3}证据模型与校准}{11}{section.5.3}%
+\contentsline {section}{\numberline {5.4}指标与对照}{11}{section.5.4}%
+\contentsline {section}{\numberline {5.5}具名基线与简单对照的区分}{11}{section.5.5}%
+\contentsline {section}{\numberline {5.6}损失配置}{12}{section.5.6}%
+\contentsline {chapter}{\numberline {第六章\hspace {.3em}}实验结果}{13}{chapter.6}%
+\contentsline {section}{\numberline {6.1}证据模型的泛化}{13}{section.6.1}%
+\contentsline {section}{\numberline {6.2}固定裁决是强基线}{13}{section.6.2}%
+\contentsline {section}{\numberline {6.3}策略组合在不同损失区域的表现}{14}{section.6.3}%
+\contentsline {section}{\numberline {6.4}官方源码基线的点预测比较}{14}{section.6.4}%
+\contentsline {section}{\numberline {6.5}校准与标签核验}{16}{section.6.5}%
+\contentsline {section}{\numberline {6.6}滚动基准}{16}{section.6.6}%
+\contentsline {section}{\numberline {6.7}真实序贯证据}{17}{section.6.7}%
+\contentsline {section}{\numberline {6.8}负结果}{17}{section.6.8}%
+\contentsline {chapter}{\numberline {第七章\hspace {.3em}}讨论与局限}{19}{chapter.7}%
+\contentsline {section}{\numberline {7.1}结果的含义}{19}{section.7.1}%
+\contentsline {section}{\numberline {7.2}新颖性与贡献边界}{19}{section.7.2}%
+\contentsline {section}{\numberline {7.3}效度威胁}{19}{section.7.3}%
+\contentsline {section}{\numberline {7.4}落地条件}{20}{section.7.4}%
+\contentsline {chapter}{\numberline {第八章\hspace {.3em}}结论}{21}{chapter.8}%
+\contentsline {chapter}{参考文献}{22}{chapter.8}%
+\contentsline {chapter}{参考文献}{22}{chapter*.13}%
+\contentsline {chapter}{致\hskip 1em\relax 谢}{26}{chapter*.14}%
+\contentsline {chapter}{\numberline {附录 A\hspace {.3em}}命题证明}{27}{appendix.A}%
+\contentsline {section}{\numberline {A.1}点答案不足}{27}{section.A.1}%
+\contentsline {section}{\numberline {A.2}相关性不足}{27}{section.A.2}%
+\contentsline {section}{\numberline {A.3}预路由不足}{27}{section.A.3}%
+\contentsline {chapter}{\numberline {附录 B\hspace {.3em}}复现与补充结果}{28}{appendix.B}%
+\contentsline {section}{\numberline {B.1}数据、代码与复现清单}{28}{section.B.1}%
+\contentsline {section}{\numberline {B.2}损失配置}{28}{section.B.2}%
+\contentsline {section}{\numberline {B.3}切换边际敏感性}{28}{section.B.3}%
+\contentsline {section}{\numberline {B.4}GLM 5.3 flash 基座}{29}{section.B.4}%
+\contentsline {section}{\numberline {B.5}Qwen3-8B 开源基座}{30}{section.B.5}%
+\contentsline {section}{\numberline {B.6}官方源码基线的来源与替换}{31}{section.B.6}%

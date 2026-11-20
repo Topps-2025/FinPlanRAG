@@ -1,0 +1,138 @@
+{
+  "schema": "finplan-findver-summary-v1",
+  "n_rows": 600,
+  "conditions": {
+    "fixed_k_4": {
+      "n": 150,
+      "accuracy": 0.7333333333333333,
+      "macro_f1": 0.43777543777543776,
+      "evidence_recall": 0.6195555555555555,
+      "mean_paragraphs": 4.0,
+      "mean_input_tokens": 1381.7866666666666,
+      "mean_output_tokens": 98.62,
+      "mean_latency_seconds": 3.186835854848226,
+      "insufficient_rate": 0.006666666666666667,
+      "verdicts": {
+        "entailed": 52,
+        "insufficient": 1,
+        "refuted": 97
+      }
+    },
+    "fixed_k_8": {
+      "n": 150,
+      "accuracy": 0.7,
+      "macro_f1": 0.42570149579648425,
+      "evidence_recall": 0.7553333333333332,
+      "mean_paragraphs": 8.0,
+      "mean_input_tokens": 2512.88,
+      "mean_output_tokens": 104.00666666666666,
+      "mean_latency_seconds": 3.394540338516235,
+      "insufficient_rate": 0.006666666666666667,
+      "verdicts": {
+        "entailed": 61,
+        "insufficient": 1,
+        "refuted": 88
+      }
+    },
+    "oracle_gold": {
+      "n": 150,
+      "accuracy": 0.7066666666666667,
+      "macro_f1": 0.44099800179654985,
+      "evidence_recall": 1.0,
+      "mean_paragraphs": 2.986666666666667,
+      "mean_input_tokens": 1102.94,
+      "mean_output_tokens": 95.09333333333333,
+      "mean_latency_seconds": 3.0365621598561603,
+      "insufficient_rate": 0.02666666666666667,
+      "verdicts": {
+        "entailed": 62,
+        "insufficient": 4,
+        "refuted": 84
+      }
+    },
+    "planner": {
+      "n": 150,
+      "accuracy": 0.66,
+      "macro_f1": 0.3967040068935803,
+      "evidence_recall": 0.5168888888888888,
+      "mean_paragraphs": 4.013333333333334,
+      "mean_input_tokens": 1630.7466666666667,
+      "mean_output_tokens": 93.92,
+      "mean_latency_seconds": 2.975500798225403,
+      "insufficient_rate": 0.006666666666666667,
+      "verdicts": {
+        "entailed": 63,
+        "insufficient": 1,
+        "refuted": 86
+      }
+    }
+  },
+  "subsets": {
+    "ie": {
+      "fixed_k_4": {
+        "n": 150,
+        "accuracy": 0.7333333333333333,
+        "macro_f1": 0.43777543777543776,
+        "evidence_recall": 0.6195555555555555,
+        "mean_paragraphs": 4.0,
+        "mean_input_tokens": 1381.7866666666666,
+        "mean_output_tokens": 98.62,
+        "mean_latency_seconds": 3.186835854848226,
+        "insufficient_rate": 0.006666666666666667,
+        "verdicts": {
+          "entailed": 52,
+          "insufficient": 1,
+          "refuted": 97
+        }
+      },
+      "fixed_k_8": {
+        "n": 150,
+        "accuracy": 0.7,
+        "macro_f1": 0.42570149579648425,
+        "evidence_recall": 0.7553333333333332,
+        "mean_paragraphs": 8.0,
+        "mean_input_tokens": 2512.88,
+        "mean_output_tokens": 104.00666666666666,
+        "mean_latency_seconds": 3.394540338516235,
+        "insufficient_rate": 0.006666666666666667,
+        "verdicts": {
+          "entailed": 61,
+          "insufficient": 1,
+          "refuted": 88
+        }
+      },
+      "oracle_gold": {
+        "n": 150,
+        "accuracy": 0.7066666666666667,
+        "macro_f1": 0.44099800179654985,
+        "evidence_recall": 1.0,
+        "mean_paragraphs": 2.986666666666667,
+        "mean_input_tokens": 1102.94,
+        "mean_output_tokens": 95.09333333333333,
+        "mean_latency_seconds": 3.0365621598561603,
+        "insufficient_rate": 0.02666666666666667,
+        "verdicts": {
+          "entailed": 62,
+          "insufficient": 4,
+          "refuted": 84
+        }
+      },
+      "planner": {
+        "n": 150,
+        "accuracy": 0.66,
+        "macro_f1": 0.3967040068935803,
+        "evidence_recall": 0.5168888888888888,
+        "mean_paragraphs": 4.013333333333334,
+        "mean_input_tokens": 1630.7466666666667,
+        "mean_output_tokens": 93.92,
+        "mean_latency_seconds": 2.975500798225403,
+        "insufficient_rate": 0.006666666666666667,
+        "verdicts": {
+          "entailed": 63,
+          "insufficient": 1,
+          "refuted": 86
+        }
+      }
+    }
+  }
+}

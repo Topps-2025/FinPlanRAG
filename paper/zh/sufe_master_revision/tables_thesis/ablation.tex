@@ -1,0 +1,21 @@
+\begin{table*}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{锚点后验融合权重$w$的消融。$w=0$为FinPlan-RF，$w=1$为纯LLM锚点后验。}
+\label{tab:ablation}
+\resizebox{0.96\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+方法 & DeepSeek Acc & Bal & Macro & Loss & GLM Acc & Bal & Macro & Loss \\
+\midrule
+AnchorEvolve-LLM ($w=1$) & .445 & .307 & .242 & 4.035 & .454 & .329 & .295 & 3.903 \\
+FinPlan-RF ($w=0$) & \textbf{.533} & \textbf{.491} & \textbf{.486} & \textbf{3.454} & .533 & \textbf{.491} & .486 & \textbf{3.454} \\
+融合 $w=.1$ & .524 & .471 & .468 & 3.604 & \textbf{.537} & .489 & \textbf{.487} & 3.648 \\
+融合 $w=.2$ & .511 & .452 & .453 & 3.639 & .529 & .474 & .477 & 3.683 \\
+融合 $w=.3$ & .520 & .449 & .450 & 3.718 & \textbf{.537} & .465 & .473 & 3.674 \\
+融合 $w=.4$ & .507 & .406 & .400 & 3.762 & .524 & .425 & .429 & 3.595 \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}

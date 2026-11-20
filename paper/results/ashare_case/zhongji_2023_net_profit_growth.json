@@ -1,0 +1,685 @@
+{
+  "claim": {
+    "claim_id": "ashare_300308_2023_net_profit_growth",
+    "company": "中际旭创",
+    "ticker": "300308.SZ",
+    "year": 2023,
+    "cutoff": "2024-01-31",
+    "target_period": "2023年年度报告",
+    "metric": "归母净利润同比增速",
+    "metric_kind": "growth",
+    "model_template": "growth_bridge",
+    "labels": [
+      "低于24.57%",
+      "24.57%至54.57%",
+      "高于54.57%"
+    ],
+    "thresholds": [
+      {
+        "label": "低于24.57%",
+        "low": null,
+        "high": 24.569303399753466
+      },
+      {
+        "label": "24.57%至54.57%",
+        "low": 24.569303399753466,
+        "high": 54.569303399753466
+      },
+      {
+        "label": "高于54.57%",
+        "low": 54.569303399753466,
+        "high": null
+      }
+    ],
+    "label_defs": {
+      "低于24.57%": "实际值低于24.57%",
+      "24.57%至54.57%": "实际值在24.57%至54.57%之间（含下限，不含上限）",
+      "高于54.57%": "实际值不低于54.57%"
+    },
+    "reference_value": 12.239908661800001,
+    "reference_unit": "亿元",
+    "unit": "%",
+    "prior_growth": 39.569303399753466,
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "2021年年度报告",
+        "date": "2021-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2022-04-25/1213057723.PDF",
+        "text": "2021年年度报告：归母净利润 8.77 亿元。",
+        "facet": "prior_period",
+        "metric": "归母净利润",
+        "value": 8.7697712632,
+        "unit": "亿元",
+        "period": "2021FY"
+      },
+      {
+        "id": "E2",
+        "title": "2022年年度报告",
+        "date": "2022-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2023-04-24/1216523562.PDF",
+        "text": "2022年年度报告：归母净利润 12.24 亿元。",
+        "facet": "prior_period",
+        "metric": "归母净利润",
+        "value": 12.239908661800001,
+        "unit": "亿元",
+        "period": "2022FY"
+      },
+      {
+        "id": "E3",
+        "title": "2023年三季度报告",
+        "date": "2023-09-30",
+        "url": "",
+        "text": "2023年三季度报告：前三季度归母净利润 12.96 亿元。",
+        "facet": "latest_period",
+        "metric": "归母净利润",
+        "value": 12.958678796300001,
+        "unit": "亿元",
+        "period": "2023Q1-Q3"
+      },
+      {
+        "id": "E4",
+        "title": "2022年三季度报告",
+        "date": "2022-09-30",
+        "url": "",
+        "text": "2022年三季度报告：前三季度归母净利润 8.53 亿元。",
+        "facet": "prior_period",
+        "metric": "归母净利润",
+        "value": 8.525084359700001,
+        "unit": "亿元",
+        "period": "2022Q1-Q3"
+      }
+    ],
+    "outcome": {
+      "label": "高于54.57%",
+      "value": 77.57712151508498,
+      "unit": "%",
+      "date": "2024-04-22",
+      "source": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF"
+    }
+  },
+  "result": {
+    "contract": {
+      "claim_id": "ashare_300308_2023_net_profit_growth",
+      "text": "",
+      "metric": "归母净利润同比增速",
+      "claim_type": "metric",
+      "labels": [
+        "低于24.57%",
+        "24.57%至54.57%",
+        "高于54.57%"
+      ],
+      "label_defs": {
+        "低于24.57%": "实际值低于24.57%",
+        "24.57%至54.57%": "实际值在24.57%至54.57%之间（含下限，不含上限）",
+        "高于54.57%": "实际值不低于54.57%"
+      },
+      "target_period": "2023年年度报告",
+      "unit": "%",
+      "reference": "",
+      "queries": [],
+      "date_windows": [],
+      "prior": {
+        "24.57%至54.57%": 0.242718,
+        "高于54.57%": 0.199029,
+        "低于24.57%": 0.558252
+      },
+      "metric_kind": "growth",
+      "model_template": "growth_bridge",
+      "anchor_types": [],
+      "query_facets": [],
+      "thresholds": [
+        {
+          "label": "低于24.57%",
+          "low": null,
+          "high": 24.569303399753466
+        },
+        {
+          "label": "24.57%至54.57%",
+          "low": 24.569303399753466,
+          "high": 54.569303399753466
+        },
+        {
+          "label": "高于54.57%",
+          "low": 54.569303399753466,
+          "high": null
+        }
+      ],
+      "reference_value": 12.239908661800001,
+      "reference_unit": "亿元"
+    },
+    "cutoff": "2024-01-31",
+    "queries": [
+      "中际旭创 2023年三季报 归母净利润同比增速",
+      "中际旭创 2022年 归母净利润同比增速",
+      "中际旭创 2023年年度报告 归母净利润同比增速",
+      "中际旭创 2023年 业绩 预告 归母净利润同比增速",
+      "中际旭创 2023年 股权激励 考核 归母净利润同比增速",
+      "中际旭创 所属行业 2023年 归母净利润同比增速 趋势"
+    ],
+    "query_plan": [
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2023年三季报 归母净利润同比增速",
+        "required": true
+      },
+      {
+        "facet": "prior_period",
+        "query": "中际旭创 2022年 归母净利润同比增速",
+        "required": true
+      },
+      {
+        "facet": "latest_period",
+        "query": "中际旭创 2023年年度报告 归母净利润同比增速",
+        "required": true
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2023年 业绩 预告 归母净利润同比增速",
+        "required": false
+      },
+      {
+        "facet": "forward_disclosure",
+        "query": "中际旭创 2023年 股权激励 考核 归母净利润同比增速",
+        "required": false
+      },
+      {
+        "facet": "industry",
+        "query": "中际旭创 所属行业 2023年 归母净利润同比增速 趋势",
+        "required": false
+      }
+    ],
+    "coverage_gaps": [],
+    "coverage_penalty": 0.0,
+    "search_log": [],
+    "evidence": [
+      {
+        "id": "E1",
+        "title": "2021年年度报告",
+        "date": "2021-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2022-04-25/1213057723.PDF",
+        "text": "2021年年度报告：归母净利润 8.77 亿元。",
+        "facet": "prior_period",
+        "metric": "归母净利润",
+        "value": 8.7697712632,
+        "unit": "亿元",
+        "period": "2021FY",
+        "source_id": "E1",
+        "prompt_text": "2021年年度报告：归母净利润 8.77 亿元。"
+      },
+      {
+        "id": "E2",
+        "title": "2022年年度报告",
+        "date": "2022-12-31",
+        "url": "https://static.cninfo.com.cn/finalpage/2023-04-24/1216523562.PDF",
+        "text": "2022年年度报告：归母净利润 12.24 亿元。",
+        "facet": "prior_period",
+        "metric": "归母净利润",
+        "value": 12.239908661800001,
+        "unit": "亿元",
+        "period": "2022FY",
+        "source_id": "E2",
+        "prompt_text": "2022年年度报告：归母净利润 12.24 亿元。"
+      },
+      {
+        "id": "E3",
+        "title": "2023年三季度报告",
+        "date": "2023-09-30",
+        "url": "",
+        "text": "2023年三季度报告：前三季度归母净利润 12.96 亿元。",
+        "facet": "latest_period",
+        "metric": "归母净利润",
+        "value": 12.958678796300001,
+        "unit": "亿元",
+        "period": "2023Q1-Q3",
+        "source_id": "E3",
+        "prompt_text": "2023年三季度报告：前三季度归母净利润 12.96 亿元。"
+      },
+      {
+        "id": "E4",
+        "title": "2022年三季度报告",
+        "date": "2022-09-30",
+        "url": "",
+        "text": "2022年三季度报告：前三季度归母净利润 8.53 亿元。",
+        "facet": "prior_period",
+        "metric": "归母净利润",
+        "value": 8.525084359700001,
+        "unit": "亿元",
+        "period": "2022Q1-Q3",
+        "source_id": "E4",
+        "prompt_text": "2022年三季度报告：前三季度归母净利润 8.53 亿元。"
+      }
+    ],
+    "excluded_evidence": [],
+    "llm": {
+      "prompt_sha256": "aaf3c60b906c6934",
+      "request_digest": "bf1f5e5f2e9535f5be6991053e1c299d6cc2f435b33706ede051d45a20bab1fc",
+      "raw_text": "{\n  \"claim_id\": \"ashare_300308_2023_net_profit_growth\",\n  \"anchors\": [\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2022年归母净利润12.24亿元\",\n      \"scope\": \"company\",\n      \"source_id\": \"E2\",\n      \"quote\": \"2022年年度报告：归母净利润 12.24 亿元。\",\n      \"date\": \"2022-12-31\",\n      \"reliability\": 0.95,\n      \"hard\": false,\n      \"implied_label\": \"低于24.57%\",\n      \"numeric_value\": 12.24,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"亿元\",\n      \"numeric_period\": \"2022FY\",\n      \"model_role\": \"prior_actual\",\n      \"rationale\": \"2022年归母净利润为同比增速的基期。\"\n    },\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2023年前三季度归母净利润12.96亿元\",\n      \"scope\": \"company\",\n      \"source_id\": \"E3\",\n      \"quote\": \"2023年三季度报告：前三季度归母净利润 12.96 亿元。\",\n      \"date\": \"2023-09-30\",\n      \"reliability\": 0.95,\n      \"hard\": false,\n      \"implied_label\": \"低于24.57%\",\n      \"numeric_value\": 12.96,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"亿元\",\n      \"numeric_period\": \"2023Q1-Q3\",\n      \"model_role\": \"ytd_actual\",\n      \"rationale\": \"2023年前三季度累计归母净利润，用于同比增速桥接。\"\n    },\n    {\n      \"type\": \"company_history\",\n      \"relation\": \"level\",\n      \"value\": \"2022年前三季度归母净利润8.53亿元\",\n      \"scope\": \"company\",\n      \"source_id\": \"E4\",\n      \"quote\": \"2022年三季度报告：前三季度归母净利润 8.53 亿元。\",\n      \"date\": \"2022-09-30\",\n      \"reliability\": 0.95,\n      \"hard\": false,\n      \"implied_label\": \"低于24.57%\",\n      \"numeric_value\": 8.53,\n      \"numeric_low\": null,\n      \"numeric_high\": null,\n      \"numeric_unit\": \"亿元\",\n      \"numeric_period\": \"2022Q1-Q3\",\n      \"model_role\": null,\n      \"rationale\": \"2022年同期累计归母净利润，用于计算前三季度同比增速。\"\n    }\n  ],\n  \"label_scores\": {\n    \"低于24.57%\": 0.45,\n    \"24.57%至54.57%\": 0.35,\n    \"高于54.57%\": 0.2\n  },\n  \"date_estimate\": null,\n  \"numeric_estimate\": {\n    \"point\": 40.0,\n    \"low\": 20.0,\n    \"high\": 60.0,\n    \"unit\": \"%\",\n    \"basis\": \"基于2023年前三季度归母净利润12.96亿元与2022年全年12.24亿元，假设Q4利润同比温和增长，全年增速大致在20%-60%区间。\",\n    \"source_ids\": [\"E2\", \"E3\", \"E4\"]\n  },\n  \"confidence\": 0.35,\n  \"missing\": \"缺少2023年Q4单季度利润或全年业绩预告/快报，无法精确桥接全年增速。\"\n}",
+      "parsed": {
+        "claim_id": "ashare_300308_2023_net_profit_growth",
+        "anchors": [
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2022年归母净利润12.24亿元",
+            "scope": "company",
+            "source_id": "E2",
+            "quote": "2022年年度报告：归母净利润 12.24 亿元。",
+            "date": "2022-12-31",
+            "reliability": 0.95,
+            "hard": false,
+            "implied_label": "低于24.57%",
+            "numeric_value": 12.24,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "亿元",
+            "numeric_period": "2022FY",
+            "model_role": "prior_actual",
+            "rationale": "2022年归母净利润为同比增速的基期。"
+          },
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2023年前三季度归母净利润12.96亿元",
+            "scope": "company",
+            "source_id": "E3",
+            "quote": "2023年三季度报告：前三季度归母净利润 12.96 亿元。",
+            "date": "2023-09-30",
+            "reliability": 0.95,
+            "hard": false,
+            "implied_label": "低于24.57%",
+            "numeric_value": 12.96,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "亿元",
+            "numeric_period": "2023Q1-Q3",
+            "model_role": "ytd_actual",
+            "rationale": "2023年前三季度累计归母净利润，用于同比增速桥接。"
+          },
+          {
+            "type": "company_history",
+            "relation": "level",
+            "value": "2022年前三季度归母净利润8.53亿元",
+            "scope": "company",
+            "source_id": "E4",
+            "quote": "2022年三季度报告：前三季度归母净利润 8.53 亿元。",
+            "date": "2022-09-30",
+            "reliability": 0.95,
+            "hard": false,
+            "implied_label": "低于24.57%",
+            "numeric_value": 8.53,
+            "numeric_low": null,
+            "numeric_high": null,
+            "numeric_unit": "亿元",
+            "numeric_period": "2022Q1-Q3",
+            "model_role": null,
+            "rationale": "2022年同期累计归母净利润，用于计算前三季度同比增速。"
+          }
+        ],
+        "label_scores": {
+          "低于24.57%": 0.45,
+          "24.57%至54.57%": 0.35,
+          "高于54.57%": 0.2
+        },
+        "date_estimate": null,
+        "numeric_estimate": {
+          "point": 40.0,
+          "low": 20.0,
+          "high": 60.0,
+          "unit": "%",
+          "basis": "基于2023年前三季度归母净利润12.96亿元与2022年全年12.24亿元，假设Q4利润同比温和增长，全年增速大致在20%-60%区间。",
+          "source_ids": [
+            "E2",
+            "E3",
+            "E4"
+          ]
+        },
+        "confidence": 0.35,
+        "missing": "缺少2023年Q4单季度利润或全年业绩预告/快报，无法精确桥接全年增速。"
+      },
+      "usage": {
+        "input_tokens": 2059,
+        "output_tokens": 820
+      },
+      "error": null
+    },
+    "anchors": [
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2022年归母净利润12.24亿元",
+        "scope": "company",
+        "source_id": "E2",
+        "quote": "2022年年度报告：归母净利润 12.24 亿元。",
+        "date": "2022-12-31",
+        "reliability": 0.95,
+        "hard": false,
+        "implied_label": "低于24.57%",
+        "numeric_value": 12.24,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "亿元",
+        "numeric_period": "2022FY",
+        "model_role": "prior_actual",
+        "rationale": "2022年归母净利润为同比增速的基期。",
+        "implied_label_matched": "低于24.57%",
+        "implied_label_raw": "低于24.57%",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.95,
+        "hard_effective": false,
+        "qualification": "vacuous",
+        "status": "rejected",
+        "reasons": [
+          "anchor describes the prior-year reference value, not the target-period outcome"
+        ],
+        "evidence_title": "2022年年度报告",
+        "evidence_url": "https://static.cninfo.com.cn/finalpage/2023-04-24/1216523562.PDF",
+        "evidence_date": "2022-12-31"
+      },
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2023年前三季度归母净利润12.96亿元",
+        "scope": "company",
+        "source_id": "E3",
+        "quote": "2023年三季度报告：前三季度归母净利润 12.96 亿元。",
+        "date": "2023-09-30",
+        "reliability": 0.95,
+        "hard": false,
+        "implied_label": "低于24.57%",
+        "numeric_value": 12.96,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "亿元",
+        "numeric_period": "2023Q1-Q3",
+        "model_role": "ytd_actual",
+        "rationale": "2023年前三季度累计归母净利润，用于同比增速桥接。",
+        "implied_label_matched": "低于24.57%",
+        "implied_label_raw": "低于24.57%",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.7839,
+        "hard_effective": false,
+        "qualification": "soft",
+        "status": "accepted",
+        "reasons": [],
+        "evidence_title": "2023年三季度报告",
+        "evidence_url": "",
+        "evidence_date": "2023-09-30",
+        "type_reliability": 0.617886,
+        "type_reliability_n": 121,
+        "calibration_shrink": 0.5
+      },
+      {
+        "type": "company_history",
+        "relation": "level",
+        "value": "2022年前三季度归母净利润8.53亿元",
+        "scope": "company",
+        "source_id": "E4",
+        "quote": "2022年三季度报告：前三季度归母净利润 8.53 亿元。",
+        "date": "2022-09-30",
+        "reliability": 0.95,
+        "hard": false,
+        "implied_label": "低于24.57%",
+        "numeric_value": 8.53,
+        "numeric_low": null,
+        "numeric_high": null,
+        "numeric_unit": "亿元",
+        "numeric_period": "2022Q1-Q3",
+        "model_role": null,
+        "rationale": "2022年同期累计归母净利润，用于计算前三季度同比增速。",
+        "implied_label_matched": "低于24.57%",
+        "implied_label_raw": "低于24.57%",
+        "quote_verified": true,
+        "numeric_verified": true,
+        "model_role_valid": true,
+        "temporal_inconsistency": false,
+        "reliability_effective": 0.95,
+        "hard_effective": false,
+        "qualification": "vacuous",
+        "status": "rejected",
+        "reasons": [
+          "anchor describes the prior-year reference value, not the target-period outcome"
+        ],
+        "evidence_title": "2022年三季度报告",
+        "evidence_url": "",
+        "evidence_date": "2022-09-30"
+      },
+      {
+        "type": "model_bridge",
+        "relation": "level",
+        "value": "(12.96 / 3 × 4 = 17.28) / 12.24 - 1 = 41.18%",
+        "scope": "company",
+        "source_id": "MODEL",
+        "quote": "(12.96 / 3 × 4 = 17.28) / 12.24 - 1 = 41.18%",
+        "date": "2024-01-31",
+        "reliability": 0.79,
+        "hard": false,
+        "implied_label": "24.57%至54.57%",
+        "implied_label_matched": "24.57%至54.57%",
+        "rationale": "(12.96 / 3 × 4 = 17.28) / 12.24 - 1 = 41.18%",
+        "qualification": "model",
+        "status": "accepted",
+        "quote_verified": true,
+        "synthetic": true,
+        "reliability_effective": 0.79,
+        "model_role": "model_bridge",
+        "numeric_value": 41.177524093213314,
+        "numeric_unit": "%",
+        "numeric_period": "2023年年度报告",
+        "reasons": []
+      }
+    ],
+    "belief": {
+      "prior": {
+        "低于24.57%": 0.558253,
+        "24.57%至54.57%": 0.242718,
+        "高于54.57%": 0.199029
+      },
+      "anchor_only": {
+        "低于24.57%": 0.647056,
+        "24.57%至54.57%": 0.283984,
+        "高于54.57%": 0.068959
+      },
+      "final": {
+        "低于24.57%": 0.603098,
+        "24.57%至54.57%": 0.330781,
+        "高于54.57%": 0.066121
+      },
+      "hard_projection": [],
+      "trace": [
+        {
+          "anchor_index": 1,
+          "implied_label": "低于24.57%",
+          "qualification": "soft",
+          "reliability_effective": 0.7839,
+          "before": {
+            "低于24.57%": 0.558253,
+            "24.57%至54.57%": 0.242718,
+            "高于54.57%": 0.199029
+          },
+          "after": {
+            "低于24.57%": 0.808707,
+            "24.57%至54.57%": 0.105106,
+            "高于54.57%": 0.086187
+          }
+        },
+        {
+          "anchor_index": 3,
+          "implied_label": "24.57%至54.57%",
+          "qualification": "model",
+          "reliability_effective": 0.79,
+          "before": {
+            "低于24.57%": 0.808707,
+            "24.57%至54.57%": 0.105106,
+            "高于54.57%": 0.086187
+          },
+          "after": {
+            "低于24.57%": 0.647056,
+            "24.57%至54.57%": 0.283984,
+            "高于54.57%": 0.068959
+          }
+        }
+      ]
+    },
+    "readout": {
+      "action": "adjudicate",
+      "point": "低于24.57%",
+      "argmax_label": "低于24.57%",
+      "set": [
+        "低于24.57%",
+        "24.57%至54.57%"
+      ],
+      "expected_loss": 2.528968,
+      "credible_set": [
+        "低于24.57%",
+        "24.57%至54.57%"
+      ],
+      "credible_set_mass": 0.933879,
+      "alpha": 0.1,
+      "action_losses": [
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于24.57%",
+            "24.57%至54.57%"
+          ],
+          "expected_loss": 2.528968
+        },
+        {
+          "action": "answer",
+          "label": "低于24.57%",
+          "expected_loss": 3.836778
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于24.57%",
+            "24.57%至54.57%",
+            "高于54.57%"
+          ],
+          "expected_loss": 4.0
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "低于24.57%",
+            "高于54.57%"
+          ],
+          "expected_loss": 4.646248
+        },
+        {
+          "action": "abstain",
+          "expected_loss": 5.0
+        },
+        {
+          "action": "answer",
+          "label": "24.57%至54.57%",
+          "expected_loss": 6.69219
+        },
+        {
+          "action": "adjudicate",
+          "set": [
+            "24.57%至54.57%",
+            "高于54.57%"
+          ],
+          "expected_loss": 6.824784
+        },
+        {
+          "action": "answer",
+          "label": "高于54.57%",
+          "expected_loss": 10.544986
+        }
+      ]
+    },
+    "date_estimate": null,
+    "forecast": {
+      "template": "growth_bridge",
+      "point": 41.177524093213314,
+      "low": 27.059771683892,
+      "high": 55.295276502534676,
+      "unit": "%",
+      "formula": "(12.96 / 3 × 4 = 17.28) / 12.24 - 1 = 41.18%",
+      "inputs": {
+        "ytd_actual": 12.96,
+        "ytd_quarters": 3.0,
+        "prior_actual": 12.239908661800001
+      },
+      "input_sources": {
+        "ytd_actual": "E3",
+        "prior_actual": "claim.reference"
+      },
+      "missing": [],
+      "method": "level_growth",
+      "interval_method": "heuristic",
+      "label": "24.57%至54.57%"
+    },
+    "calibration": {
+      "applied": true,
+      "bundle": "/root/autodl-tmp/finplanrag_2026/paper/results/anchor_cli/calibration/bundle.json",
+      "order": [
+        1,
+        2,
+        0
+      ],
+      "features": {
+        "belief_below": 0.283984,
+        "belief_within": 0.068959,
+        "belief_above": 0.647056,
+        "score_below": 0.35,
+        "score_within": 0.2,
+        "score_above": 0.45,
+        "entropy": 0.823582,
+        "margin": 0.363072,
+        "n_anchors_scaled": 0.083333,
+        "n_hard_scaled": 0.0,
+        "mean_reliability": 0.7839,
+        "max_reliability": 0.7839
+      },
+      "anchor": {
+        "24.57%至54.57%": 0.283984,
+        "高于54.57%": 0.068959,
+        "低于24.57%": 0.647056
+      },
+      "calibrated": {
+        "低于24.57%": 0.207477,
+        "24.57%至54.57%": 0.751946,
+        "高于54.57%": 0.040576
+      },
+      "fused": {
+        "低于24.57%": 0.603098,
+        "24.57%至54.57%": 0.330781,
+        "高于54.57%": 0.066121
+      },
+      "temperature": 3.000000000000002,
+      "fusion_weight": 0.9,
+      "type_shrinkage": 0.5
+    },
+    "numeric_estimate": {
+      "point": 40.0,
+      "low": 20.0,
+      "high": 60.0,
+      "unit": "%",
+      "basis": "基于2023年前三季度归母净利润12.96亿元与2022年全年12.24亿元，假设Q4利润同比温和增长，全年增速大致在20%-60%区间。",
+      "source_ids": [
+        "E2",
+        "E3",
+        "E4"
+      ]
+    },
+    "seconds": 0.0,
+    "error": null
+  },
+  "outcome": {
+    "label": "高于54.57%",
+    "value": 77.57712151508498,
+    "unit": "%",
+    "date": "2024-04-22",
+    "source": "https://static.cninfo.com.cn/finalpage/2024-04-22/1219703026.PDF"
+  }
+}

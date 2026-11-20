@@ -1,0 +1,11 @@
+{
+  "n_claims": 1005,
+  "coverage": {
+    "earnings_8k": 993,
+    "fallback_10q": 12
+  },
+  "mean_days_before_10q": 24.03021148036254,
+  "median_days_before_10q": 2,
+  "max_days_before_10q": 160,
+  "min_days_before_10q": 0
+}

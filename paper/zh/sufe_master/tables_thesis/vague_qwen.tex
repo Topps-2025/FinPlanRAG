@@ -1,0 +1,24 @@
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{2pt}
+\caption{Qwen3-8B基座上的模糊断言结果（227条XBRL核验断言）。Loss越低越好；Sel@50为50\%覆盖率下的选择性准确率，AURC越低越好。}
+\label{tab:vague-qwen}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lrrrrrrrrrrr}
+\toprule
+方法 & Acc & Bal & Macro & MCC & AUROC & AUPRC & ECE & Brier & Loss & Sel@50 & AURC \\
+\midrule
+FinDVer-style & .445 & .422 & .406 & .133 & .564 & .375 & .555 & 1.110 & 5.524 & .456 & .535 \\
+Fin-Fact-style & .511 & .477 & .464 & \textbf{.237} & .609 & .404 & .489 & .978 & 4.846 & .491 & .467 \\
+Self-RAG-style & .489 & .447 & .437 & .196 & .583 & .394 & .489 & .990 & 5.093 & .482 & .506 \\
+CRAG-style & .454 & .418 & .399 & .152 & .566 & .371 & .547 & 1.093 & 5.366 & .456 & .534 \\
+FLARE-style & .326 & .298 & .212 & -0.107 & .475 & .322 & .672 & 1.340 & 6.740 & .316 & .664 \\
+Adaptive-RAG-style & .344 & .324 & .290 & -0.027 & .492 & .330 & .654 & 1.308 & 6.485 & .298 & .663 \\
+AnchorEvolve-LLM & .427 & .353 & .355 & .027 & .562 & .399 & .163 & .647 & 3.586 & .561 & .435 \\
+FinPlanRAG（AnchorEvolve-Fusion, $w=0.1$） & \textbf{.537} & .486 & .485 & .227 & \textbf{.707} & \textbf{.509} & \textbf{.027} & \textbf{.562} & 3.577 & .632 & \textbf{.373} \\
+共享校准RF（非LLM诊断） & .533 & \textbf{.491} & \textbf{.486} & .229 & .706 & .505 & .033 & .566 & \textbf{3.454} & \textbf{.649} & .383 \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

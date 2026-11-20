@@ -1,0 +1,26 @@
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{DocFinQA long-document question answering. ``Paras'' is the mean number of acquired paragraphs and ``Cov.'' the answer coverage.}
+\label{tab:docfinqa}
+\begin{tabular}{lrrrrrrrr}
+\toprule
+ & \multicolumn{4}{c}{\shortstack{DeepSeek\\Flash}} & \multicolumn{4}{c}{\shortstack{GLM 5.3\\Flash}} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Condition & Acc. & Macro F1 & Paras & Cov. & Acc. & Macro F1 & Paras & Cov. \\
+\midrule
+Fixed-4 & .333 & .192 & 4.00 & .557 & .400 & .199 & 4.00 & .653 \\
+Fixed-8 & .367 & .223 & 8.00 & .603 & .440 & .225 & 8.00 & .720 \\
+Fixed-16 & .390 & .234 & 16.00 & .640 & .480 & .249 & 16.00 & .757 \\
+Planner B=8 & .417 & .230 & 4.56 & .707 & .450 & .248 & 4.15 & .763 \\
+Planner B=16 & .460 & .276 & 6.85 & .773 & .470 & .243 & 5.88 & .840 \\
+Self-RAG-style & .373 & .223 & 8.03 & .613 & .447 & .231 & 8.16 & .717 \\
+CRAG-style & .373 & .222 & 8.05 & .613 & .447 & .235 & 8.32 & .727 \\
+FLARE-style & .330 & .197 & 4.00 & .557 & .393 & .193 & 4.19 & .643 \\
+Adaptive-RAG-style & .363 & .211 & 7.22 & .570 & .393 & .198 & 6.51 & .657 \\
+\midrule
+\textbf{FinPlanRAG (obligation + fallback)} & \textbf{.457} & \textbf{.276} & 10.69 & \textbf{.770} & \textbf{.497} & \textbf{.252} & 10.31 & \textbf{.810} \\
+\bottomrule
+\end{tabular}
+\end{table*}

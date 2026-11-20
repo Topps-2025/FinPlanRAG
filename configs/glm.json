@@ -1,0 +1,75 @@
+{
+  "data": "paper/data/dataset_v4.json",
+  "earnings_events": "paper/data/earnings_events.json",
+  "results_root": "paper/results/glm",
+  "test_years": [
+    2022,
+    2023,
+    2024,
+    2025
+  ],
+  "folds": 5,
+  "fold_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "decision_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "verified_labels": [
+    "xbrl_search",
+    "xbrl_verified",
+    "xbrl_override"
+  ],
+  "llm": {
+    "provider": "glm",
+    "model": "glm-5.3-flash",
+    "base_url": "https://open.bigmodel.cn/api/paas/v4",
+    "api_key_env": "GLM_API_KEY",
+    "temperature": 0.0,
+    "max_tokens": 900,
+    "reasoning_effort": "low"
+  },
+  "sequential": {
+    "gammas": [
+      0.0,
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1
+    ],
+    "evidence_costs": [
+      0.1,
+      0.5
+    ],
+    "outcome_cost": 2.0,
+    "max_acquire": 3,
+    "seeds": [
+      1,
+      2,
+      3
+    ],
+    "train_end_year": 2021,
+    "test_start_year": 2022,
+    "verified_only": true,
+    "outcome_costs": [
+      2.0,
+      5.0
+    ],
+    "selection_margin": 0.1,
+    "planner_margin": 0.2
+  }
+}

@@ -1,0 +1,35 @@
+% ==================== 中文摘要 ====================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{摘\texorpdfstring{\quad}{ }要}
+\begin{center}
+{\zihao{-2}\heiti \method：义务检索与锚定裁决的\\[0.2cm]
+双层金融问答框架\par}
+\vspace{0.6cm}
+{\zihao{-2}\heiti 摘\quad 要\par}
+\end{center}
+\vspace{0.4cm}
+\markboth{摘\quad 要}{摘\quad 要}
+{\zihao{-4}\songti\sloppy
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\hspace*{2em}金融文本分析同时包含确定信息问题与模糊断言问题。前者要求读取申报文件在截止时点已经陈述的事实，后者要求判断尚未实现的未来结果。现有检索增强生成与断言验证系统在观察到证据之前固定输出契约，难以在同一框架内同时处理两类查询。本文提出FinPlanRAG，以LLM路由器判断查询的模糊性，并将确定查询送入义务检索分支，将模糊断言送入锚点演化分支。确定分支把问题绑定为类型化义务，在时点语料上按义务覆盖迭代取证，由LLM阅读器返回闭合答案；模糊分支AnchorEvolve抽取稳定关系、行业模式和锚点实例三层锚点，按硬、软、空泛、对抗、过期五类进行资格判定，更新结果桶上的信念，并在非对称损失下返回点答案、可信集或弃权。两个分支和路由器均调用LLM。\par
+\hspace*{2em}本文的贡献包括三个方面。第一，把金融问答的输出契约表述为混合负载上的路由与裁决问题，使确定检索与模糊断言共享一个可审计的时点框架。第二，给出AnchorEvolve的金融断言实例化，将LLM锚点抽取、证据资格判定、校准后验和损失感知裁决组合为可复现流程。第三，在DocFinQA、XBRL核验收入指引和FinDVer上，以多基座、多具名基线和多指标进行统一评估。确定分支在准确率与证据成本上优于固定预算阅读器和具名RAG基线；模糊分支在保持普通准确率的同时显著降低决策损失，并在平衡准确率与宏F1上取得更高点估计；路由器在较大基座上接近oracle混合效用。该框架把输出契约从固定接口转化为可检验的决策变量，为金融文本系统提供可泛化、可审计的时点问答与断言裁决方案。\par
+\noindent{\zihao{-4}\heiti 关键词：}{\zihao{-4}\songti 金融检索增强生成\hspace{2em}模糊断言\hspace{2em}锚点演化\hspace{2em}双层路由\hspace{2em}可信集}
+
+% ==================== 英文摘要 ====================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Abstract}
+\begin{center}{\arial\bfseries\zihao{-2} Abstract\par}\end{center}
+\vspace{0.6cm}
+\markboth{Abstract}{Abstract}
+{\arial\zihao{-4}\selectfont\sloppy
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\hspace*{2em}Financial text analysis mixes determinate questions with vague forward-looking claims. The first asks for a fact that a filing states at the cutoff; the second asks about an outcome that is not yet realized. Retrieval-augmented generation and claim verification fix the output contract before seeing the evidence, so they cannot serve both query types in one framework. We present FinPlanRAG, which uses an LLM router to decide whether a query is vague and sends determinate queries to an obligation-retrieval branch and vague claims to an anchor-evolution branch. The determinate branch binds typed obligations, acquires point-in-time evidence until the obligations are covered, and returns a closed answer from an LLM reader. The vague branch, AnchorEvolve, extracts stable-relation, industry-schema, and instance anchors, qualifies each anchor as hard, soft, vacuous, adversarial, or stale, updates a belief over outcome buckets, and returns a point answer, a credible set, or an abstention under an asymmetric loss. Both branches and the router call an LLM.\par
+\hspace*{2em}The paper makes three contributions. First, it formulates the output contract of financial question answering as a routing and adjudication problem over a mixed workload, so that determinate retrieval and vague claims share one auditable point-in-time framework. Second, it gives a financial instantiation of AnchorEvolve that combines LLM anchor extraction, evidence qualification, a calibrated posterior, and a loss-aware gate in a reproducible pipeline. Third, it evaluates the framework on DocFinQA, XBRL-verified revenue-guidance claims, and FinDVer with multiple backbones, named baselines, and metrics. The determinate branch improves accuracy at lower evidence cost over fixed-budget readers and named RAG baselines. The vague branch preserves plain accuracy while lowering decision loss, and obtains higher point estimates of balanced accuracy and macro F1. The router approaches oracle-level mixed utility on the larger backbones. The framework turns the output contract from a fixed interface into a testable decision variable, and offers a general, auditable approach to point-in-time financial question answering and claim adjudication.\par
+}
+\vspace{0.4cm}
+\noindent{\arial\bfseries\zihao{-4} Key Words:} {\arial\zihao{-4}\selectfont financial RAG\hspace{2em}vague claims\hspace{2em}anchor evolution\hspace{2em}two-branch routing\hspace{2em}credible set}
+

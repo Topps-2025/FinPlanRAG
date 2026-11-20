@@ -1,0 +1,16 @@
+{
+  "schema": "finplan-ashare-annual-backtest-v1",
+  "n_claims": 40,
+  "n_companies": 5,
+  "years": [
+    2024,
+    2025
+  ],
+  "by_metric": {
+    "growth": 20,
+    "margin": 10,
+    "date": 10
+  },
+  "missing": [],
+  "output": "C:\\Users\\Lenovo\\Desktop\\Paper\\FinPlanRAG\\paper\\data\\ashare_backtest\\claims.json"
+}

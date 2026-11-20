@@ -1,0 +1,21 @@
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\caption{Ablation of the anchor-conditioned belief. $w$ is the weight on the LLM anchor posterior; $w=0$ is FinPlan-RF and $w=1$ is AnchorEvolve-LLM.}
+\label{tab:ablation}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tabular}{lrrrrrrrr}
+\toprule
+Method & DeepSeek Acc & Bal & Macro & Loss & GLM Acc & Bal & Macro & Loss \\
+\midrule
+AnchorEvolve-LLM ($w=1$) & .445 & .307 & .242 & 4.035 & .454 & .329 & .295 & 3.903 \\
+FinPlan-RF ($w=0$) & \textbf{.533} & \textbf{.491} & \textbf{.486} & \textbf{3.454} & .533 & \textbf{.491} & .486 & \textbf{3.454} \\
+Fusion $w=.1$ & .524 & .471 & .468 & 3.604 & \textbf{.537} & .489 & \textbf{.487} & 3.648 \\
+Fusion $w=.2$ & .511 & .452 & .453 & 3.639 & .529 & .474 & .477 & 3.683 \\
+Fusion $w=.3$ & .520 & .449 & .450 & 3.718 & \textbf{.537} & .465 & .473 & 3.674 \\
+Fusion $w=.4$ & .507 & .406 & .400 & 3.762 & .524 & .425 & .429 & 3.595 \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}

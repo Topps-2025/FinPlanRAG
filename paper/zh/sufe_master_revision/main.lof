@@ -1,0 +1,16 @@
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces FinPlanRAG总体框架。路由器把查询送入义务检索分支或AnchorEvolve；前者返回闭合答案，后者返回点答案、可信集或弃权。左侧虚线表示时点约束。}}{11}{figure.caption.6}%
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces AnchorEvolve 修订版机制。时点 8-K 原文经 LLM 抽取 L0/L1/L2 锚点；五类资格判定将硬/软锚点送入信念更新，空泛/过期/对抗锚点被过滤；时间演化状态（类型可靠性 Beta 后验与时点先验）参与信念更新；锚点后验与结构化 RF 融合后，由全动作损失感知读出生成点答案、裁决集或弃权。}}{20}{figure.caption.7}%
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}

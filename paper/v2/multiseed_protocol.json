@@ -1,0 +1,49 @@
+{
+  "schema": "finplan-v2-multiseed-protocol-v1",
+  "date": "2026-10-31",
+  "status": "pre-registered before the 20-seed confirmatory run; the 3-seed run was an implementation smoke test",
+  "data": "C:/Users/Lenovo/Desktop/Paper/AnchorEvolve/real_data_v4/dataset_v4.json",
+  "split": "test",
+  "n_test": 273,
+  "controlled_signal": {
+    "availability_days_after_cutoff": 30,
+    "cost": 0.5,
+    "precision_assignment": "half 0.9, half 0.5; deterministic from seed and case_id; independent of query features a pre-hoc router can see",
+    "ma_subset": "cases with precision 0.9"
+  },
+  "seeds": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+  "primary_metric": "top-1 accuracy at cost budget 1.0 on the controlled MA subset",
+  "primary_budget": 1.0,
+  "primary_baseline": "planner_no_evidence (pre-hoc cost-aware router)",
+  "secondary_metrics": [
+    "top-1 accuracy",
+    "macro F1",
+    "coverage",
+    "mean credible-set size",
+    "ECE (10 bins)",
+    "Brier score",
+    "log loss",
+    "selective accuracy at 50% coverage",
+    "AURC",
+    "accuracy at cost budgets 0, 0.5, 1.0, 1.5, 2.0, 3.0",
+    "leakage rate"
+  ],
+  "positive_criterion": {
+    "paired_difference": "planner_preliminary - planner_no_evidence > 0 at budget 1.0",
+    "ci": "95% CI of the paired difference across seeds excludes 0",
+    "seed_consistency": "at least 16 of 20 seeds positive",
+    "frontier": "planner_preliminary top-1 accuracy >= planner_no_evidence at every budget in the grid"
+  },
+  "real_data_control": {
+    "setting": "same cases with no preliminary signal",
+    "rule": "if the real-data control is not positive, no real-data method claim; the controlled result is mechanism evidence only"
+  },
+  "caveat": "The preliminary signal is synthetic. The primary result is a controlled mechanism result, not real financial evidence.",
+  "artifacts": [
+    "src/finplan_rag/decision/run_multiseed.py",
+    "src/finplan_rag/decision/metrics.py",
+    "paper/results/v2_multiseed/controlled.json",
+    "paper/results/v2_multiseed/real.json",
+    "paper/results/v2_multiseed/report.md"
+  ]
+}

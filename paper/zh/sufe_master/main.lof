@@ -1,0 +1,15 @@
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces FinPlanRAG总体框架。路由器把查询送入义务检索分支或AnchorEvolve；前者返回闭合答案，后者返回点答案、可信集或弃权。左侧虚线表示时点约束。}}{9}{figure.caption.5}%
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces AnchorEvolve机制。LLM抽取L0、L1和L2锚点；硬锚点约束可行结果，软锚点更新结果信念，空泛、对抗和过期锚点被过滤。锚点后验与校准后验形成融合后验，损失感知门据此返回点答案、可信集或弃权；共享校准后验另作非LLM诊断。}}{16}{figure.caption.6}%
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}

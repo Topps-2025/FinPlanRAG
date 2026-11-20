@@ -1,0 +1,33 @@
+\begin{table*}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\caption{FinDVer testmini transfer with the default reader.}
+\label{tab:findver}
+\begin{tabular}{lrrrr}
+\toprule
+Condition & Acc. & Macro F1 & Paras & Coverage \\
+\midrule
+\multicolumn{5}{l}{\textit{DeepSeek Flash}} \\
+Fixed-4 & .551 & .665 & 4.00 & .659 \\
+Fixed-8 & .623 & .713 & 8.00 & .747 \\
+Fixed-16 & .660 & .735 & 16.00 & .796 \\
+Obligation planner & .680 & .752 & 5.63 & .807 \\
+Obligation + fallback & .701 & .759 & 8.76 & .847 \\
+\midrule
+\multicolumn{5}{l}{\textit{GLM 5.3 Flash}} \\
+Fixed-4 & .599 & .701 & 4.00 & .696 \\
+Fixed-8 & .680 & .753 & 8.00 & .803 \\
+Fixed-16 & .743 & .792 & 16.00 & .874 \\
+Obligation planner & .726 & .774 & 5.69 & .871 \\
+Obligation + fallback & .753 & .789 & 9.19 & .906 \\
+\midrule
+\multicolumn{5}{l}{\textit{Qwen3-8B}} \\
+Fixed-4 & .593 & .635 & 4.00 & .864 \\
+Fixed-8 & .629 & .664 & 8.00 & .891 \\
+Fixed-16 & .636 & .673 & 16.00 & .887 \\
+Obligation planner & .637 & .657 & 5.12 & .937 \\
+Obligation + fallback & .649 & .663 & 6.13 & .954 \\
+\bottomrule
+\end{tabular}
+\end{table*}

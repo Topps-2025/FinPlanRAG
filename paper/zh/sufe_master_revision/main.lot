@@ -1,0 +1,32 @@
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\contentsline {table}{\numberline {5.1}{\ignorespaces 五类锚点资格判定。}}{21}{table.caption.8}%
+\addvspace {10.0pt}
+\contentsline {table}{\numberline {6.1}{\ignorespaces 混合负载路由结果。效用定义见第\ref {ch:empirical}章。}}{29}{table.caption.9}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces DocFinQA长文档问答结果。Acc.为精确匹配，Macro F1为宏F1，Paras为平均段落，Cov.为覆盖率。}}{31}{table.caption.10}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces FinDVer testmini迁移结果（默认阅读器）。}}{32}{table.caption.11}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces 受限 gate 与全动作 gate 的决策损失比较（227 条 XBRL 核验断言；配对 95\% CI 为 10,000 次 claim 级 bootstrap）。}}{33}{table.caption.12}%
+\contentsline {table}{\numberline {6.5}{\ignorespaces 公平 gate 下的基线比较（全动作读出；Fusion 为含 LLM 锚点信号的融合后验，RF 为结构化诊断）。}}{34}{table.caption.13}%
+\contentsline {table}{\numberline {6.6}{\ignorespaces DeepSeek 演化版系统与消融（227 条；Acc/Bal/Macro/Loss；Loss 为全动作 gate）。}}{35}{table.caption.14}%
+\contentsline {table}{\numberline {6.7}{\ignorespaces 演化先验特征（无 LLM）的 validation/test 结果。Validation 为 185 条；test 为 227 条；相同 3 seeds/300 trees。}}{35}{table.caption.15}%
+\contentsline {table}{\numberline {6.8}{\ignorespaces 动作集与可信集（DeepSeek 227 条）。}}{36}{table.caption.16}%
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\contentsline {table}{\numberline {A.1}{\ignorespaces DeepSeek基座上的模糊断言结果（227条XBRL核验断言）。Loss越低越好；Sel@50为50\%覆盖率下的选择性准确率，AURC越低越好。}}{45}{table.caption.19}%
+\contentsline {table}{\numberline {A.2}{\ignorespaces GLM 5.3基座上的模糊断言结果（227条XBRL核验断言）。Loss越低越好；Sel@50为50\%覆盖率下的选择性准确率，AURC越低越好。}}{45}{table.caption.20}%
+\contentsline {table}{\numberline {A.3}{\ignorespaces Qwen3-8B基座上的模糊断言结果（227条XBRL核验断言）。Loss越低越好；Sel@50为50\%覆盖率下的选择性准确率，AURC越低越好。}}{46}{table.caption.21}%
+\addvspace {10.0pt}
+\contentsline {table}{\numberline {B.1}{\ignorespaces Qwen3-8B的DocFinQA结果（300题固定样本）。}}{47}{table.caption.22}%
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\addvspace {10.0pt}
+\contentsline {table}{\numberline {G.1}{\ignorespaces 受限 gate 与全动作 gate 的决策损失（227 条）。}}{59}{table.caption.23}%
+\contentsline {table}{\numberline {G.2}{\ignorespaces Fusion 全动作 vs 最好 gated 具名基线（同一全动作 gate）。}}{59}{table.caption.24}%
+\contentsline {table}{\numberline {G.3}{\ignorespaces DeepSeek 演化版系统与消融（227 条；全动作 Loss）。}}{60}{table.caption.25}%
+\contentsline {table}{\numberline {G.4}{\ignorespaces 演化先验特征（无 LLM；validation 185 条，test 227 条；3 seeds/300 trees）。}}{60}{table.caption.26}%
+\contentsline {table}{\numberline {G.5}{\ignorespaces 固定 router 预测、替换前瞻分支损失后的混合效用（527 条已验证子集）。}}{61}{table.caption.27}%

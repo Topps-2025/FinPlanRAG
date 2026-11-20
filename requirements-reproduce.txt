@@ -1,0 +1,15 @@
+# Pinned environment for the reported experiments (Python 3.12).
+# The core package itself only needs numpy; these are the experiment extras.
+numpy==2.2.6
+scipy==1.15.3
+scikit-learn==1.7.2
+pandas==3.1.1
+requests>=2.31
+matplotlib>=3.10
+pytest>=8
+xgboost==3.4.1
+lightgbm==4.7.0
+catboost==1.2.10
+jsonlines>=3
+tiktoken>=0.7
+tqdm>=4.65

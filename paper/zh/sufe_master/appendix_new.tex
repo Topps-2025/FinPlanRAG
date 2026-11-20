@@ -1,0 +1,94 @@
+% NOTE: This file is not included by main.tex. The active source is chapters_new.tex and chapters_6_9.tex.
+\chapter{命题与证明}
+
+\section{裁决门的贝叶斯最优性}
+
+\begin{proposition}
+给定信念$b\in\Delta(\mathcal H)$、动作集合$\mathcal A=\{\text{answer},\text{adjudicate},\text{abstain}\}$和损失函数$L:\mathcal A\times\mathcal H\to\mathbb R$，选择
+\[
+\pi^\star=\arg\min_{\pi\in\mathcal A}\mathbb E_{y\sim b}[L(\pi,y)]
+\]
+是贝叶斯最优动作。
+\end{proposition}
+
+\begin{proof}
+对任意动作$\pi$，其在信念$b$下的期望损失为
+\[
+R(\pi,b)=\sum_{y\in\mathcal H}b(y)L(\pi,y).
+\]
+这是$b$的线性函数，也是有限集合$\mathcal A$上的实值函数。由$\pi^\star$的定义，
+\[
+R(\pi^\star,b)\le R(\pi,b),\qquad \forall \pi\in\mathcal A.
+\]
+因此不存在在$b$下期望损失更低的动作。若存在另一个动作$\pi'$满足$R(\pi',b)=R(\pi^\star,b)$，则$\pi'$与$\pi^\star$并列为贝叶斯最优；本文按固定顺序打破平局，不改变最优性。
+\end{proof}
+
+\section{固定契约是特例}
+
+\begin{proposition}
+固定预算RAG、断言验证器和选择性分类器都是FinPlanRAG动作集合的限制。
+\end{proposition}
+
+\begin{proof}
+FinPlanRAG的动作集合为
+\[
+\mathcal A=\{\text{answer},\text{adjudicate},\text{abstain}\}\cup\{\text{acquire},\text{wait}\}.
+\]
+固定预算RAG在检索前固定证据预算$k$，删除$\text{acquire}$和$\text{wait}$，并把输出限制为$\text{answer}$，得到
+\[
+\mathcal A_{\text{RAG}}=\{\text{answer}\}\subset\mathcal A.
+\]
+断言验证器把输出限制为支持、反驳或证据不足，对应$\text{answer}$与$\text{abstain}$，并固定证据输入，得到
+\[
+\mathcal A_{\text{verify}}=\{\text{answer},\text{abstain}\}\subset\mathcal A.
+\]
+选择性分类器固定决策时点，只允许$\text{answer}$或$\text{abstain}$，得到
+\[
+\mathcal A_{\text{selective}}=\{\text{answer},\text{abstain}\}\subset\mathcal A.
+\]
+三者都删除了至少一个动作或固定了停止规则，因此是FinPlanRAG动作集合的子集。
+\end{proof}
+
+\section{路由效用的分解}
+
+\begin{proposition}
+设确定查询集合为$\mathcal D$，模糊查询集合为$\mathcal V$，路由器预测为$\hat{\mathcal D}$和$\hat{\mathcal V}$。混合效用可分解为
+\[
+U=\frac{1}{n}\sum_{q\in\mathcal D\cap\hat{\mathcal D}}u_D(q)
++\frac{1}{n}\sum_{q\in\mathcal V\cap\hat{\mathcal V}}u_V(q),
+\]
+其中$u_D(q)$为确定查询的F1，$u_V(q)=1-L(q)/10$为模糊查询的效用。
+\end{proposition}
+
+\begin{proof}
+设$n=|\mathcal D|+|\mathcal V|$。对每条查询定义指示变量
+\[
+\mathbb I_D(q)=\mathbf 1[q\in\mathcal D],\qquad
+\mathbb I_V(q)=\mathbf 1[q\in\mathcal V].
+\]
+路由器正确时获得对应分支效用，错误时获得0，因此
+\[
+U=\frac{1}{n}\sum_{q\in\mathcal D}\mathbb I[q\in\hat{\mathcal D}]u_D(q)
++\frac{1}{n}\sum_{q\in\mathcal V}\mathbb I[q\in\hat{\mathcal V}]u_V(q).
+\]
+把指示变量写成集合交集，即得
+\[
+U=\frac{1}{n}\sum_{q\in\mathcal D\cap\hat{\mathcal D}}u_D(q)
++\frac{1}{n}\sum_{q\in\mathcal V\cap\hat{\mathcal V}}u_V(q).
+\]
+oracle路由器对每条查询都正确，故$U_{\text{oracle}}=\frac{1}{n}\sum_{q\in\mathcal D}u_D(q)+\frac{1}{n}\sum_{q\in\mathcal V}u_V(q)$。两者之差为错路由项，等于被错路由查询在本分支上的效用之和除以$n$。
+\end{proof}
+
+\chapter{实现结构与提示词}
+
+\section{实现结构}
+
+实现分为五个模块。路由模块读取原始查询和截止时点元数据，返回路由标签、置信度和简短理由。锚点模块读取断言、指引区间、当前季度值、基率和证据项，返回L2锚点及其可靠性、硬软标记和隐含桶。确定分支模块建立时点段落与表格索引，按义务覆盖迭代取证，并调用阅读器返回闭合答案。校准模块在开发集与验证集上训练随机森林并做温度缩放。汇总模块把逐条预测、路由决策和指标写入统一结果文件。各模块通过统一的数据结构连接，LLM调用按请求负载的哈希缓存，因此相同输入可以复现相同输出。
+
+\section{提示词}
+
+路由器提示词要求模型判断输入是确定信息还是模糊断言，返回路由标签、置信度和理由，并明确管理层指引是前瞻性断言而不是已实现事实。锚点提示词要求模型输出L2锚点列表和三类桶的边际判断，明确指引区间定义三个桶但不是区间内结果的证据，硬锚点需要显式约束且可靠性不低于0.65。阅读器提示词要求输出答案、置信度、充分性、缺失信息、证据编号和理由，证据不足时返回\texttt{insufficient}。三个提示词都不包含测试结果，也不要求模型猜测已实现结果。
+
+\section{复现边界}
+
+公开结果包含逐条预测、路由决策和汇总指标；LLM响应缓存不随论文提交。随机森林的折种子、校准方式和融合权重选择在正文中给出。所有API密钥从环境变量读取，不写入结果文件或论文源文件。

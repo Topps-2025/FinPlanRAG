@@ -1,0 +1,33 @@
+\begin{table}[htbp]
+\centering
+\zihao{5}
+\setlength{\tabcolsep}{3pt}
+\caption{FinDVer testmini迁移结果（默认阅读器）。}
+\label{tab:findver}
+\begin{tabular}{llrrr}
+\toprule
+基座 & 条件 & 准确率 & 宏F1 & 平均段落 \\
+\midrule
+\multicolumn{5}{l}{\textit{DeepSeek}} \\
+固定4段 & .551 & .665 & 4.00 \\
+固定8段 & .623 & .713 & 8.00 \\
+固定16段 & .660 & .735 & 16.00 \\
+规划器 & .680 & .752 & 5.63 \\
+规划器+回退 & .701 & .759 & 8.76 \\
+\midrule
+\multicolumn{5}{l}{\textit{GLM 5.3}} \\
+固定4段 & .599 & .701 & 4.00 \\
+固定8段 & .680 & .753 & 8.00 \\
+固定16段 & .743 & .792 & 16.00 \\
+规划器 & .726 & .774 & 5.69 \\
+规划器+回退 & .753 & .789 & 9.19 \\
+\midrule
+\multicolumn{5}{l}{\textit{Qwen3-8B}} \\
+固定4段 & .593 & .635 & 4.00 \\
+固定8段 & .629 & .664 & 8.00 \\
+固定16段 & .636 & .673 & 16.00 \\
+规划器 & .637 & .657 & 5.12 \\
+规划器+回退 & .649 & .663 & 6.13 \\
+\bottomrule
+\end{tabular}
+\end{table}

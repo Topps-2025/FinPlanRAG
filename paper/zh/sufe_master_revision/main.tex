@@ -1,0 +1,324 @@
+\documentclass[12pt,openany]{ctexbook}
+
+% 上海财经大学硕士学位论文版式
+% 版式目标：A4，黑白色正文，左侧装订，三线表，表题在上，图题在下
+% 生效源文件：chapters_new.tex（第1-5章）、chapters_6_9.tex（第6-7章与附录）、backmatter.tex。
+% chapter7_new.tex、chapter89_new.tex、appendix_new.tex 不参与编译，仅作历史存档。
+\usepackage[a4paper,top=3.8cm,bottom=3.8cm,left=3.2cm,right=3.2cm,headheight=13pt,headsep=0.35cm,footskip=0.8cm]{geometry}
+\usepackage{setspace}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{tocloft}
+\renewcommand{\cftchapfont}{\mdseries\songti\zihao{4}}
+\renewcommand{\cftchappagefont}{\mdseries\songti\zihao{4}}
+\renewcommand{\cftsecfont}{\mdseries\songti\zihao{-4}}
+\renewcommand{\cftsecpagefont}{\mdseries\songti\zihao{-4}}
+\renewcommand{\cftsubsecfont}{\mdseries\songti\zihao{5}}
+\renewcommand{\cftsubsecpagefont}{\mdseries\songti\zihao{5}}
+\setlength{\cftchapindent}{2em}
+\setlength{\cftsecindent}{4em}
+\setlength{\cftsecnumwidth}{4.2em}
+\renewcommand{\cftsecaftersnum}{\hspace{1em}}
+\setlength{\cftsubsecindent}{7em}
+\setlength{\cftsubsecnumwidth}{2.5em}
+\renewcommand{\cftsubsecaftersnum}{\hspace{0.5em}}
+\usepackage{fancyhdr}
+\usepackage[hidelinks]{hyperref}
+\usepackage[round,authoryear]{natbib}
+\bibpunct{(}{)}{;}{a}{,}{,}
+\renewcommand{\bibname}{参考文献}
+\usepackage{fontspec}
+\usepackage{seqsplit}
+\usepackage{tikz}
+\usepackage{algorithm}
+\usepackage{float}
+\usepackage{placeins}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  columns=fullflexible,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  showstringspaces=false,
+  keepspaces=true,
+  tabsize=2
+}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
+
+\newfontfamily\arial{Arial}
+\setmainfont{Times New Roman}
+\setCJKmainfont[AutoFakeBold=2,BoldFont=SimHei,ItalicFont=SimSun]{SimSun}
+\setCJKsansfont[AutoFakeBold=2,BoldFont=SimHei]{SimHei}
+\setCJKmonofont{SimSun}
+\setCJKfamilyfont{song}[AutoFakeBold=2,BoldFont=SimHei]{SimSun}
+\setCJKfamilyfont{hei}[AutoFakeBold=2,BoldFont=SimHei]{SimHei}
+\setCJKfamilyfont{zhsong}[AutoFakeBold=2,BoldFont=SimHei]{SimSun}
+\setCJKfamilyfont{zhhei}[AutoFakeBold=2,BoldFont=SimHei]{SimHei}
+\setCJKfamilyfont{zhfs}[AutoFakeBold=2,BoldFont=SimHei]{FangSong}
+\setCJKfamilyfont{callig}{STXingkai}
+\newcommand{\calligfont}{\CJKfamily{callig}}
+\XeTeXgenerateactualtext=1
+
+% 全文保持黑色，不使用彩色链接或彩色表格
+\hypersetup{colorlinks=false,hidelinks,linkcolor=black,citecolor=black,urlcolor=black,
+  pdftitle={FinPlanRAG：面向金融混合查询的契约路由与锚点演化框架}}
+% 预答辩/查重匿名版：不写入 pdfauthor，终稿恢复 pdfauthor={高深深}
+
+% 表题在上，图题在下；图序/表序与题名之间空两个字符
+\DeclareCaptionFont{sufeten}{\fontsize{10.5pt}{12.6pt}\selectfont}
+\DeclareCaptionLabelSeparator{sufetwo}{\hspace{2em}}
+\captionsetup[table]{position=top,font=sufeten,labelfont=bf,labelsep=sufetwo,skip=6pt,justification=centering}
+\captionsetup[figure]{position=bottom,font=sufeten,labelfont=bf,labelsep=sufetwo,skip=6pt,justification=centering}
+\renewcommand{\listfigurename}{图\quad 目\quad 录}
+\renewcommand{\listtablename}{表\quad 目\quad 录}
+\setlength{\heavyrulewidth}{1.0pt}
+\setlength{\lightrulewidth}{0.5pt}
+\renewcommand{\arraystretch}{1.15}
+
+\ctexset{
+  chapter/format={\centering\heiti\zihao{3}},
+  chapter/beforeskip={24pt},
+  chapter/afterskip={18pt},
+  chapter/aftername={\qquad},
+  chapter/afterindent=true,
+  section/format={\centering\heiti\zihao{4}},
+  section/name={第,节},
+  section/number={\chinese{section}},
+  section/afterindent=true,
+  section/beforeskip={24pt},
+  section/afterskip={6pt},
+  section/aftername={\qquad},
+  subsection/format={\heiti\fontsize{13pt}{15.6pt}\selectfont},
+  subsection/name={,、},
+  subsection/number={\chinese{subsection}},
+  subsection/beforeskip={12pt},
+  subsection/afterskip={6pt},
+  subsection/aftername={},
+  chapter/name={第,章},
+  chapter/number={\chinese{chapter}},
+  contentsname={目\quad 录},
+  figurename={图},
+  tablename={表}
+}
+\renewcommand{\thetable}{\thechapter.\arabic{table}}
+\renewcommand{\thefigure}{\thechapter.\arabic{figure}}
+
+\let\cleardoublepage\clearpage
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0pt}
+\makeatletter
+\@afterindenttrue
+\let\@afterindentfalse\@afterindenttrue
+\makeatother
+\linespread{1.37931}
+\raggedbottom
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{\zihao{5}\songti \nouppercase{\leftmark}}
+\fancyfoot[C]{\zihao{5}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{#1}}
+\renewcommand{\sectionmark}[1]{}
+
+\newtheorem{proposition}{命题}[chapter]
+\newtheorem{theorem}{定理}[chapter]
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\indic}{\mathbf{1}}
+\newcommand{\method}{FinPlanRAG}
+\newcommand{\anchorevolve}{AnchorEvolve}
+\newcommand{\sufehead}[1]{\chapter*{#1}\markboth{#1}{#1}\addcontentsline{toc}{chapter}{#1}}
+\newcommand{\sufesec}[1]{\par\vspace{12pt}\noindent{\heiti\zihao{4}#1}\par\vspace{6pt}\phantomsection\addcontentsline{toc}{section}{#1}}
+
+% ==================== 高亮修订标记 ====================
+% 黄色底纹 = 新增段落/表格行；蓝色文字 = 修改或新增句子。
+\newcommand{\rev}[1]{\textcolor{blue}{#1}}
+\newcommand{\revhl}[1]{\colorbox{yellow!30}{#1}}
+\newtcolorbox{revbox}{
+  colback=yellow!12,
+  colframe=yellow!55!black,
+  breakable,
+  boxrule=0pt,
+  left=3pt, right=3pt, top=3pt, bottom=3pt,
+  before skip=4pt, after skip=4pt
+}
+\newtcolorbox{oldnote}{
+  colback=gray!8,
+  colframe=gray!55!black,
+  breakable,
+  boxrule=0pt,
+  left=3pt, right=3pt, top=3pt, bottom=3pt
+}
+
+\title{\method：面向金融混合查询的契约路由与锚点演化框架}
+% 预答辩/查重匿名版：不写入作者；终稿恢复 \author{高深深}
+\author{}
+\date{2026年11月}
+
+\begin{document}
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}
+
+% ==================== 封面（预答辩/查重匿名版） ====================
+% 按学院通知：封面仅保留论文题目和专业，删除姓名、学号、学院、指导教师等个人信息；
+% 原创性声明、致谢、个人简历在本阶段不排入，终稿阶段恢复。
+\begin{titlepage}
+\thispagestyle{empty}
+\noindent
+\begin{minipage}[t]{0.5\linewidth}
+\vspace{0pt}
+\includegraphics[width=2.6cm]{figures/sufe_logo.png}
+\end{minipage}%
+\begin{minipage}[t]{0.5\linewidth}
+\raggedleft
+{\zihao{5}\songti 学校代码：10272\par}
+\end{minipage}
+
+\vspace{1.1cm}
+\begin{center}
+{\calligfont\fontsize{40pt}{48pt}\selectfont 上海财经大学\par}
+\vspace{0.45cm}
+{\zihao{3}\bfseries SHANGHAI UNIVERSITY OF FINANCE AND\par}
+{\zihao{3}\bfseries ECONOMICS\par}
+\vspace{0.55cm}
+{\zihao{2}\heiti 硕士学位论文\par}
+\vspace{0.25cm}
+{\zihao{3}\bfseries MASTER\quad DISSERTATION\par}
+\end{center}
+
+\vspace{2.6cm}
+\begin{center}
+{\zihao{4}\songti
+\renewcommand{\arraystretch}{1.75}
+\begin{tabular}{r@{\quad}l}
+论文题目 & \underline{\makebox[9.6cm][c]{\textbf{FinPlanRAG：面向金融混合查询的}}} \tabularnewline
+ & \underline{\makebox[9.6cm][c]{\textbf{契约路由与锚点演化框架}}} \tabularnewline
+专\qquad 业 & \underline{\makebox[9.6cm][c]{金融工程与量化投资}} \tabularnewline
+\end{tabular}\par}
+\end{center}
+\end{titlepage}
+
+% ==================== 原创性声明与版权使用授权书（终稿恢复） ====================
+% 按学院通知：预答辩与查重阶段不排入原创性声明和版权使用授权书，终稿阶段恢复。
+\frontmatter
+\pagestyle{fancy}
+% \sufehead{学位论文原创性声明}
+% {\zihao{-4}\songti
+% \setlength{\parindent}{2em}
+% \hspace*{2em}本人郑重声明：所呈交的学位论文，是本人在导师的指导下，独立进行研究工作所取得的成果。除文中已经注明引用的内容外，本论文不含任何其他个人或集体已经发表或撰写过的作品成果。对本文的研究做出重要贡献的个人和集体，均已在文中以明确方式标明。本人完全意识到本声明的法律结果由本人承担。\par
+% \vspace{0.7cm}
+% \noindent 论文作者签名：\includegraphics[height=1.0cm]{figures/signature.png} \hfill 日期：2026年11月10日\par
+% }
+
+% \vspace{0.8cm}
+% \phantomsection
+% \addcontentsline{toc}{chapter}{学位论文版权使用授权书}
+% \begin{center}
+% {\zihao{4}\heiti 学位论文版权使用授权书\par}
+% \vspace{0.15cm}
+% {\zihao{4}\heiti （硕士学位论文用）\par}
+% \end{center}
+% \vspace{0.15cm}
+% {\zihao{-4}\songti
+% \setlength{\parindent}{2em}
+% \hspace*{2em}本人完全了解上海财经大学关于收集、保存、使用学位论文的规定，即：按照有关要求提交学位论文的印刷本和电子版本。上海财经大学有权保留并向国家有关部门或机构送交本论文的复印件和扫描件，允许论文被查阅和借阅。学校可以将学位论文的全部或部分内容编入有关数据库进行检索和传播，可以采用影印、缩印或扫描等复制手段保存、汇编学位论文。\par
+% \vspace{0.7cm}
+% \noindent 论文作者签名：\includegraphics[height=1.0cm]{figures/signature.png} \hfill 导师签名：\underline{\hspace{3cm}}\par
+% \vspace{0.4cm}
+% \noindent 日期：2026年11月10日 \hfill 日期：2026年11月10日\par
+% }
+
+% ==================== 修订说明（高亮版） ====================
+\clearpage
+\sufehead{修订说明}
+\begin{revbox}
+\noindent\textbf{高亮约定：}黄色底纹表示本次修订新增或重写的段落/表格行；蓝色文字表示修改或新增的句子；未高亮文字为原文保留。
+\end{revbox}
+
+\begin{revbox}
+\noindent\textbf{叙事重构。}本次修订把论文主线从“router + 两个并列方法”收束为一条契约链：\textbf{契约级形式化}（输出契约作为查询级决策变量）→ \textbf{确定契约控制分支}（义务检索，标准但强，不作为主要算法创新）→ \textbf{前瞻契约主分支}（AnchorEvolve 的可演化锚点证据状态）→ \textbf{全动作损失感知读出}（核心经验贡献）。Router 被明确为契约选择器的简单接口，不再作为第一创新点。
+\end{revbox}
+
+\begin{revbox}
+\noindent\textbf{算法修订。}(1) 用截止时点 8-K 原文构造带段落编号的文本证据，锚点必须引用 \texttt{P\#}/\texttt{E\#} 来源与日期，公司名默认脱敏；(2) 五类资格判定（vacuous/stale/adversarial/hard/soft）落到确定性代码；(3) 结果揭示后才更新的锚点类型可靠性 Beta 后验与时点先验，构成时间演化；(4) 全动作损失感知读出：在 3 个点标签、7 个非空裁决集和弃权上取最小期望损失，取代原先“点答案 vs 最高密度 $1-\alpha$ 可信集”的受限 gate；(5) 所有 baseline 共用同一个 gate，修正原先的不公平比较。
+\end{revbox}
+
+\begin{revbox}
+\noindent\textbf{主要新结果（DeepSeek Flash，227 条 XBRL 核验断言）。}旧系统 Fusion 受限 gate 的决策损失为 3.604；全动作读出将其降到 2.863（配对 95\% CI $[-1.031,-0.423]$），GLM 与 Qwen 分别从 3.648/3.577 降到 2.956/2.837。DeepSeek 演化版最终系统（新锚点 + 时间演化 + 演化先验 RF + 全动作读出）为 Acc .551 / Bal .489 / Macro .503 / Loss 2.890，相对旧系统 Loss 差 $-0.714$，CI $[-1.057,-0.352]$；演化先验 RF 单独为 .555/.503/.508/2.828。公平 gate 下 Fusion 相对最强 baseline 点估计更低，Qwen 显著，DeepSeek/GLM 的最强 baseline 差异不显著；准确率相对 RF 的 +2.7 点为点估计（McNemar $p\approx0.69$），不作为显著性主张。Router 结构不变；在 527 条已验证子集上，混合效用由 .389 升到 .437。
+\end{revbox}
+
+\begin{revbox}
+\noindent\textbf{需要读者注意。}附录 A 的十一项指标和原表 6.2/6.3 是\textbf{旧受限 gate} 口径；第 6 章与附录 G 给出全动作口径与演化版结果。原稿的类型化义务章节保留为设计描述；主实验的确定分支实现是确定性词项覆盖，完整类型化 planner 在 \texttt{src/finplan\_rag/planner.py} 中作为扩展。
+\end{revbox}
+
+% ==================== 中文摘要 ====================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{摘\texorpdfstring{\quad}{ }要}
+\begin{center}
+{\zihao{-2}\heiti \method：面向金融混合查询的\\[0.2cm]
+契约路由与锚点演化框架\par}
+\vspace{0.2cm}
+{\zihao{-2}\heiti 摘\quad 要\par}
+\end{center}
+\vspace{0.2cm}
+\markboth{摘\quad 要}{摘\quad 要}
+{\zihao{-4}\songti\sloppy
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{2em}
+\hspace*{2em}\rev{金融文本分析同时包含确定信息问题与前瞻性断言。前者要求从截止时点以前的申报文件中读取或计算已陈述事实，后者要求判断尚未实现的未来结果。现有检索增强生成、断言验证与选择性预测通常预先固定输出接口，因而容易把前瞻性断言压缩为无保留的点答案，或把本可闭合的事实问题强制为分类裁决。本文把输出契约表述为查询级决策变量：系统先判断事实是否已在截止时点存在，再选择闭合答案契约或点答案/裁决集/弃权契约。Router 是这一契约选择器的简单接口，不作为本文的主要算法创新。确定契约由义务检索控制分支实现；前瞻契约由 AnchorEvolve 实现：它从截止时点 8-K 原文抽取带来源的 L2 锚点，经五类资格判定、时点可靠性演化与信念更新得到可审计证据状态，再由全动作损失感知读出转换为点答案、裁决集或弃权。}
+\hspace*{2em}\rev{本文在 DocFinQA、227 条 XBRL 核验收入指引断言和 FinDVer 上，使用 DeepSeek Flash、GLM 5.3 Flash 和 Qwen3-8B 与六个具名基线进行统一评估。全动作损失感知读出在三个基座上显著降低决策损失：Fusion 从 3.604 降到 2.863、从 3.648 降到 2.956、从 3.577 降到 2.837（配对区间均排除零）。DeepSeek 演化版最终系统达到准确率 .551、平衡准确率 .489、宏 F1 .503、决策损失 2.890，相对旧系统显著降损（−0.714，CI [−1.057,−0.352]）；演化先验 RF 诊断达到 .555/.503/.508/2.828。公平 gate 下 Fusion 的点估计低于全部具名基线，Qwen 上显著；DeepSeek/GLM 上相对最强基线的差异不显著。结果表明：契约形式化负责组织问题，锚点演化负责维护可审计证据状态，全动作校准读出负责控制最终风险。}
+\noindent{\zihao{-4}\heiti 关键词：}{\zihao{-4}\songti 金融问答\hspace{0.6em}检索增强生成\hspace{0.6em}前瞻性断言\hspace{0.6em}契约路由\hspace{0.6em}锚点演化\hspace{0.6em}全动作决策\hspace{0.6em}校准}
+}
+
+% ==================== 英文摘要 ====================
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Abstract}
+\begin{center}{\arial\bfseries\zihao{-2} Abstract\par}\end{center}
+\vspace{0.6cm}
+\markboth{Abstract}{Abstract}
+{\arial\zihao{-4}\selectfont\sloppy
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}
+\hspace*{2em}\rev{Financial text analysis combines determinate questions, whose answers are stated or computable at a cutoff, with forward-looking claims, whose outcomes have not yet been realized. Existing retrieval-augmented generation, claim-verification, and selective-prediction systems usually fix the output interface in advance. We formulate the output contract as a query-level decision: the system first decides whether the fact exists at the cutoff, then selects either a closed-answer contract or a point/credible-set/abstention contract. The router is a deliberately simple interface to this contract selector, not the main algorithmic contribution. The determinate contract is implemented by an obligation-retrieval control branch. The forward-looking contract is implemented by AnchorEvolve: it extracts source-cited L2 anchors from the point-in-time 8-K excerpt, applies a five-type qualification, evolves anchor-type reliability with revealed outcomes, updates a belief, and converts the resulting auditable evidence state into a point answer, a loss-optimal adjudication set, or an abstention through a full-action loss-aware readout.}
+\hspace*{2em}\rev{We evaluate FinPlanRAG on DocFinQA, 227 XBRL-verified revenue-guidance claims, and FinDVer with DeepSeek Flash, GLM 5.3 Flash, and Qwen3-8B against six named baselines. The full-action readout significantly lowers decision loss on all three backbones: Fusion decreases from 3.604 to 2.863, from 3.648 to 2.956, and from 3.577 to 2.837, with paired intervals excluding zero. On DeepSeek, the evolved system reaches .551 accuracy, .489 balanced accuracy, .503 macro-F1, and 2.890 decision loss, a significant reduction from the old system (-0.714, CI [-1.057,-0.352]); the evolved-prior RF diagnostic reaches .555/.503/.508/2.828. Under the same gate, Fusion is lower in point estimate than every named baseline and is significant on Qwen; the differences against the strongest baselines on DeepSeek and GLM are not significant. The results support a division of labor in which the contract formulation organizes the problem, anchor evolution maintains an auditable evidence state, and the full-action calibrated readout controls final risk.}
+}
+\vspace{0.4cm}
+{\sloppy\noindent{\arial\bfseries\zihao{-4} Key Words:} {\arial\zihao{-4}\selectfont financial QA\hspace{0.8em}RAG\hspace{0.8em}forward-looking claims\hspace{0.8em}contract routing\hspace{0.8em}calibrated credible sets}\par}
+
+% ==================== 目录 ====================
+\clearpage
+\tableofcontents
+\markboth{目\quad 录}{目\quad 录}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{图\texorpdfstring{\quad}{ }目\texorpdfstring{\quad}{ }录}
+\listoffigures
+\markboth{图\quad 目\quad 录}{图\quad 目\quad 录}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{表\texorpdfstring{\quad}{ }目\texorpdfstring{\quad}{ }录}
+\listoftables
+\markboth{表\quad 目\quad 录}{表\quad 目\quad 录}
+\clearpage
+
+\mainmatter
+\zihao{-4}
+\setlength{\parindent}{2em}
+\zihao{-4}
+
+\input{chapters_new}
+\input{chapters_6_9_revision}
+\input{backmatter}
+
+\end{document}

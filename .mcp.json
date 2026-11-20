@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "finplan-anchor": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["scripts/run_anchor_mcp.py"],
+      "env": {
+        "PYTHONIOENCODING": "utf-8",
+        "PYTHONUTF8": "1"
+      }
+    }
+  }
+}

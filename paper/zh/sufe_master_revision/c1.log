@@ -1,0 +1,1225 @@
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex\ctexbook.cls
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctexbacken
+d.cfg)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-xe
+tex.def))
+Document Class: ctexbook 2026/07/14 v2.6.4 Chinese adapter for class book (CTEX
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex\ctexhook.sty
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex\ctexpatch.sty
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\fix-cm.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1enc.def))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctexopts.c
+fg) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\book.cls
+Document Class: book 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\bk12.clo))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/engine\ctex-engin
+e-xetex.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/xelatex/xecjk\xeCJK.sty
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xtemplate\x
+template.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/xparse\xpar
+se.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec-xete
+x.sty (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fontspec\fontspec.cfg)
+)) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/xelatex/xecjk\xeCJK.cfg))
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/zhnumber\zhnumber.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/zhnumber\zhnumber-utf8
+.cfg))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/scheme\ctex-schem
+e-chinese-book.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctex-name-
+utf8.cfg))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/fontset\ctex-font
+set-windows.def))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/ctex/config\ctex.cfg)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg)
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty)
+) (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\xetex.def
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx
+))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tcolorbox\tcolorbox.st
+y
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz
+.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.s
+ty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfuti
+l-common.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfuti
+l-latex.def)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs
+.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex
+)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfcore
+.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.
+cfg)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgfsys
+.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
+s.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
+slibraryfiltered.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.
+cfg)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys-xetex.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys-dvipdfmx.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ys-common-pdf.def))))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+yssoftpath.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfs
+ysprotocol.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+re.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.cod
+e.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil
+.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathpars
+er.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.basic.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.trigonometric.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.random.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.comparison.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.base.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.round.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.misc.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunc
+tions.integerarithmetics.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc
+.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloa
+t.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code
+.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repoints.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repathconstruct.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repathusage.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+rescopes.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+regraphicstate.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+retransformations.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+requick.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reobjects.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repathprocessing.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+rearrows.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reshade.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reimage.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+reexternal.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+relayers.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+retransparency.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+repatterns.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfco
+rerdf.code.tex)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
+eshapes.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
+eplot.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
+omp-version-0-65.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfc
+omp-version-1-18.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.s
+ty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.
+sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkey
+s.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.cod
+e.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor
+.code.tex))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz\tikz.code.tex
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
+raryplothandlers.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodul
+ematrix.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibrarytopaths.code.tex)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tools\verbatim.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/environ\environ.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/trimspaces\trimspaces.
+sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tcolorbox\tcbbreakable
+.code.tex
+Library (tcolorbox): 'tcbbreakable.code.tex' version '6.9.0'
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/pdfcol\pdfcol.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.
+sty)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty))
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/tocloft\tocloft.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.st
+y)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefin
+ekeys.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.
+sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmd
+s.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\getti
+tlestring.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.st
+y)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.
+sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcal
+c.sty)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hxetex.def
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfi
+lecheck.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\unique
+counter.sty)))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/seqsplit\seqsplit.sty)
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/algorithms\algorithm.s
+ty (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty)
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algpseudo
+code.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/algorithmicx\algorithm
+icx.sty
+Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
+)
+Document Style - pseudocode environments for use with the `algorithmicx' style
+)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty)
+ (C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
+))
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/xelatex/xecjk\xeCJK-listings
+.sty
+
+LaTeX Warning: You have requested release `2026/06/01' of LaTeX,
+               but only release `2025-11-01' is available.
+
+)
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflib
+raryarrows.meta.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibrarypositioning.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibraryfit.code.tex)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/ti
+kz/libraries\tikzlibrarybackgrounds.code.tex)
+
+Package xeCJK Warning: Redefining CJKfamily `\CJKrmdefault' (SimSun(0)).
+
+
+Package xeCJK Warning: Redefining CJKfamily `\CJKsfdefault' (Microsoft YaHei).
+
+
+Package xeCJK Warning: Redefining CJKfamily `\CJKttdefault' (FangSong).
+
+
+Package xeCJK Warning: Redefining CJKfamily `zhsong' (SimSun).
+
+
+Package xeCJK Warning: Redefining CJKfamily `zhhei' (SimHei).
+
+
+Package xeCJK Warning: Redefining CJKfamily `zhfs' (FangSong).
+
+No file main.aux.
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+[1] [1] [2] [3] [4]
+No file main.toc.
+[5]
+No file main.lof.
+[6]
+No file main.lot.
+[7] (chapters_new.tex
+第一章
+
+Package natbib Warning: Citation `hirst2008management' on page 1 undefined on i
+nput line 7.
+
+
+Package natbib Warning: Citation `lewis2020rag' on page 1 undefined on input li
+ne 7.
+
+
+Package natbib Warning: Citation `chen2021finqa' on page 1 undefined on input l
+ine 7.
+
+
+Package natbib Warning: Citation `zhu2021tatqa' on page 1 undefined on input li
+ne 7.
+
+
+Package natbib Warning: Citation `islam2023financebench' on page 1 undefined on
+ input line 7.
+
+
+Package natbib Warning: Citation `reddy2024docfinqa' on page 1 undefined on inp
+ut line 7.
+
+
+Package natbib Warning: Citation `jiang2023flare' on page 1 undefined on input 
+line 7.
+
+
+Package natbib Warning: Citation `jeong2024adaptiverag' on page 1 undefined on 
+input line 7.
+
+
+Package natbib Warning: Citation `yao2023react' on page 1 undefined on input li
+ne 7.
+
+
+Package natbib Warning: Citation `shinn2023reflexion' on page 1 undefined on in
+put line 7.
+
+
+Package natbib Warning: Citation `zhao2024findver' on page 1 undefined on input
+ line 7.
+
+
+Package natbib Warning: Citation `rangapur2025finfact' on page 1 undefined on i
+nput line 7.
+
+
+Package natbib Warning: Citation `chow1970optimum' on page 1 undefined on input
+ line 7.
+
+
+Package natbib Warning: Citation `geifman2017selective' on page 1 undefined on 
+input line 7.
+
+
+Package natbib Warning: Citation `lopezdeprado2018advances' on page 1 undefined
+ on input line 11.
+
+[1] [2] [3]
+第二章
+
+Package natbib Warning: Citation `chen2021finqa' on page 4 undefined on input l
+ine 39.
+
+
+Package natbib Warning: Citation `zhu2021tatqa' on page 4 undefined on input li
+ne 39.
+
+
+Package natbib Warning: Citation `islam2023financebench' on page 4 undefined on
+ input line 39.
+
+
+Package natbib Warning: Citation `xie2024finben' on page 4 undefined on input l
+ine 39.
+
+
+Package natbib Warning: Citation `reddy2024docfinqa' on page 4 undefined on inp
+ut line 39.
+
+
+Package natbib Warning: Citation `zhao2024findver' on page 4 undefined on input
+ line 43.
+
+
+Package natbib Warning: Citation `rangapur2025finfact' on page 4 undefined on i
+nput line 43.
+
+
+Package natbib Warning: Citation `mansouri2026finrank' on page 4 undefined on i
+nput line 45.
+
+
+Package natbib Warning: Citation `jiang2026finrate' on page 4 undefined on inpu
+t line 45.
+
+
+Package natbib Warning: Citation `chen2026hcrag' on page 4 undefined on input l
+ine 45.
+
+
+Package natbib Warning: Citation `chi2026finsagent' on page 4 undefined on inpu
+t line 45.
+
+
+Package natbib Warning: Citation `zhou2026fincards' on page 4 undefined on inpu
+t line 45.
+
+[4]
+
+Package natbib Warning: Citation `lewis2020rag' on page 5 undefined on input li
+ne 49.
+
+
+Package natbib Warning: Citation `jiang2023flare' on page 5 undefined on input 
+line 49.
+
+
+Package natbib Warning: Citation `jeong2024adaptiverag' on page 5 undefined on 
+input line 49.
+
+
+Package natbib Warning: Citation `yao2023react' on page 5 undefined on input li
+ne 49.
+
+
+Package natbib Warning: Citation `shinn2023reflexion' on page 5 undefined on in
+put line 49.
+
+
+Package natbib Warning: Citation `asai2024selfrag' on page 5 undefined on input
+ line 49.
+
+
+Package natbib Warning: Citation `yan2024crag' on page 5 undefined on input lin
+e 49.
+
+
+Package natbib Warning: Citation `jiang2023flare' on page 5 undefined on input 
+line 49.
+
+
+Package natbib Warning: Citation `jeong2024adaptiverag' on page 5 undefined on 
+input line 49.
+
+
+Package natbib Warning: Citation `chow1970optimum' on page 5 undefined on input
+ line 57.
+
+
+Package natbib Warning: Citation `geifman2017selective' on page 5 undefined on 
+input line 57.
+
+
+Package natbib Warning: Citation `guo2017calibration' on page 5 undefined on in
+put line 57.
+
+
+Package natbib Warning: Citation `elkan2001cost' on page 5 undefined on input l
+ine 57.
+
+
+Package natbib Warning: Citation `vovk2005algorithmic' on page 5 undefined on i
+nput line 57.
+
+
+Package natbib Warning: Citation `angelopoulos2021gentle' on page 5 undefined o
+n input line 57.
+
+
+Package natbib Warning: Citation `romano2020classification' on page 5 undefined
+ on input line 57.
+
+
+Package natbib Warning: Citation `gibbs2021adaptive' on page 5 undefined on inp
+ut line 57.
+
+[5]
+
+Package natbib Warning: Citation `manski2003partial' on page 6 undefined on inp
+ut line 65.
+
+
+Package natbib Warning: Citation `lopezdeprado2018advances' on page 6 undefined
+ on input line 65.
+
+[6] [7]
+第三章
+[8]
+
+LaTeX Warning: Reference `ch:empirical' on page 9 undefined on input line 125.
+
+[9]
+
+LaTeX Warning: Reference `fig:framework' on page 10 undefined on input line 136
+.
+
+
+LaTeX Warning: Reference `ch:determinate' on page 10 undefined on input line 13
+6.
+
+
+LaTeX Warning: Reference `ch:anchor' on page 10 undefined on input line 136.
+
+! Text line contains an invalid character.
+l.138 ^^H
+         egin{revbox}
+! Undefined control sequence.
+\endtcolorbox ->\tcb@insert@after@part 
+                                       \end {tcb@savebox}\UseTaggingSocket {...
+l.141 \end{revbox}
+                  
+! Extra \endgroup.
+\color@endgroup ->\endgraf \@endpefalse \endgroup 
+                                                  
+l.141 \end{revbox}
+                  
+! Too many }'s.
+\endtcb@savebox ...efalse \color@endgroup \egroup 
+                                                  \expandafter \@iiiparbox \...
+l.141 \end{revbox}
+                  
+! Undefined control sequence.
+\endtcb@savebox ...pandafter \@iiiparbox \@mpargs 
+                                                  {\unvbox \@tempboxa }
+l.141 \end{revbox}
+                  
+! Text line contains an invalid character.
+l.162 ^^H
+         egin{revbox}
+! Text line contains an invalid character.
+l.170 ^^H
+         egin{revbox}
+! Missing number, treated as zero.
+<to be read again> 
+                   \protect 
+l.222 \caption{义务检索的单轮取证}
+                         
+! Illegal unit of measure (pt inserted).
+<to be read again> 
+                   \protect 
+l.222 \caption{义务检索的单轮取证}
+                         
+
+! Package caption Error: \caption outside float.
+
+See the caption package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.222 \caption{义务检索的单轮取证}
+                         
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+[]\TU/SimSun(1)/m/n/12.045 义
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 务
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 检
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 索
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 的
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 单
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 轮
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 取
+
+Overfull \hbox (12.045pt too wide) in paragraph at lines 222--222
+\TU/SimSun(1)/m/n/12.045 证 
+Runaway argument?
+{\@checkend {tcb@savebox}\endgroup \UseHook {env/tcb@savebox/after}\if@ignore \
+ETC.
+! Paragraph ended before \setlength was complete.
+<to be read again> 
+                   \par 
+l.222 \caption{义务检索的单轮取证}
+                         
+(framework_tikz.tex [10]) [11] [12]
+第四章
+! Undefined control sequence.
+\endtcolorbox ->\tcb@insert@after@part 
+                                       \end {tcb@savebox}\UseTaggingSocket {...
+l.222 \caption{义务检索的单轮取证}
+                         
+! Too many }'s.
+\endtcb@savebox ...efalse \color@endgroup \egroup 
+                                                  \expandafter \@iiiparbox \...
+l.222 \caption{义务检索的单轮取证}
+                         
+! Undefined control sequence.
+\endtcb@savebox ...pandafter \@iiiparbox \@mpargs 
+                                                  {\unvbox \@tempboxa }
+l.222 \caption{义务检索的单轮取证}
+                         
+! Argument of \@iiiparbox has an extra }.
+<inserted text> 
+                \par 
+l.222 \caption{义务检索的单轮取证}
+                         
+Runaway argument?
+\@checkend {tcb@savebox}\endgroup \UseHook {env/tcb@savebox/after}\if@ignore \E
+TC.
+! Paragraph ended before \@iiiparbox was complete.
+<to be read again> 
+                   \par 
+l.222 \caption{义务检索的单轮取证}
+                         
+! Too many }'s.
+<recently read> }
+                 
+l.222 \caption{义务检索的单轮取证}
+                         
+
+LaTeX Warning: Unexpected alignment H on input line 222.
+
+! Extra \endgroup.
+\@iiiparbox ...f@pboxsw \m@th $\fi \@end@tempboxa 
+                                                  
+l.222 \caption{义务检索的单轮取证}
+                         
+[13]
+! Too many }'s.
+\@endfloatbox ...pagefalse \outer@nobreak \egroup 
+                                                  \color@endbox 
+l.249 \end{algorithm}
+                     
+! Extra \endgroup.
+\color@endgroup ->\endgraf \@endpefalse \endgroup 
+                                                  
+l.249 \end{algorithm}
+                     
+! Too many }'s.
+\color@endbox ->\color@endgroup \egroup 
+                                        
+l.249 \end{algorithm}
+                     
+! Undefined control sequence.
+\endalgorithm ...oatbox \global \setbox \@currbox 
+                                                  \float@makebox \columnwidt...
+l.249 \end{algorithm}
+                     
+! Missing number, treated as zero.
+<to be read again> 
+                   \vbox 
+l.249 \end{algorithm}
+                     
+! Undefined control sequence.
+\caption@ORI@float@makebox ...boxrestore \@fs@pre 
+                                                  \@fs@iftopcapt \ifvoid \@f...
+l.249 \end{algorithm}
+                     
+! Undefined control sequence.
+\caption@ORI@float@makebox ...@pre \@fs@iftopcapt 
+                                                  \ifvoid \@floatcapt \else ...
+l.249 \end{algorithm}
+                     
+! Undefined control sequence.
+\caption@ORI@float@makebox ...i \unvbox \@currbox 
+                                                  \else \unvbox \@currbox \i...
+l.249 \end{algorithm}
+                     
+! Extra \else.
+\caption@ORI@float@makebox ...box \@currbox \else 
+                                                  \unvbox \@currbox \ifvoid ...
+l.249 \end{algorithm}
+                     
+! Missing number, treated as zero.
+<to be read again> 
+                   \unvbox 
+l.249 \end{algorithm}
+                     
+! Undefined control sequence.
+\caption@ORI@float@makebox ...e \unvbox \@currbox 
+                                                  \ifvoid \@floatcapt \else ...
+l.249 \end{algorithm}
+                     
+! Extra \fi.
+\caption@ORI@float@makebox ...\@floatcapt \fi \fi 
+                                                  \par \@fs@post \vskip \z@ }
+l.249 \end{algorithm}
+                     
+! Missing number, treated as zero.
+<to be read again> 
+                   \scan_stop: 
+l.249 \end{algorithm}
+                     
+! Undefined control sequence.
+\caption@ORI@float@makebox ... \fi \par \@fs@post 
+                                                  \vskip \z@ }
+l.249 \end{algorithm}
+                     
+
+! LaTeX Error: \begin{document} ended by \end{algorithm}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.249 \end{algorithm}
+                     
+! Extra \endgroup.
+\end  ...end#1\endcsname \@checkend {#1}\endgroup 
+                                                  \UseHook {env/#1/after}\if...
+l.249 \end{algorithm}
+                     
+(chapter5_revision.tex
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active
+
+Package fancyhdr Warning: \headheight is too small (13.0pt): 
+(fancyhdr)                Make it at least 15.8392pt, for example:
+(fancyhdr)                \setlength{\headheight}{15.8392pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-2.8392pt}.
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active
+Underfull \vbox (badness 10000) has occurred while \output is active [14]
+第五章
+[15]
+Overfull \vbox (15.69594pt too high) detected at line 43
+
+Overfull \vbox (34.41168pt too high) detected at line 44
+
+Overfull \vbox (15.65317pt too high) detected at line 45
+
+Overfull \vbox (15.65317pt too high) detected at line 46
+
+Overfull \vbox (15.65317pt too high) detected at line 47
+
+Overfull \vbox (15.69594pt too high) detected at line 48
+
+Underfull \vbox (badness 10000) detected at line 49
+
+Overfull \vbox (34.41168pt too high) detected at line 50
+
+Underfull \vbox (badness 10000) detected at line 51
+
+Underfull \vbox (badness 10000) detected at line 52
+
+Underfull \vbox (badness 10000) detected at line 53
+
+Overfull \vbox (53.25574pt too high) detected at line 54
+
+Overfull \vbox (34.57498pt too high) detected at line 68
+! Missing } inserted.
+<inserted text> 
+                }
+l.70 \end{figure}
+                 
+
+Underfull \hbox (badness 2980) in paragraph at lines 75--76
+\TU/SimSun(1)/m/n/12.045 等 关 键 词 选 取 段 落；|  每 个 段 落 带 稳 定 编 号 $\OML/cmm/m/it/12
+.045 P\OT1/cmr/m/n/12.045 1\OML/cmm/m/it/12.045 ; P\OT1/cmr/m/n/12.045 2\OML/cm
+m/m/it/12.045 ; [] $\TU/SimSun(1)/m/n/12.045 ，|  结 构 化 证 据 带
+
+Underfull \vbox (badness 10000) detected at line 93
+! Missing } inserted.
+<inserted text> 
+                }
+l.106 \end{table}
+                 
+
+Underfull \vbox (badness 10000) detected at line 209
+! Missing } inserted.
+<inserted text> 
+                }
+l.222 \end{algorithm}
+                     
+)) (chapters_6_9_revision.tex (chapter6_revision.tex
+第六章
+
+Package natbib Warning: Citation `reddy2024docfinqa' on page 16 undefined on in
+put line 13.
+
+
+Package natbib Warning: Citation `zhao2024findver' on page 16 undefined on inpu
+t line 17.
+
+
+Package natbib Warning: Citation `qwen2025qwen3' on page 16 undefined on input 
+line 23.
+
+
+Package natbib Warning: Citation `zhao2024findver' on page 16 undefined on inpu
+t line 27.
+
+
+Package natbib Warning: Citation `rangapur2025finfact' on page 16 undefined on 
+input line 27.
+
+
+Package natbib Warning: Citation `asai2024selfrag' on page 16 undefined on inpu
+t line 27.
+
+
+Package natbib Warning: Citation `yan2024crag' on page 16 undefined on input li
+ne 27.
+
+
+Package natbib Warning: Citation `jiang2023flare' on page 16 undefined on input
+ line 27.
+
+
+Package natbib Warning: Citation `jeong2024adaptiverag' on page 16 undefined on
+ input line 27.
+
+
+Package natbib Warning: Citation `brodersen2010balanced' on page 16 undefined o
+n input line 33.
+
+
+Package natbib Warning: Citation `sokolova2009performance' on page 16 undefined
+ on input line 33.
+
+
+LaTeX Warning: Reference `ch:anchor' on page 16 undefined on input line 33.
+
+(tables_thesis/router.tex
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \begin{table}[htbp]
+                       
+
+LaTeX Warning: Reference `ch:experiments' on page 16 undefined on input line 5.
+
+
+
+LaTeX Warning: Reference `ch:experiments' on page 16 undefined on input line 5.
+
+
+
+Underfull \vbox (badness 10000) detected at line 5
+! Missing } inserted.
+<inserted text> 
+                }
+l.18 \end{table}
+                
+)
+
+LaTeX Warning: Reference `tab:router' on page 16 undefined on input line 43.
+
+(tables_thesis/docfinqa.tex
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \begin{table}[htbp]
+                       
+
+Overfull \vbox (9.2093pt too high) detected at line 5
+! Missing } inserted.
+<inserted text> 
+                }
+l.26 \end{table}
+                
+)
+
+LaTeX Warning: Reference `tab:docfinqa' on page 16 undefined on input line 61.
+
+(tables_thesis/findver.tex
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \begin{table}[htbp]
+                       
+
+Underfull \vbox (badness 10000) detected at line 5
+! Missing } inserted.
+<inserted text> 
+                }
+l.33 \end{table}
+                
+)
+
+LaTeX Warning: Reference `tab:findver' on page 16 undefined on input line 71.
+
+
+Overfull \vbox (9.25032pt too high) detected at line 87
+! Missing } inserted.
+<inserted text> 
+                }
+l.98 \end{table}
+                
+
+Overfull \vbox (9.2093pt too high) detected at line 108
+! Missing } inserted.
+<inserted text> 
+                }
+l.125 \end{table}
+                 
+
+Underfull \vbox (badness 10000) detected at line 141
+! Missing } inserted.
+<inserted text> 
+                }
+l.156 \end{table}
+                 
+
+Overfull \vbox (9.25032pt too high) detected at line 166
+! Missing } inserted.
+<inserted text> 
+                }
+l.178 \end{table}
+                 
+
+LaTeX Warning: Reference `tab:fullaction' on page 16 undefined on input line 18
+7.
+
+
+Underfull \vbox (badness 10000) detected at line 194
+! Missing } inserted.
+<inserted text> 
+                }
+l.206 \end{table}
+                 
+) (chapter7_revision.tex
+第七章
+) (references_sufe.tex) (appendix_full.tex
+附录 A
+
+LaTeX Warning: Reference `tab:vague-ds' on page 16 undefined on input line 4.
+
+
+LaTeX Warning: Reference `tab:vague-qwen' on page 16 undefined on input line 4.
+
+
+
+LaTeX Warning: Reference `tab:vague' on page 16 undefined on input line 4.
+
+
+LaTeX Warning: Reference `tab:vague-qwen-main' on page 16 undefined on input li
+ne 4.
+
+(tables_thesis/vague_ds.tex
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \begin{table}[htbp]
+                       
+
+Overfull \vbox (9.25032pt too high) detected at line 5
+! Missing } inserted.
+<inserted text> 
+                }
+l.24 \end{table}
+                
+) (tables_thesis/vague_glm.tex
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \begin{table}[htbp]
+                       
+
+Overfull \vbox (9.25032pt too high) detected at line 5
+! Missing } inserted.
+<inserted text> 
+                }
+l.24 \end{table}
+                
+) (tables_thesis/vague_qwen.tex
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.1 \begin{table}[htbp]
+                       
+
+Overfull \vbox (9.25032pt too high) detected at line 5
+! Missing } inserted.
+<inserted text> 
+                }
+l.24 \end{table}
+                
+)
+附录 B
+
+LaTeX Warning: Reference `tab:qwen-doc' on page 16 undefined on input line 15.
+
+
+! LaTeX Error: Not in outer par mode.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.17 \begin{table}[htbp]
+                        
+
+Underfull \vbox (badness 10000) detected at line 21
+! Missing } inserted.
+<inserted text> 
+                }
+l.34 \end{table}
+                
+附录 C
+附录 D
+附录 E
+(C:\Users\Lenovo\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty)
+附录 F
+) (appendix_revision.tex
+附录 G
+
+Underfull \vbox (badness 10000) detected at line 15
+! Missing } inserted.
+<inserted text> 
+                }
+l.26 \end{table}
+                
+
+Underfull \hbox (badness 3989) in paragraph at lines 29--30
+\TU/TimesNewRoman(0)/m/n/12.045 Fusion \TU/SimSun(1)/m/it/12.045 的 全 动 作 减 损：| 
+\TU/TimesNewRoman(0)/m/n/12.045 DeepSeek $\OMS/cmsy/m/n/12.045 ^^@\OT1/cmr/m/n/
+12.045 0\OML/cmm/m/it/12.045 :\OT1/cmr/m/n/12.045 740$ $[\OMS/cmsy/m/n/12.045 ^
+^@\OT1/cmr/m/n/12.045 1\OML/cmm/m/it/12.045 :\OT1/cmr/m/n/12.045 031\OML/cmm/m/
+it/12.045 ; \OMS/cmsy/m/n/12.045 ^^@\OT1/cmr/m/n/12.045 0\OML/cmm/m/it/12.045 :
+\OT1/cmr/m/n/12.045 423]$\TU/SimSun(1)/m/it/12.045 ；| \TU/TimesNewRoman(0)/m/n/
+12.045 GLM $\OMS/cmsy/m/n/12.045 ^^@\OT1/cmr/m/n/12.045 0\OML/cmm/m/it/12.045 :
+\OT1/cmr/m/n/12.045 690$
+
+Underfull \hbox (badness 10000) in paragraph at lines 29--30
+\OMS/cmsy/m/n/12.045 ^^@\OT1/cmr/m/n/12.045 0\OML/cmm/m/it/12.045 :\OT1/cmr/m/n
+/12.045 573$ $[\OMS/cmsy/m/n/12.045 ^^@\OT1/cmr/m/n/12.045 0\OML/cmm/m/it/12.04
+5 :\OT1/cmr/m/n/12.045 855\OML/cmm/m/it/12.045 ; \OMS/cmsy/m/n/12.045 ^^@\OT1/c
+mr/m/n/12.045 0\OML/cmm/m/it/12.045 :\OT1/cmr/m/n/12.045 282]$\TU/SimSun(1)/m/i
+t/12.045 ；| \TU/TimesNewRoman(0)/m/n/12.045 GLM $\OMS/cmsy/m/n/12.045 ^^@\OT1/c
+mr/m/n/12.045 0\OML/cmm/m/it/12.045 :\OT1/cmr/m/n/12.045 575$ $[\OMS/cmsy/m/n/1
+2.045 ^^@\OT1/cmr/m/n/12.045 0\OML/cmm/m/it/12.045 :\OT1/cmr/m/n/12.045 858\OML
+/cmm/m/it/12.045 ; \OMS/cmsy/m/n/12.045 ^^@\OT1/cmr/m/n/12.045 0\OML/cmm/m/it/1
+2.045 :\OT1/cmr/m/n/12.045 274]$\TU/SimSun(1)/m/it/12.045 ；| \TU/TimesNewRoman(
+0)/m/n/12.045 Qwen $\OMS/cmsy/m/n/12.045 ^^@\OT1/cmr/m/n/12.045 0\OML/cmm/m/it/
+12.045 :\OT1/cmr/m/n/12.045 573$
+
+Underfull \vbox (badness 10000) detected at line 38
+! Missing } inserted.
+<inserted text> 
+                }
+l.49 \end{table}
+                
+
+Underfull \vbox (badness 10000) detected at line 61
+! Missing } inserted.
+<inserted text> 
+                }
+l.76 \end{table}
+                
+
+Underfull \vbox (badness 10000) detected at line 88
+! Missing } inserted.
+<inserted text> 
+                }
+l.100 \end{table}
+                 
+
+Underfull \vbox (badness 10000) detected at line 107
+! Missing } inserted.
+<inserted text> 
+                }
+l.118 \end{table}
+                 
+
+Underfull \hbox (badness 1629) in paragraph at lines 123--124
+\TU/SimSun(1)/m/it/12.045 修 订 版 锚 点 提 示 词 要 求：|  锚 点 引 用 \TU/lmtt/m/n/12.045 P#
+\TU/TimesNewRoman(0)/m/n/12.045 /\TU/lmtt/m/n/12.045 E# \TU/SimSun(1)/m/it/12.0
+45 来 源 与 不 晚 于 \TU/TimesNewRoman(0)/m/n/12.045 cutoff \TU/SimSun(1)/m/it/12.045
+ 的 日 期；|
+
+LaTeX Warning: Reference `tab:fullaction' on page 16 undefined on input line 12
+7.
+
+
+LaTeX Warning: Reference `tab:evolution' on page 16 undefined on input line 127
+.
+
+
+LaTeX Warning: Reference `tab:prior' on page 16 undefined on input line 127.
+
+)) (backmatter.tex)
+
+Package natbib Warning: There were undefined citations.
+
+
+! LaTeX Error: \begin{table} on input line 104 ended by \end{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.324 \end{document}
+                    
+(main.aux
+
+Package natbib Warning: Citation(s) may have changed.
+(natbib)                Rerun to get citations correct.
+
+)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+! You can't use `\end' in internal vertical mode.
+\enddocument ...cument/end}\deadcycles \z@ \@@end 
+                                                  
+l.324 \end{document}
+                    
+
+! LaTeX Error: \begin{table} on input line 104 ended by \end{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.324 \end{document}
+                    
+! Missing } inserted.
+<inserted text> 
+                }
+l.324 \end{document}
+                    
+)miktex-dvipdfmx: major issue: So far, you have not checked for MiKTeX updates.
+
+! Emergency stop.
+<*> ./main.tex
+              
+Output written on main.pdf (23 pages).
+Transcript written on main.log.
+xelatex: major issue: So far, you have not checked for MiKTeX updates.

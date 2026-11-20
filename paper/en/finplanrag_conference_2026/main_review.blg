@@ -1,0 +1,54 @@
+This is BibTeX, Version 0.99e
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main_review.aux
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+The style file: acl_natbib.bst
+Reallocating 'name_of_file' (item size: 1) to 11 items.
+Reallocating 'glb_str_end' (item size: 4) to 20 items.
+Reallocating 'glb_str_ptr' (item size: 4) to 20 items.
+Reallocating 'global_strs' (item size: 1) to 4000000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Database file #1: references.bib
+You've used 30 entries,
+            3782 wiz_defined-function locations,
+            897 strings with 13029 characters,
+and the built_in function-call counts, 28019 in all, are:
+= -- 2316
+> -- 1765
+< -- 28
++ -- 729
+- -- 549
+* -- 1992
+:= -- 4095
+add.period$ -- 120
+call.type$ -- 30
+change.case$ -- 368
+chr.to.int$ -- 31
+cite$ -- 30
+duplicate$ -- 1564
+empty$ -- 1762
+format.name$ -- 635
+if$ -- 6006
+int.to.chr$ -- 1
+int.to.str$ -- 2
+missing$ -- 373
+newline$ -- 154
+num.names$ -- 120
+pop$ -- 1033
+preamble$ -- 1
+purify$ -- 307
+quote$ -- 0
+skip$ -- 1411
+stack$ -- 0
+substring$ -- 863
+swap$ -- 924
+text.length$ -- 28
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 261
+warning$ -- 0
+while$ -- 130
+width$ -- 0
+write$ -- 391

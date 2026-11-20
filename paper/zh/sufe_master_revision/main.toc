@@ -1,0 +1,67 @@
+\contentsline {chapter}{修订说明}{i}{chapter*.1}%
+\contentsline {chapter}{摘\hskip 1em\relax 要}{iii}{section*.2}%
+\contentsline {chapter}{Abstract}{iv}{section*.3}%
+\contentsline {chapter}{图\hskip 1em\relax 目\hskip 1em\relax 录}{viii}{section*.4}%
+\contentsline {chapter}{表\hskip 1em\relax 目\hskip 1em\relax 录}{ix}{section*.5}%
+\contentsline {chapter}{\numberline {第一章\hspace {.3em}}绪论}{1}{chapter.1}%
+\contentsline {section}{\numberline {第一节}研究背景与问题提出}{1}{section.1.1}%
+\contentsline {section}{\numberline {第二节}研究内容与方法}{2}{section.1.2}%
+\contentsline {section}{\numberline {第三节}主要贡献}{2}{section.1.3}%
+\contentsline {chapter}{\numberline {第二章\hspace {.3em}}文献综述}{4}{chapter.2}%
+\contentsline {chapter}{\numberline {第三章\hspace {.3em}}研究设计：研究问题、假设与总体框架}{8}{chapter.3}%
+\contentsline {section}{\numberline {第一节}研究问题}{8}{section.3.1}%
+\contentsline {section}{\numberline {第二节}研究假设}{9}{section.3.2}%
+\contentsline {section}{\numberline {第三节}总体框架}{10}{section.3.3}%
+\contentsline {section}{\numberline {第四节}时点约束与评价协议}{11}{section.3.4}%
+\contentsline {chapter}{\numberline {第四章\hspace {.3em}}义务检索分支：Obligation Retrieval}{13}{chapter.4}%
+\contentsline {section}{\numberline {第一节}状态表示：类型化义务}{13}{section.4.1}%
+\contentsline {section}{\numberline {第二节}证据空间：时点语料与块索引}{14}{section.4.2}%
+\contentsline {section}{\numberline {第三节}取证策略：覆盖驱动的迭代检索}{15}{section.4.3}%
+\contentsline {section}{\numberline {第四节}答案生成：阅读器与闭包}{15}{section.4.4}%
+\contentsline {chapter}{\numberline {第五章\hspace {.3em}}AnchorEvolve：前瞻性断言分支}{18}{chapter.5}%
+\contentsline {section}{\numberline {第一节}状态表示：假设空间与三层锚点}{18}{section.5.1}%
+\contentsline {section}{\numberline {第二节}状态构造：时点文本证据与锚点抽取}{19}{section.5.2}%
+\contentsline {section}{\numberline {第三节}状态过滤：五类资格判定}{21}{section.5.3}%
+\contentsline {section}{\numberline {第四节}状态更新：时间演化与信念}{22}{section.5.4}%
+\contentsline {section}{\numberline {第五节}决策读出：校准融合与全动作损失感知门}{23}{section.5.5}%
+\contentsline {section}{\numberline {第六节}时点演化与算法}{25}{section.5.6}%
+\contentsline {chapter}{\numberline {第六章\hspace {.3em}}实证结果与分析}{27}{chapter.6}%
+\contentsline {section}{\numberline {第一节}数据与任务}{27}{section.6.1}%
+\contentsline {section}{\numberline {第二节}基座模型、具名基线与评价指标}{28}{section.6.2}%
+\contentsline {section}{\numberline {第三节}路由与混合负载}{29}{section.6.3}%
+\contentsline {section}{\numberline {第四节}义务检索控制分支}{30}{section.6.4}%
+\contentsline {section}{\numberline {第五节}全动作读出与公平基线}{33}{section.6.5}%
+\contentsline {section}{\numberline {第六节}演化版本：文本锚点与时间演化（DeepSeek）}{34}{section.6.6}%
+\contentsline {section}{\numberline {第七节}消融与可信集}{36}{section.6.7}%
+\contentsline {section}{\numberline {第八节}误差分析与讨论}{36}{section.6.8}%
+\contentsline {chapter}{\numberline {第七章\hspace {.3em}}讨论与结论}{38}{chapter.7}%
+\contentsline {section}{\numberline {第一节}讨论}{38}{section.7.1}%
+\contentsline {section}{\numberline {第二节}局限与未来研究}{40}{section.7.2}%
+\contentsline {section}{\numberline {第三节}研究结论}{40}{section.7.3}%
+\contentsline {chapter}{参考文献}{42}{section*.17}%
+\contentsline {chapter}{\numberline {附录 A\hspace {.3em}}完整指标表}{45}{appendix.A}%
+\contentsline {chapter}{\numberline {附录 B\hspace {.3em}}Qwen3-8B的DocFinQA结果}{47}{appendix.B}%
+\contentsline {chapter}{\numberline {附录 C\hspace {.3em}}命题与完整证明}{48}{appendix.C}%
+\contentsline {section}{\numberline {第一节}裁决门的贝叶斯最优性}{48}{section.C.1}%
+\contentsline {section}{\numberline {第二节}路由效用的分解}{49}{section.C.2}%
+\contentsline {section}{\numberline {第三节}软锚点更新的归一化与单调性}{50}{section.C.3}%
+\contentsline {section}{\numberline {第四节}可信集的最小基数}{50}{section.C.4}%
+\contentsline {chapter}{\numberline {附录 D\hspace {.3em}}LLM提示词}{51}{appendix.D}%
+\contentsline {section}{\numberline {第一节}路由器提示词}{51}{section.D.1}%
+\contentsline {section}{\numberline {第二节}锚点抽取提示词}{52}{section.D.2}%
+\contentsline {section}{\numberline {第三节}阅读器提示词}{53}{section.D.3}%
+\contentsline {section}{\numberline {第四节}提示词设计说明}{53}{section.D.4}%
+\contentsline {chapter}{\numberline {附录 E\hspace {.3em}}核心代码}{54}{appendix.E}%
+\contentsline {section}{\numberline {第一节}义务项与覆盖}{54}{section.E.1}%
+\contentsline {section}{\numberline {第二节}锚点信念更新与裁决门}{55}{section.E.2}%
+\contentsline {section}{\numberline {第三节}校准随机森林}{57}{section.E.3}%
+\contentsline {chapter}{\numberline {附录 F\hspace {.3em}}实现结构与复现边界}{58}{appendix.F}%
+\contentsline {section}{\numberline {第一节}实现结构}{58}{section.F.1}%
+\contentsline {section}{\numberline {第二节}复现边界}{58}{section.F.2}%
+\contentsline {chapter}{\numberline {附录 G\hspace {.3em}}全动作读出与演化版补充结果}{59}{appendix.G}%
+\contentsline {section}{\numberline {第一节}全动作读出与受限 gate}{59}{section.G.1}%
+\contentsline {section}{\numberline {第二节}公平 gated 基线}{59}{section.G.2}%
+\contentsline {section}{\numberline {第三节}DeepSeek 演化版与消融}{60}{section.G.3}%
+\contentsline {section}{\numberline {第四节}演化先验特征}{60}{section.G.4}%
+\contentsline {section}{\numberline {第五节}Router 集成}{61}{section.G.5}%
+\contentsline {section}{\numberline {第六节}修订版提示词与配置摘要}{61}{section.G.6}%
